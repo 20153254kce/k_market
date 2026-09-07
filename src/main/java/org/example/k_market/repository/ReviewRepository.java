@@ -1,0 +1,71 @@
+package org.example.k_market.repository;
+
+import org.example.k_market.entity.Review;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Collection;
+
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+
+    List<Review> findByProdNoOrderByCreatedAtDesc(Long prodNo);
+    Page<Review> findByProdNoOrderByCreatedAtDesc(Long prodNo, Pageable pageable);
+    Page<Review> findByMemberNoOrderByCreatedAtDesc(int memberNo, Pageable pageable);
+    boolean existsByMemberNoAndProdNo(int memberNo, long prodNo);
+
+    @Query("""
+            SELECT r
+            FROM Review r
+            JOIN Product p ON r.prodNo = p.prodNo
+            WHERE p.shopNo = :shopNo
+            ORDER BY r.createdAt DESC, r.reviewNO DESC
+            """)
+    Page<Review> findSellerProductReviews(@Param("shopNo") int shopNo, Pageable pageable);
+    long countByMemberNo(int memberNo);
+    // 기존에 있던 다른 메서드가 있다면 그대로 두고 위 메서드만 추가하세요.
+
+    // 후기 많은 순
+    long countByProdNo(Long prodNo);
+
+
+    /**
+     * 특정 상품에 등록된 리뷰의 평균 별점 조회
+     */
+    @Query("""
+           SELECT AVG(r.rating)
+           FROM Review r
+           WHERE r.prodNo = :prodNo
+           """)
+    Double findAverageRatingByProdNo(@Param("prodNo") Long prodNo);
+
+    /**
+     * 판매자가 등록한 전체 상품 후기의 평균 별점 조회
+     */
+    @Query("""
+           SELECT AVG(r.rating)
+           FROM Review r
+           JOIN Product p ON r.prodNo = p.prodNo
+           WHERE p.shopNo = :shopNo
+           """)
+    Double findAverageRatingByShopNo(@Param("shopNo") Integer shopNo);
+
+    @Query("""
+           SELECT r.prodNo AS prodNo, AVG(r.rating) AS averageRating, COUNT(r) AS reviewCount
+           FROM Review r
+           WHERE r.prodNo IN :prodNos
+           GROUP BY r.prodNo
+           """)
+    List<ProductRatingStat> findProductRatingStats(@Param("prodNos") Collection<Long> prodNos);
+
+    interface ProductRatingStat {
+        Long getProdNo();
+        Double getAverageRating();
+        long getReviewCount();
+    }
+
+
+}

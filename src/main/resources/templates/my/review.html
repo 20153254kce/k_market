@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="ko" style=""><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>K-market - 나의리뷰</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#c8e8f2",
+                        "surface-container-low": "#f3f4f5",
+                        "primary": "#14333b",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#edeeef",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "inverse-primary": "#acccd5",
+                        "surface-dim": "#d9dadb",
+                        "outline": "#72787a",
+                        "primary-container": "#2c4a52",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "on-tertiary-fixed": "#2d1605",
+                        "tertiary-fixed": "#ffdcc7",
+                        "secondary": "#3e6659",
+                        "outline-variant": "#c1c7ca",
+                        "secondary-fixed": "#c0ecdc",
+                        "surface-variant": "#e1e3e4",
+                        "on-surface": "#191c1d",
+                        "on-error": "#ffffff",
+                        "tertiary": "#452916",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "background": "#f8f9fa",
+                        "surface": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-bright": "#f8f9fa",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-secondary-container": "#446c5f",
+                        "tertiary-container": "#5e3f2a",
+                        "on-background": "#191c1d",
+                        "primary-fixed-dim": "#acccd5",
+                        "on-surface-variant": "#41484a",
+                        "on-primary-container": "#99b9c2",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#001f26",
+                        "inverse-surface": "#2e3132",
+                        "surface-tint": "#45636b",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#002018",
+                        "secondary-container": "#c0ecdc",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-max": "1280px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "gutter": "24px",
+                        "xl": "80px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "body-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- [상단 헤더] TopNavBar 시작 -->
+<div th:replace="~{layout/site :: header}"></div>
+<!-- [상단 헤더] TopNavBar 종료 -->
+<main class="max-w-container-max mx-auto flex min-h-screen">
+    <!-- [사이드바] SideNavBar 시작 -->
+    <div th:replace="~{my/_shared :: sidebar('review')}"></div>
+    <!-- [사이드바] SideNavBar 종료 -->
+    <!-- [메인 콘텐츠] Content Area 시작 -->
+    <section class="flex-1 p-xl">
+        <div th:replace="~{my/_shared :: banner}"></div>
+        <!-- 제목 섹션 -->
+        <div class="flex items-center space-x-sm mb-md border-b border-outline-variant pb-sm">
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stars</span>
+            <h1 class="font-headline-lg text-headline-lg text-primary" th:text="${isSeller} ? '리뷰관리' : '나의리뷰'">나의리뷰</h1>
+        </div>
+        <!-- 리뷰 리스트 테이블 -->
+        <div class="flex items-start gap-sm">
+        <div class="flex-1 min-w-0 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+            <table class="w-full table-fixed text-left border-collapse">
+                <colgroup>
+                    <col class="w-[9%]">
+                    <col class="w-[26%]">
+                    <col class="w-[31%]">
+                    <col class="w-[14%]">
+                    <col class="w-[20%]">
+                </colgroup>
+                <thead class="bg-surface-container text-on-surface-variant">
+                <tr class="h-[66px]">
+                    <th class="py-md px-md font-label-md text-center whitespace-nowrap">번호</th>
+                    <th class="py-md px-md font-label-md whitespace-nowrap">상품명</th>
+                    <th class="py-md px-md font-label-md whitespace-nowrap">내용</th>
+                    <th class="py-md px-md font-label-md text-center whitespace-nowrap">평점</th>
+                    <th class="py-md px-md font-label-md text-center whitespace-nowrap">작성일</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                <tr th:if="${myReviewMessage}">
+                    <td colspan="5" class="py-sm px-md text-center text-secondary" th:text="${myReviewMessage}"></td>
+                </tr>
+                <tr th:if="${reviewBlock == null or reviewBlock.page.empty}">
+                    <td colspan="5" class="py-lg px-md text-center text-on-surface-variant">작성한 리뷰가 없습니다.</td>
+                </tr>
+                <tr class="h-[74px] hover:bg-surface-bright transition-colors" th:each="review, stat : ${reviewBlock.page.content}">
+                    <td class="py-md px-md text-center text-on-surface-variant font-label-sm" th:text="${(reviewBlock.currentPage - 1) * reviewBlock.page.size + stat.count}">1</td>
+                    <td class="py-md px-md min-w-0">
+                        <a class="block truncate text-primary hover:underline font-medium whitespace-nowrap"
+                           th:href="@{/product/view(prodNo=${review.productNo})}"
+                           th:title="${review.productNo + ' / ' + review.productName}"
+                           th:text="${review.productNo + ' / ' + review.productName}">상품번호 / 상품명 01</a>
+                    </td>
+                    <td class="py-md px-md min-w-0">
+                        <span class="block truncate text-on-surface-variant whitespace-nowrap"
+                              th:title="${review.content}"
+                              th:text="${review.content}">배송이 빠릅니다.</span>
+                    </td>
+                    <td class="py-md px-md text-center">
+                        <div class="flex justify-center">
+                            <div th:replace="~{fragments/rating :: reviewRating(${review.rating})}"></div>
+                        </div>
+                    </td>
+                    <td class="py-md px-md text-center text-on-surface-variant font-label-sm whitespace-nowrap" th:text="${review.createdAt != null ? #temporals.format(review.createdAt, 'yyyy-MM-dd') : '-'}">2022-12-10</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="w-16 shrink-0" th:if="${!isSeller and reviewBlock != null and !reviewBlock.page.empty}">
+            <div class="h-[66px]"></div>
+            <div class="h-[74px] flex items-center justify-center"
+                 th:each="review : ${reviewBlock.page.content}">
+                <form th:action="@{/my/review/delete}" method="post">
+                    <input type="hidden" name="reviewNo" th:value="${review.reviewNo}">
+                    <button type="submit" class="h-9 w-16 rounded-lg bg-error text-on-error font-label-md text-label-md hover:bg-on-error-container active:scale-95 transition-all shadow-sm whitespace-nowrap">삭제</button>
+                </form>
+            </div>
+        </div>
+        </div>
+        <!-- 하단 페이지네이션 -->
+        <nav class="mt-lg flex justify-center items-center space-x-base" th:if="${reviewBlock != null}">
+            <a class="flex items-center px-3 py-1 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors group"
+               th:classappend="${reviewBlock.currentPage <= 1} ? ' pointer-events-none opacity-50'"
+               th:href="@{/my/review(pg=${reviewBlock.currentPage - 1})}">
+                <span class="material-symbols-outlined text-sm mr-1 group-hover:-translate-x-1 transition-transform">chevron_left</span>
+                <span class="font-label-md">이전</span>
+            </a>
+            <div class="flex items-center space-x-1">
+                <a th:each="pageNo : ${#numbers.sequence(reviewBlock.startPage, reviewBlock.endPage)}"
+                   th:href="@{/my/review(pg=${pageNo})}"
+                   th:text="${pageNo}"
+                   th:class="${pageNo == reviewBlock.currentPage ? 'w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold shadow-md' : 'w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors'}">1</a>
+            </div>
+            <a class="flex items-center px-3 py-1 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors group"
+               th:classappend="${reviewBlock.currentPage >= reviewBlock.page.totalPages} ? ' pointer-events-none opacity-50'"
+               th:href="@{/my/review(pg=${reviewBlock.currentPage + 1})}">
+                <span class="font-label-md">다음</span>
+                <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </a>
+        </nav>
+    </section>
+    <!-- [메인 콘텐츠] Content Area 종료 -->
+</main>
+<!-- [푸터] Footer 시작 -->
+<div th:replace="~{layout/site :: footer}"></div>
+<!-- [푸터] Footer 종료 -->
+<script>
+    // 간단한 행 호버 효과 및 클릭 상호작용
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('click', () => {
+            row.classList.add('scale-[0.99]');
+            setTimeout(() => row.classList.remove('scale-[0.99]'), 150);
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>
+

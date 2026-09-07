@@ -1,0 +1,906 @@
+<!DOCTYPE html><html lang="ko" style=""><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>K-market 마이페이지</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e1e3e4",
+                        "surface-container": "#edeeef",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#ffdcc7",
+                        "surface-bright": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9fa",
+                        "tertiary-container": "#5e3f2a",
+                        "surface-container-highest": "#e1e3e4",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "on-background": "#191c1d",
+                        "secondary-fixed": "#c0ecdc",
+                        "on-surface-variant": "#41484a",
+                        "primary-fixed-dim": "#acccd5",
+                        "secondary-container": "#c0ecdc",
+                        "inverse-surface": "#2e3132",
+                        "inverse-primary": "#acccd5",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-primary-container": "#99b9c2",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#45636b",
+                        "tertiary": "#452916",
+                        "on-secondary-container": "#446c5f",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "surface-dim": "#d9dadb",
+                        "primary-container": "#2c4a52",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "outline-variant": "#c1c7ca",
+                        "on-surface": "#191c1d",
+                        "on-primary-fixed": "#001f26",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#002018",
+                        "outline": "#72787a",
+                        "secondary": "#3e6659",
+                        "background": "#f8f9fa",
+                        "surface-container-high": "#e7e8e9",
+                        "on-primary": "#ffffff",
+                        "primary": "#14333b",
+                        "surface-container-low": "#f3f4f5",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "primary-fixed": "#c8e8f2",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "container-max": "1280px",
+                        "md": "24px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "xl": "80px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-md": [
+                            "Be Vietnam Pro"
+                        ],
+                        "headline-md": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "body-md": [
+                            "Be Vietnam Pro"
+                        ],
+                        "label-sm": [
+                            "Be Vietnam Pro"
+                        ],
+                        "display-lg": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "body-lg": [
+                            "Be Vietnam Pro"
+                        ],
+                        "headline-lg-mobile": [
+                            "Plus Jakarta Sans"
+                        ],
+                        "headline-lg": [
+                            "Plus Jakarta Sans"
+                        ]
+                    },
+                    "fontSize": {
+                        "label-md": [
+                            "14px",
+                            {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "headline-md": [
+                            "20px",
+                            {
+                                "lineHeight": "1.4",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-md": [
+                            "16px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "label-sm": [
+                            "12px",
+                            {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "display-lg": [
+                            "48px",
+                            {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "headline-lg-mobile": [
+                            "24px",
+                            {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "headline-lg": [
+                            "32px",
+                            {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .mypage-recent-order-table { table-layout: fixed; min-width: 780px; }
+        .mypage-recent-order-table th:nth-child(1), .mypage-recent-order-table td:nth-child(1) { width: 15%; white-space: nowrap; }
+        .mypage-recent-order-table th:nth-child(2), .mypage-recent-order-table td:nth-child(2) { width: 53%; }
+        .mypage-recent-order-table th:nth-child(3), .mypage-recent-order-table td:nth-child(3) { width: 14%; text-align: center; }
+        .mypage-recent-order-table th:nth-child(4), .mypage-recent-order-table td:nth-child(4) { width: 18%; }
+        .mypage-recent-order-table td:nth-child(3) span,
+        .mypage-recent-order-table td:nth-child(4) button,
+        .mypage-recent-order-table td:nth-child(4) a { display: inline-flex; white-space: nowrap; }
+
+        .mypage-recent-point-table { table-layout: fixed; min-width: 820px; }
+        .mypage-recent-point-table th,
+        .mypage-recent-point-table td { font-size: 14px; }
+        .mypage-recent-point-table th:nth-child(1), .mypage-recent-point-table td:nth-child(1) { width: 14%; white-space: nowrap; }
+        .mypage-recent-point-table th:nth-child(2), .mypage-recent-point-table td:nth-child(2) { width: 10%; white-space: nowrap; }
+        .mypage-recent-point-table th:nth-child(3), .mypage-recent-point-table td:nth-child(3) { width: 14%; white-space: nowrap; }
+        .mypage-recent-point-table th:nth-child(4), .mypage-recent-point-table td:nth-child(4) { width: 14%; white-space: nowrap; }
+        .mypage-recent-point-table th:nth-child(5), .mypage-recent-point-table td:nth-child(5) { width: 34%; word-break: keep-all; line-height: 1.5; }
+        .mypage-recent-point-table th:nth-child(6), .mypage-recent-point-table td:nth-child(6) { width: 14%; white-space: nowrap; }
+        .mypage-qna-table { table-layout: fixed; min-width: 820px; }
+        .mypage-qna-table th:nth-child(1), .mypage-qna-table td:nth-child(1) { width: 8%; white-space: nowrap; }
+        .mypage-qna-table th:nth-child(2), .mypage-qna-table td:nth-child(2) { width: 15%; word-break: keep-all; }
+        .mypage-qna-table th:nth-child(3), .mypage-qna-table td:nth-child(3) { width: 15%; word-break: keep-all; }
+        .mypage-qna-table th:nth-child(4), .mypage-qna-table td:nth-child(4) { width: 34%; }
+        .mypage-qna-table th:nth-child(5), .mypage-qna-table td:nth-child(5) { width: 16%; white-space: nowrap; }
+        .mypage-qna-table th:nth-child(6), .mypage-qna-table td:nth-child(6) { width: 12%; white-space: nowrap; }
+        .mypage-qna-table td:nth-child(6) span { display: inline-flex; white-space: nowrap; }
+        .mypage-action-stack {
+            width: 100%;
+            max-width: 120px;
+            margin-inline: auto;
+            gap: 8px;
+        }
+        .mypage-action-stack form { width: 100%; }
+        .mypage-action-stack button,
+        .mypage-action-stack > a {
+            display: flex;
+            min-height: 36px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px !important;
+            padding: 7px 12px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            line-height: 1.2;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(20, 51, 59, 0.08);
+            transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+        }
+        .mypage-action-stack button:hover,
+        .mypage-action-stack > a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(20, 51, 59, 0.14);
+        }
+        .mypage-action-stack button:active,
+        .mypage-action-stack > a:active { transform: translateY(0) scale(0.98); }
+        .mypage-action-stack form[action$="/confirm"] button {
+            border: 1px solid #14333b !important;
+            background: #14333b !important;
+            color: #fff !important;
+        }
+        .mypage-action-stack > a[href*="/product/view"] {
+            border: 1px solid #acccd5 !important;
+            background: #edf7fa !important;
+            color: #14333b !important;
+        }
+        .mypage-action-stack form[action$="/claim/cancel"] button {
+            border: 1px solid #ef9a9a !important;
+            background: #fff1f0 !important;
+            color: #a3131d !important;
+        }
+        .mypage-action-stack .open-claim-btn {
+            border: 1px solid #c1c7ca !important;
+            background: #fff !important;
+            color: #41484a !important;
+        }
+        .mypage-action-stack .open-claim-btn:hover { background: #f3f4f5 !important; }
+    </style>
+</head>
+<body class="font-body-md text-on-surface bg-background min-h-screen">
+<!-- 상단 네비게이션 바 -->
+<div th:replace="~{layout/site :: header}"></div>
+<main class="max-w-container-max mx-auto flex px-xl py-lg gap-gutter">
+    <!-- 사이드 네비게이션 -->
+    <div th:replace="~{my/_shared :: sidebar('')}"></div>
+    <!-- 메인 콘텐츠 영역 -->
+    <section class="flex-1 space-y-md">
+        <div th:if="${param.dormantReleased}" class="bg-secondary-container border border-secondary-fixed-dim text-on-secondary-container rounded-lg px-md py-sm flex items-center gap-sm">
+            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+            <p class="font-label-md text-label-md">휴면 계정이 해제되었습니다. 다시 정상적으로 서비스를 이용할 수 있습니다.</p>
+        </div>
+        <!-- 사용자 정보 영역 -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-md flex flex-col md:flex-row md:items-center md:justify-between gap-md">
+            <div class="space-y-xs">
+                <p class="font-label-sm text-label-sm text-on-surface-variant">내 계정</p>
+                <h3 class="font-headline-md text-headline-md text-primary" th:text="${loginUserId} != '' ? |${loginUserId}님| : '로그인이 필요합니다'">사용자님</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                    권한
+                    <span class="font-bold text-primary" th:text="${loginUserRole}">USER</span>
+                </p>
+            </div>
+            <div class="flex flex-wrap justify-end items-center gap-base">
+                <a th:if="${isAdmin}" th:href="@{/admin/index}" href="/admin/index" class="inline-flex items-center gap-xs px-md py-2 rounded-lg border border-error bg-error-container/70 text-error font-bold hover:bg-error-container transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                    관리자
+                </a>
+                <a th:if="${isSeller and sellerShopStatus != null and #strings.equalsIgnoreCase(sellerShopStatus, 'ACTIVE')}" th:href="@{/admin/product/list}" href="/admin/product/list" class="inline-flex items-center gap-xs px-md py-2 rounded-lg border border-primary bg-primary-container/70 text-primary font-bold hover:bg-primary-container transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">storefront</span>
+                    판매자 관리
+                </a>
+                <a th:href="@{/cs/index}" href="/cs/index" class="inline-flex items-center gap-xs px-md py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">support_agent</span>
+                    고객센터
+                </a>
+            </div>
+        </div>
+        <!-- 사용자 요약 요약바 -->
+        <div th:if="${isSeller}" class="space-y-lg">
+            <div th:if="${sellerShopStatus == null or #strings.equalsIgnoreCase(sellerShopStatus, 'PENDING')}" class="rounded-xl border border-secondary bg-secondary-container p-xl text-center text-on-secondary-container">
+                <span class="material-symbols-outlined text-5xl mb-sm">schedule</span>
+                <h3 class="text-headline-lg font-bold">운영 준비중입니다</h3>
+                <p class="mt-sm">상점 승인 후 운영현황과 매출 통계를 확인할 수 있습니다.</p>
+            </div>
+            <div th:if="${sellerShopStatus != null and !#strings.equalsIgnoreCase(sellerShopStatus, 'ACTIVE') and !#strings.equalsIgnoreCase(sellerShopStatus, 'PENDING')}" class="rounded-xl border border-error bg-error-container p-xl text-center text-error">
+                <span class="material-symbols-outlined text-5xl mb-sm">block</span>
+                <h3 class="text-headline-lg font-bold">운영 중지되었습니다</h3>
+                <p class="mt-sm">운영 재개가 필요한 경우 관리자에게 문의해주세요.</p>
+            </div>
+            <div th:if="${sellerDashboard != null}">
+                <section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md shadow-sm">
+                    <h3 class="font-headline-md text-headline-md text-on-background mb-md border-b border-outline-variant pb-sm">운영현황 (주문상세 기준)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-sm text-center">
+                        <div class="bg-surface p-sm rounded border border-outline-variant"><p class="text-label-sm text-on-surface-variant">입금대기</p><strong class="text-headline-md text-primary" th:text="${sellerDashboard.pendingDeposit}">0</strong></div>
+                        <div class="bg-surface p-sm rounded border border-outline-variant"><p class="text-label-sm text-on-surface-variant">배송준비</p><strong class="text-headline-md text-primary" th:text="${sellerDashboard.preparingDelivery}">0</strong></div>
+                        <div class="bg-surface p-sm rounded border border-outline-variant"><p class="text-label-sm text-on-surface-variant">취소요청</p><strong class="text-headline-md text-error" th:text="${sellerDashboard.cancelRequest}">0</strong></div>
+                        <div class="bg-surface p-sm rounded border border-outline-variant"><p class="text-label-sm text-on-surface-variant">교환요청</p><strong class="text-headline-md text-secondary" th:text="${sellerDashboard.exchangeRequest}">0</strong></div>
+                        <div class="bg-surface p-sm rounded border border-outline-variant"><p class="text-label-sm text-on-surface-variant">반품요청</p><strong class="text-headline-md text-tertiary" th:text="${sellerDashboard.returnRequest}">0</strong></div>
+                    </div>
+                </section>
+            </div>
+            <section th:if="${sellerDashboard != null}" class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md shadow-sm">
+                <h3 class="font-headline-md text-headline-md text-on-background mb-md border-b border-outline-variant pb-sm">집계 및 매출 현황 (최근 5일)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-lg min-h-64">
+                    <div class="border border-outline-variant rounded-lg p-sm bg-surface">
+                        <p class="font-label-md text-on-surface-variant mb-sm">최근 5일 주문 · 결제 · 취소 집계</p>
+                        <table class="w-full text-center text-label-sm"><thead><tr class="border-b border-outline-variant bg-surface-container-low"><th class="py-2">날짜</th><th>주문(건)</th><th>결제(건)</th><th>취소(건)</th></tr></thead>
+                            <tbody><tr th:each="daily : ${sellerDashboard.dailySummaryList}" class="border-b border-outline-variant/50"><td class="py-2" th:text="${daily.date}">07-14</td><td th:text="${daily.orderCount}">0</td><td th:text="${daily.payCount}">0</td><td th:text="${daily.cancelCount}">0</td></tr></tbody>
+                        </table>
+                    </div>
+                    <div class="border border-outline-variant rounded-lg p-sm bg-surface">
+                        <p class="font-label-md text-on-surface-variant mb-sm">5일간 주요 카테고리 매출</p>
+                        <div th:if="${#lists.isEmpty(sellerDashboard.topSalesList)}" class="py-16 text-center text-outline">매출 집계 데이터가 없습니다.</div>
+                        <div th:each="sales : ${sellerDashboard.topSalesList}" class="mb-md">
+                            <div class="flex justify-between text-label-sm"><strong th:text="${sales.categoryName}">카테고리</strong><span><span th:text="${#numbers.formatInteger(sales.totalSales, 0, 'COMMA')}">0</span>원 (<span th:text="${sales.percentage}">0</span>%)</span></div>
+                            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden mt-1"><div class="h-full bg-primary" th:style="'width:' + ${sales.percentage} + '%' "></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div th:unless="${isSeller}" class="contents">
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-md flex justify-around items-center divide-x divide-outline-variant">
+            <div class="flex-1 text-center">
+                <p class="font-label-md text-label-md text-on-surface-variant">주문</p>
+                <p class="font-headline-lg text-headline-lg text-primary" th:text="${dashboard != null ? #numbers.formatInteger(dashboard.summary.orderCount, 1, 'COMMA') : '0'}">0</p>
+            </div>
+            <div class="flex-1 text-center">
+                <p class="font-label-md text-label-md text-on-surface-variant">사용가능 쿠폰</p>
+                <p class="font-headline-lg text-headline-lg text-primary" th:text="${dashboard != null ? #numbers.formatInteger(dashboard.summary.couponCount, 1, 'COMMA') : '0'}">0</p>
+            </div>
+            <div class="flex-1 text-center">
+                <p class="font-label-md text-label-md text-on-surface-variant">포인트</p>
+                <p class="font-headline-lg text-headline-lg text-primary" th:text="${dashboard != null ? #numbers.formatInteger(dashboard.summary.points, 1, 'COMMA') : '0'}">0</p>
+            </div>
+            <div class="flex-1 text-center">
+                <p class="font-label-md text-label-md text-on-surface-variant">문의</p>
+                <p class="font-headline-lg text-headline-lg text-primary" th:text="${dashboard != null ? #numbers.formatInteger(dashboard.summary.qnaCount, 1, 'COMMA') : '0'}">0</p>
+            </div>
+        </div>
+        <div th:replace="~{my/_shared :: banner}"></div>
+        <!-- 최근 주문 내역 -->
+        <div class="space-y-sm">
+            <div class="flex justify-between items-end border-b-2 border-primary pb-2">
+                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                    최근주문내역
+                </h3>
+                <a class="font-label-sm text-label-sm text-on-surface-variant hover:underline flex items-center" th:href="@{/my/order}" href="/my/order">더보기 <span class="material-symbols-outlined text-[16px]">chevron_right</span></a>
+            </div>
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-x-auto">
+                <table class="mypage-recent-order-table w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">날짜</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">주문정보</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">상태</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant text-center">확인 / 신청</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant">
+                    <tr th:if="${dashboard == null or #lists.isEmpty(dashboard.recentOrders)}">
+                        <td colspan="4" class="px-md py-lg text-center text-on-surface-variant">최근 주문 내역이 없습니다.</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-lowest transition-colors" th:each="order : ${dashboard?.recentOrders}">
+                        <td class="px-md py-md font-body-md text-body-md whitespace-nowrap" th:text="${order.orderedAt != null ? #temporals.format(order.orderedAt, 'yyyy-MM-dd') : '-'}">2022-12-13</td>
+                        <td class="px-md py-md">
+                            <div class="flex gap-md">
+                                <div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden border border-outline-variant bg-surface-container">
+                                    <img class="w-full h-full object-cover"
+                                         th:if="${order.thumb != null and !#strings.isEmpty(order.thumb)}"
+                                         th:src="${#strings.startsWith(order.thumb, 'http://') or #strings.startsWith(order.thumb, 'https://') ? order.thumb : '/uploads/' + order.thumb}"
+                                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv3LTdlkAUaDFlm71RMWQb5PXwUE6rtixNXpnN_91ONw_tDp728OL0pC_DgBzwrx6xnb2-ZyTZuSs8BegkEuYim_PPukURQOo82ATYK9VnZ5lxf-1lsOPhjREEJ_fDwRO_ZAm7U3Cq78LAvqN4Rq3aWzyGDIoJwE8En9MAVeCuzVgksMmW_YQYR4IEOXb3Fo7barotMDFZTDV0nPvhmgdl4T_VM0t6FbN9b63hZbJDCaJzXRlMzirUuDURmfmjw1835LyoozcEy3ML">
+                                    <div th:if="${order.thumb == null or #strings.isEmpty(order.thumb)}" class="w-full h-full flex items-center justify-center text-outline">
+                                        <span class="material-symbols-outlined">image</span>
+                                    </div>
+                                </div>
+                                <div class="space-y-xs">
+                                    <button type="button" class="open-order-btn font-label-sm text-label-sm text-primary font-bold hover:underline"
+                                            th:data-modal-id="|order-detail-${order.orderNo}|">주문번호 : <span th:text="${order.orderNo}">1012211341</span></button>
+                                    <p class="font-headline-md text-headline-md text-primary" th:text="${order.orderName}">주문 상품명</p>
+                                    <p class="font-body-md text-body-md">상품 <span th:text="${order.itemCount}">1</span>종 · 총 수량 <span th:text="${order.totalQuantity}">1</span>개</p>
+                                    <p class="font-headline-md text-headline-md text-primary font-bold" th:text="${#numbers.formatInteger(order.totalPaymentPrice, 1, 'COMMA') + '원'}">34,000원</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-md py-md">
+                            <span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm whitespace-nowrap" th:text="${order.status}">배송완료</span>
+                        </td>
+                        <td class="px-md py-md">
+                            <div class="mypage-action-stack flex flex-col gap-2 w-32 mx-auto">
+                                <button type="button" class="open-order-btn w-full bg-primary text-on-primary font-label-md text-label-md py-2 rounded-lg hover:opacity-90 transition-opacity"
+                                        th:data-modal-id="|order-detail-${order.orderNo}|">주문상세</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 판매자 정보 섹션 -->
+        <!-- 포인트 적립 내역 섹션 -->
+        <div class="pt-lg">
+            <div class="flex justify-between items-end border-b-2 border-primary pb-2 mb-sm">
+                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">포인트적립내역</h3>
+                <a class="font-label-sm text-label-sm text-on-surface-variant hover:underline flex items-center" th:href="@{/my/point}" href="/my/point">더보기 <span class="material-symbols-outlined text-[16px]">chevron_right</span></a>
+            </div>
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-x-auto">
+                <table class="mypage-recent-point-table w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">날짜</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">구분</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">주문번호</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">적립금액</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">비고</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">유효기간</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant">
+                    <tr th:if="${dashboard == null or #lists.isEmpty(dashboard.recentPoints)}">
+                        <td colspan="6" class="px-md py-lg text-center text-on-surface-variant">최근 포인트 내역이 없습니다.</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-lowest transition-colors" th:each="point : ${dashboard?.recentPoints}">
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${point.createdAt != null ? #temporals.format(point.createdAt, 'yyyy-MM-dd') : '-'}">2022-12-13</td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${point.type}">적립</td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${point.pointNo}">2022121001</td>
+                        <td class="px-md py-md font-body-md text-body-md font-bold"
+                            th:classappend="${point.amount >= 0} ? ' text-primary' : ' text-error'"
+                            th:text="${point.amount >= 0 ? '+' + #numbers.formatInteger(point.amount, 1, 'COMMA') : #numbers.formatInteger(point.amount, 1, 'COMMA')}">340</td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${point.description}">상품 구매확정</td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${point.expiredAt != null ? #temporals.format(point.expiredAt, 'yyyy-MM-dd') : '-'}">2024-12-10</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 나의 문의 내역 시작 -->
+        <div class="pt-lg space-y-sm">
+            <div class="flex justify-between items-end border-b-2 border-primary pb-2 mb-sm">
+                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">나의 문의 내역</h3>
+                <a class="font-label-sm text-label-sm text-on-surface-variant hover:underline flex items-center" th:href="@{/my/myqna}" href="/my/myqna">더보기 <span class="material-symbols-outlined text-[16px]">chevron_right</span></a>
+            </div>
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-x-auto">
+                <table class="mypage-qna-table w-full text-left border-collapse">
+                    <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">번호</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">문의채널</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">문의유형</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">제목</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">작성일</th>
+                        <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant">상태</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant">
+                    <tr th:if="${dashboard == null or #lists.isEmpty(dashboard.recentQnas)}">
+                        <td colspan="6" class="px-md py-lg text-center text-on-surface-variant">최근 문의 내역이 없습니다.</td>
+                    </tr>
+                    <tr class="hover:bg-surface-container-lowest transition-colors" th:each="qna, stat : ${dashboard?.recentQnas}">
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${stat.count}">1</td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${qna.channel}">고객센터</td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${qna.type}">주문/결제</td>
+                        <td class="px-md py-md font-body-md text-body-md whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                            <a class="hover:text-primary hover:underline"
+                               th:href="@{/cs/qna/view/{no}(no=${qna.no})}"
+                               th:text="${qna.title}">신용카드 결제 중 오류가 난 경우 어떻게 하나요?</a>
+                        </td>
+                        <td class="px-md py-md font-body-md text-body-md" th:text="${qna.createdAt != null ? #temporals.format(qna.createdAt, 'yyyy-MM-dd') : '-'}">2022-12-12</td>
+                        <td class="px-md py-md">
+                            <span th:class="${qna.statusLabel == '답변완료' ? 'bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm' : 'bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full font-label-sm text-label-sm'}"
+                                  th:text="${qna.statusLabel}">검토중</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 나의 설정 -->
+        <div class="pt-lg space-y-sm">
+            <div class="flex justify-between items-end border-b-2 border-primary pb-2">
+                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">나의설정</h3>
+            </div>
+            <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-md grid grid-cols-1 md:grid-cols-3 gap-md divide-y md:divide-y-0 md:divide-x divide-outline-variant">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">기본배송지설정</p>
+                        <a class="text-primary font-label-sm text-label-sm hover:underline" th:href="@{/my/myinfo}" href="/my/myinfo">변경</a>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant"
+                       th:text="${mySettingAddress != null ? mySettingAddress : '등록된 배송지가 없습니다.'}">등록된 배송지가 없습니다.</p>
+                </div>
+                <div class="space-y-2 md:pl-md pt-md md:pt-0">
+                    <div class="flex justify-between items-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">Email 설정</p>
+                        <a class="text-primary font-label-sm text-label-sm hover:underline" th:href="@{/my/myinfo}" href="/my/myinfo">변경</a>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant"
+                       th:text="${mySettingEmail != null ? mySettingEmail : '등록된 이메일이 없습니다.'}">등록된 이메일이 없습니다.</p>
+                    <p class="text-label-sm text-outline" th:if="${mySettingRegisteredAt != null}"
+                       th:text="|회원정보 등록일 ${#temporals.format(mySettingRegisteredAt, 'yyyy-MM-dd')}|">회원정보 등록일</p>
+                </div>
+                <div class="space-y-2 md:pl-md pt-md md:pt-0">
+                    <div class="flex justify-between items-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">휴대폰 설정</p>
+                        <a class="text-primary font-label-sm text-label-sm hover:underline" th:href="@{/my/myinfo}" href="/my/myinfo">변경</a>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant"
+                       th:text="${mySettingPhone != null ? mySettingPhone : '등록된 휴대폰 번호가 없습니다.'}">등록된 휴대폰 번호가 없습니다.</p>
+                    <p class="text-label-sm text-outline" th:if="${mySettingRegisteredAt != null}"
+                       th:text="|회원정보 등록일 ${#temporals.format(mySettingRegisteredAt, 'yyyy-MM-dd')}|">회원정보 등록일</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+</main>
+<!-- 푸터 -->
+<div th:replace="~{layout/site :: footer}"></div>
+<div th:replace="~{my/_shared :: claimModal}"></div>
+<div th:replace="~{my/_shared :: orderDetailModals(${dashboard != null ? dashboard.recentOrders : null})}"></div>
+<!-- 주문상세정보 모달 (Order Detail Popup) -->
+<div class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 custom-modal" id="order-detail-modal">
+    <!-- 배경 오버레이 -->
+    <div class="absolute inset-0 bg-on-surface/50 modal-overlay cursor-pointer close-modal-trigger"></div>
+    <!-- 모달 콘텐츠 -->
+    <div class="relative w-full max-w-4xl bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-content scale-95 opacity-0">
+        <!-- 모달 헤더 -->
+        <div class="px-md py-4 border-b border-outline-variant flex justify-between items-center bg-white sticky top-0 z-10">
+            <h3 class="font-headline-md text-headline-md text-primary">주문상세정보</h3>
+            <button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-on-surface-variant close-modal-trigger">
+                <span class="material-symbols-outlined pointer-events-none">close</span>
+            </button>
+        </div>
+        <!-- 모달 바디 (스크롤 가능) -->
+        <div class="p-md space-y-lg overflow-y-auto">
+            <!-- 주문정보 -->
+            <div class="space-y-md">
+                <div class="flex items-center">
+                    <span class="w-1.5 h-6 bg-primary rounded-full mr-3"></span>
+                    <h4 class="font-headline-md text-headline-md text-on-surface">주문정보</h4>
+                </div>
+                <div class="border border-outline-variant rounded-xl overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-surface-container-low">
+                        <tr>
+                            <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant w-1/4">날짜</th>
+                            <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant w-2/4">상품정보</th>
+                            <th class="px-md py-3 font-label-md text-label-md text-on-surface-variant w-1/4">상태</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="border-b border-outline-variant">
+                            <td class="px-md py-md font-body-md text-body-md text-on-surface-variant">2024-01-01</td>
+                            <td class="px-md py-md">
+                                <div class="flex gap-4">
+                                    <img class="w-24 h-24 object-cover rounded-lg bg-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIX3xfVnd5pvLmEK1wuBazCm_hwN4LstT3SnK5jzyTb21cPFemO4MtRqayxVgJy4oMtjoQCphNOXNNfEw4RUOFGL8a2VUW4E_RHFqCoCgZECcv-SXn0B_bPQ1pXiyfDJquCSCO1uaUkh4vQ6SN3cYun0CbQHwjNXsrVVMAlQHcA-YnRtSdZMcjpct4RL8h8zuMV-YH3tNySmUJ9OEyOYwoSdmwOOMinbohXql7wwSW9pqVsu5Hzv-cggYAkpCzNnSrjvYjV5W6_DcC">
+                                    <div class="space-y-1">
+                                        <div class="font-label-sm text-label-sm text-primary">주문번호 : 1012211341</div>
+                                        <div class="font-body-md text-body-md font-semibold text-on-surface">(주) 상호명</div>
+                                        <div class="font-body-md text-body-md text-on-surface-variant">상품명 A 디자인 리빙 오브제</div>
+                                        <div class="flex items-baseline space-x-2">
+                                            <span class="font-body-md text-body-md text-on-surface-variant">수량 : 1개</span>
+                                            <span class="font-headline-md text-headline-md text-primary">34,000원</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-md py-md">
+<span class="inline-flex items-center px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-label-md">
+                                    배송완료
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="p-md bg-surface-container-low/50 flex justify-end items-center gap-xl">
+                        <div class="text-right">
+                            <p class="font-label-sm text-label-sm text-on-surface-variant">판매가: 34,000원</p>
+                            <p class="font-label-sm text-label-sm text-error">할인: -3,000원</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-label-sm text-label-sm text-on-surface-variant">최종 결제금액</p>
+                            <p class="font-headline-lg text-headline-lg text-primary">31,000원</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 배송정보 -->
+            <div class="space-y-md">
+                <div class="flex items-center">
+                    <span class="w-1.5 h-6 bg-primary rounded-full mr-3"></span>
+                    <h4 class="font-headline-md text-headline-md text-on-surface">배송정보</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant border border-outline-variant rounded-xl overflow-hidden">
+                    <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">받는사람</div>
+                    <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">홍길동</div>
+                    <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">연락처</div>
+                    <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">010-1234-1001</div>
+                    <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">배송주소</div>
+                    <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface leading-relaxed">[210**] 부산광역시 부산진구 대연동 121 10층 1004호</div>
+                    <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">배송요청사항</div>
+                    <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface-variant italic">없음</div>
+                </div>
+            </div>
+        </div>
+        <!-- 모달 푸터: Return to List Button -->
+        <div class="p-md bg-white border-t border-outline-variant flex justify-center sticky bottom-0 z-10">
+            <button class="px-xl py-md bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all close-modal-trigger">목록으로 이동하기</button>
+        </div>
+    </div>
+</div>
+<!-- 문의하기 모달 (Inquiry Popup) -->
+<div class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4 custom-modal" id="inquiry-modal">
+    <!-- 배경 오버레이 -->
+    <div class="absolute inset-0 bg-on-surface/50 modal-overlay cursor-pointer close-modal-trigger"></div>
+    <!-- 모달 콘텐츠 -->
+    <div class="relative w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-content scale-95 opacity-0">
+        <!-- 모달 헤더 -->
+        <div class="px-md py-4 border-b border-outline-variant flex justify-between items-center bg-white sticky top-0 z-10">
+            <h3 class="font-headline-md text-headline-md text-primary">문의하기</h3>
+            <button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-on-surface-variant close-modal-trigger">
+                <span class="material-symbols-outlined pointer-events-none">close</span>
+            </button>
+        </div>
+        <!-- 모달 바디 -->
+        <div class="p-md space-y-md overflow-y-auto">
+            <!-- 문의 종류 선택 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">문의 종류</label>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input checked="" class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">상품</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">배송</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">반품/취소</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">교환</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">기타</span>
+                    </label>
+                </div>
+            </div>
+            <!-- 이메일 입력 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">이메일</label>
+                <input class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="example@email.com" type="email">
+            </div>
+            <!-- 제목 입력 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">제목</label>
+                <input class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="문의 제목을 입력해주세요" type="text">
+            </div>
+            <!-- 내용 입력 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">내용</label>
+                <textarea class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none" placeholder="문의하실 내용을 상세히 입력해주세요" rows="6"></textarea>
+            </div>
+        </div>
+        <!-- 모달 푸터 -->
+        <div class="p-md bg-white border-t border-outline-variant flex justify-center gap-3 sticky bottom-0 z-10">
+            <button class="flex-1 py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all">등록하기</button>
+            <button class="flex-1 py-3 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all close-modal-trigger">취소</button>
+        </div>
+    </div>
+</div>
+<script>
+    // 인터랙션 효과
+    document.querySelectorAll('button, a').forEach(el => {
+        el.addEventListener('mousedown', () => el.classList.add('opacity-80'));
+        el.addEventListener('mouseup', () => el.classList.remove('opacity-80'));
+    });
+
+    // 모달 표시 함수
+    function showModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        const modalContent = modal.querySelector('.modal-content');
+
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // 스크롤 방지
+
+        // 애니메이션을 위해 약간의 지연 후 클래스 추가
+        setTimeout(() => {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    // 모달 숨김 함수
+    function hideModal(modal) {
+        if (!modal) return;
+        const modalContent = modal.querySelector('.modal-content');
+
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+
+        // 애니메이션 완료 후 숨김
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            // 열려있는 다른 모달이 없다면 바디 스크롤 복원
+            const anyOpenModal = document.querySelector('.custom-modal:not(.hidden)');
+            if (!anyOpenModal) {
+                document.body.style.overflow = '';
+            }
+        }, 300);
+    }
+
+    document.addEventListener('click', (e) => {
+        const orderBtn = e.target.closest('.open-order-btn');
+        if (orderBtn) {
+            e.preventDefault();
+            showModal(orderBtn.dataset.modalId);
+            return;
+        }
+
+        const sellerBtn = e.target.closest('.open-seller-btn');
+        if (sellerBtn) {
+            e.preventDefault();
+            document.getElementById('seller-modal-name').textContent = sellerBtn.dataset.shopName || '-';
+            document.getElementById('seller-modal-ceo').textContent = sellerBtn.dataset.shopCeo || '-';
+            document.getElementById('seller-modal-phone').textContent = sellerBtn.dataset.shopPhone || '-';
+            document.getElementById('seller-modal-fax').textContent = sellerBtn.dataset.shopFax || '-';
+            document.getElementById('seller-modal-email').textContent = sellerBtn.dataset.shopEmail || '-';
+            document.getElementById('seller-modal-biz-number').textContent = sellerBtn.dataset.shopBizNumber || '-';
+            document.getElementById('seller-modal-address').textContent = sellerBtn.dataset.shopAddress || '-';
+            showModal('seller-info-modal');
+            return;
+        }
+
+        const inquiryBtn = e.target.closest('.open-inquiry-btn');
+        if (inquiryBtn) {
+            e.preventDefault();
+            showModal('inquiry-modal');
+            return;
+        }
+
+        const sellerInquiryBtn = e.target.closest('.open-seller-inquiry-btn');
+        if (sellerInquiryBtn) {
+            e.preventDefault();
+            showModal('seller-inquiry-reg-modal');
+            return;
+        }
+
+        const closeBtn = e.target.closest('.close-modal-trigger');
+        if (closeBtn) {
+            e.preventDefault();
+            const modal = closeBtn.closest('.custom-modal');
+            if (modal) hideModal(modal);
+        }
+    });
+
+    // ESC 키로 열려있는 모든 모달 닫기
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.custom-modal:not(.hidden)').forEach(modal => {
+                hideModal(modal);
+            });
+        }
+    });
+</script>
+<!-- 판매자 정보 모달 (Seller Info Popup) -->
+<div class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4 custom-modal" id="seller-info-modal">
+    <!-- 배경 오버레이 -->
+    <div class="absolute inset-0 bg-on-surface/50 modal-overlay cursor-pointer close-modal-trigger"></div>
+    <!-- 모달 콘텐츠 -->
+    <div class="relative w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-content scale-95 opacity-0">
+        <!-- 모달 헤더 -->
+        <div class="px-md py-4 border-b border-outline-variant flex justify-between items-center bg-white sticky top-0 z-10">
+            <h3 class="font-headline-md text-headline-md text-primary">판매자 정보</h3>
+            <button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-on-surface-variant close-modal-trigger">
+                <span class="material-symbols-outlined pointer-events-none">close</span>
+            </button>
+        </div>
+        <!-- 모달 바디 -->
+        <div class="p-md space-y-md overflow-y-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant border border-outline-variant rounded-xl overflow-hidden">
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">판매자 등급</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">파워딜러</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">상호</div>
+                <div id="seller-modal-name" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">(주) 상호명</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">대표자</div>
+                <div id="seller-modal-ceo" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">홍길동</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">전화번호</div>
+                <div id="seller-modal-phone" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">051-123-1000</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">FAX</div>
+                <div id="seller-modal-fax" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">051-123-1001</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">Email</div>
+                <div id="seller-modal-email" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">company@abc.com</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">사업자번호</div>
+                <div id="seller-modal-biz-number" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">123-12-123457</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">영업소 소재지</div>
+                <div id="seller-modal-address" class="bg-white px-md py-4 font-body-md text-body-md text-on-surface leading-relaxed">[210**] 부산광역시 부산진구 중앙대로 300 한빛빌딩 10층</div>
+            </div>
+            <p class="text-label-sm text-on-surface-variant opacity-70">※ 위 정보는 전자상거래 법 제 20조 제 2항 및 동 법 시행령 제 25조 제 2항에 의거하여 소비자보호에 의거 공개합니다</p>
+        </div>
+        <!-- 모달 푸터 -->
+        <div class="p-md bg-white border-t border-outline-variant flex justify-center gap-3 sticky bottom-0 z-10">
+            <button class="flex-1 py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all open-seller-inquiry-btn">문의하기</button>
+            <button class="flex-1 py-3 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all close-modal-trigger">닫기</button>
+        </div>
+    </div>
+</div><!-- 판매자 문의하기 등록 모달 (Seller Inquiry Registration Popup) -->
+<div class="fixed inset-0 z-[80] flex items-center justify-center p-4 custom-modal hidden" id="seller-inquiry-reg-modal">
+    <!-- 배경 오버레이 -->
+    <div class="absolute inset-0 bg-on-surface/50 modal-overlay cursor-pointer close-modal-trigger"></div>
+    <!-- 모달 콘텐츠 -->
+    <div class="relative w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-content scale-100 opacity-100">
+        <!-- 모달 헤더 -->
+        <div class="px-md py-4 border-b border-outline-variant flex justify-between items-center bg-white sticky top-0 z-10">
+            <h3 class="font-headline-md text-headline-md text-primary">문의하기</h3>
+            <button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-on-surface-variant close-modal-trigger">
+                <span class="material-symbols-outlined pointer-events-none">close</span>
+            </button>
+        </div>
+        <!-- 모달 바디 -->
+        <div class="p-md space-y-md overflow-y-auto">
+            <!-- 문의 종류 선택 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">문의 종류</label>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input checked="" class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="seller_inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">상품</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="seller_inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">배송</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="seller_inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">반품/취소</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="seller_inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">교환</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant" name="seller_inquiry_type" type="radio">
+                        <span class="font-body-md text-body-md text-on-surface-variant">기타</span>
+                    </label>
+                </div>
+            </div>
+            <!-- 이메일 입력 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">이메일</label>
+                <input class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="example@email.com" type="email">
+            </div>
+            <!-- 제목 입력 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">제목</label>
+                <input class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="문의 제목을 입력해주세요" type="text">
+            </div>
+            <!-- 내용 입력 -->
+            <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface font-bold">내용</label>
+                <textarea class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none" placeholder="문의하실 내용을 상세히 입력해주세요" rows="6"></textarea>
+            </div>
+        </div>
+        <!-- 모달 푸터 -->
+        <div class="p-md bg-white border-t border-outline-variant flex justify-center gap-3 sticky bottom-0 z-10">
+            <button class="flex-1 py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all">등록하기</button>
+            <button class="flex-1 py-3 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all close-modal-trigger">취소</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>
+
+

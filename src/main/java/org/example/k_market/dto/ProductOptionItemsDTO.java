@@ -1,0 +1,25 @@
+package org.example.k_market.dto;
+
+import org.example.k_market.entity.ProductOptionItems;
+import lombok.*;
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ProductOptionItemsDTO {
+
+    private long optItemNo;
+    private long optionNo;
+    private String itemName;
+
+    public ProductOptionItems toEntity(){
+        return ProductOptionItems.builder()
+                .optItemNo(optItemNo)
+                .optionNo(optionNo)
+                .itemName(itemName)
+                .build();
+    }
+}

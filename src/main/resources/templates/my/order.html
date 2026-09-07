@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>K-market - 마이페이지 전체주문내역</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#d6ab90",
+                        "secondary-container": "#c0ecdc",
+                        "on-primary-container": "#99b9c2",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed": "#c0ecdc",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc7",
+                        "surface-bright": "#f8f9fa",
+                        "inverse-primary": "#acccd5",
+                        "on-surface": "#191c1d",
+                        "on-primary-fixed": "#001f26",
+                        "on-surface-variant": "#41484a",
+                        "outline-variant": "#c1c7ca",
+                        "primary": "#14333b",
+                        "secondary": "#3e6659",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c1d",
+                        "primary-fixed": "#c8e8f2",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#acccd5",
+                        "tertiary": "#452916",
+                        "tertiary-container": "#5e3f2a",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary-fixed": "#2d1605",
+                        "background": "#f8f9fa",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#446c5f",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-tint": "#45636b",
+                        "on-error": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "outline": "#72787a",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container": "#edeeef",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "on-secondary-fixed": "#002018",
+                        "surface-dim": "#d9dadb",
+                        "primary-container": "#2c4a52",
+                        "on-secondary": "#ffffff"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        md: "24px",
+                        gutter: "24px",
+                        lg: "48px",
+                        "margin-mobile": "16px",
+                        xs: "4px",
+                        "container-max": "1280px",
+                        sm: "12px",
+                        xl: "80px",
+                        base: "8px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "headline-md": ["20px", { lineHeight: "1.4", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "label-md": ["14px", { lineHeight: "1.4", letterSpacing: "0.01em", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "1.2", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body { background-color: #F7F8F9; color: #191c1d; }
+        .mypage-order-grid { min-width: 780px; }
+        .mypage-order-grid > :nth-child(1) { white-space: nowrap; font-size: 14px; }
+        .mypage-order-grid > :nth-child(3) span { display: inline-flex; white-space: nowrap; }
+        .mypage-order-grid > :nth-child(4) button,
+        .mypage-order-grid > :nth-child(4) a { white-space: nowrap; }
+        .mypage-action-stack {
+            width: 100%;
+            max-width: 120px;
+            margin-inline: auto;
+            gap: 8px;
+        }
+        .mypage-action-stack form { width: 100%; }
+        .mypage-action-stack button,
+        .mypage-action-stack > a {
+            display: flex;
+            min-height: 36px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px !important;
+            padding: 7px 12px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            line-height: 1.2;
+            box-shadow: 0 1px 2px rgba(20, 51, 59, 0.08);
+            transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+        }
+        .mypage-action-stack button:hover,
+        .mypage-action-stack > a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(20, 51, 59, 0.14);
+        }
+        .mypage-action-stack button:active,
+        .mypage-action-stack > a:active { transform: translateY(0) scale(0.98); }
+        .mypage-action-stack form[action$="/confirm"] button {
+            border: 1px solid #14333b !important;
+            background: #14333b !important;
+            color: #fff !important;
+        }
+        .mypage-action-stack > a[href*="/product/view"] {
+            border: 1px solid #acccd5 !important;
+            background: #edf7fa !important;
+            color: #14333b !important;
+        }
+        .mypage-action-stack form[action$="/claim/cancel"] button {
+            border: 1px solid #ef9a9a !important;
+            background: #fff1f0 !important;
+            color: #a3131d !important;
+        }
+        .mypage-action-stack .open-claim-btn {
+            border: 1px solid #c1c7ca !important;
+            background: #fff !important;
+            color: #41484a !important;
+        }
+        .mypage-action-stack .open-claim-btn:hover { background: #f3f4f5 !important; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md">
+<!-- Top Navigation Bar -->
+<div th:replace="~{layout/site :: header}"></div>
+<!-- Main Content Area -->
+<main class="flex-grow max-w-container-max mx-auto w-full px-xl py-lg flex flex-col md:flex-row gap-lg">
+    <!-- Sidebar Navigation -->
+    <div th:replace="~{my/_shared :: sidebar('order')}"></div>
+    <!-- Main Content -->
+    <div class="flex-1 min-w-0">
+        <div th:replace="~{my/_shared :: banner}"></div>
+        <!-- Header -->
+        <div class="mb-md">
+            <h1 class="font-headline-md text-headline-md text-on-surface">전체주문내역</h1>
+        </div>
+        <div th:if="${myOrderMessage}" class="mb-md rounded-lg bg-secondary-container px-md py-sm text-on-secondary-container font-label-md" th:text="${myOrderMessage}"></div>
+        <div th:if="${myOrderError}" class="mb-md rounded-lg bg-error-container px-md py-sm text-error font-label-md" th:text="${myOrderError}"></div>
+        <!-- Filter Section -->
+        <form id="order-period-form" th:action="@{/my/order}" method="get" class="bg-surface-container-lowest p-md rounded-xl shadow-sm mb-lg border border-outline-variant/60">
+            <input type="hidden" name="pg" value="1">
+            <div class="flex flex-wrap xl:flex-nowrap items-center gap-sm xl:gap-md">
+                <span class="font-label-md text-label-md text-on-surface-variant whitespace-nowrap">기간별 조회</span>
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    <button type="button" data-days="7" class="period-quick-btn h-9 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-primary hover:bg-primary/5 text-label-md font-label-md text-on-surface-variant transition-colors whitespace-nowrap">1주일</button>
+                    <button type="button" data-days="15" class="period-quick-btn h-9 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-primary hover:bg-primary/5 text-label-md font-label-md text-on-surface-variant transition-colors whitespace-nowrap">15일</button>
+                    <button type="button" data-months="1" class="period-quick-btn h-9 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-primary hover:bg-primary/5 text-label-md font-label-md text-on-surface-variant transition-colors whitespace-nowrap">1개월</button>
+                    <button type="button" data-years="1" class="period-quick-btn h-9 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-primary hover:bg-primary/5 text-label-md font-label-md text-on-surface-variant transition-colors whitespace-nowrap">1년</button>
+                </div>
+                <div class="hidden lg:block h-8 w-px bg-outline-variant mx-sm"></div>
+                <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 min-w-0 xl:ml-auto">
+                    <label class="sr-only" for="order-start-date">시작일</label>
+                    <input id="order-start-date"
+                           name="startDate"
+                           type="date"
+                           class="h-9 w-[150px] min-w-0 rounded-lg border-outline-variant text-label-md font-label-md text-on-surface bg-surface-container-lowest focus:border-primary focus:ring-primary shadow-sm"
+                           th:value="${startDate != null ? #temporals.format(startDate, 'yyyy-MM-dd') : ''}">
+                    <span class="text-on-surface-variant">~</span>
+                    <label class="sr-only" for="order-end-date">종료일</label>
+                    <input id="order-end-date"
+                           name="endDate"
+                           type="date"
+                           class="h-9 w-[150px] min-w-0 rounded-lg border-outline-variant text-label-md font-label-md text-on-surface bg-surface-container-lowest focus:border-primary focus:ring-primary shadow-sm"
+                           th:value="${endDate != null ? #temporals.format(endDate, 'yyyy-MM-dd') : ''}">
+                    <button type="submit" class="h-9 px-5 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm whitespace-nowrap">조회</button>
+                    <a th:href="@{/my/order}" class="h-9 px-4 rounded-lg border border-outline-variant inline-flex items-center justify-center text-label-md font-label-md text-on-surface-variant hover:bg-surface-variant transition-colors whitespace-nowrap">초기화</a>
+                </div>
+            </div>
+        </form>
+        <!-- Order List Table -->
+        <div class="bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant overflow-x-auto custom-scrollbar mb-lg">
+            <div class="mypage-order-grid grid grid-cols-12 gap-4 p-4 bg-surface-container-low border-b border-outline-variant text-label-sm font-label-sm text-on-surface-variant text-center">
+                <div class="col-span-2">날짜</div>
+                <div class="col-span-6">주문정보</div>
+                <div class="col-span-2">상태</div>
+                <div class="col-span-2">확인 / 신청</div>
+            </div>
+            <div class="flex flex-col divide-y divide-outline-variant">
+                <div th:if="${orderBlock == null or orderBlock.page.empty}" class="p-lg text-center text-on-surface-variant">
+                    주문내역이 없습니다.
+                </div>
+                <div class="mypage-order-grid grid grid-cols-12 gap-4 p-md items-center" th:each="order : ${orderBlock.page.content}">
+                    <div class="col-span-2 text-center text-body-md font-body-md text-on-surface-variant">
+                        <span th:text="${order.orderedAt != null ? #temporals.format(order.orderedAt, 'yyyy-MM-dd') : '-'}">2022-12-13</span>
+                    </div>
+                    <div class="col-span-6 flex gap-md">
+                        <div class="w-24 h-24 bg-surface-variant rounded-md flex-shrink-0 flex items-center justify-center overflow-hidden border border-outline-variant">
+                            <img th:if="${order.thumb != null and !order.thumb.isBlank()}"
+                                 th:src="${#strings.startsWith(order.thumb, 'http://') or #strings.startsWith(order.thumb, 'https://') ? order.thumb : '/uploads/' + order.thumb}"
+                                 class="w-full h-full object-cover" alt="상품 이미지">
+                            <span th:unless="${order.thumb != null and !order.thumb.isBlank()}" class="material-symbols-outlined text-outline text-display-lg" style="font-variation-settings: 'FILL' 0;">image</span>
+                        </div>
+                        <div class="flex flex-col justify-center gap-1">
+                            <button type="button"
+                                    class="open-order-btn w-fit text-label-sm font-label-sm text-primary font-semibold hover:underline text-left"
+                                    th:data-modal-id="|order-detail-${order.orderNo}|">
+                                주문번호 : <span th:text="${order.orderNo}">1012211341</span>
+                            </button>
+                            <span class="text-body-md font-body-md text-on-surface font-semibold" th:text="${order.orderName}">주문 상품명</span>
+                            <span class="text-label-sm text-on-surface-variant" th:text="${order.itemCount > 1 ? '상품 ' + order.itemCount + '종' : '상품 1종'}">상품 1종</span>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-label-sm font-label-sm text-on-surface-variant">총 수량 : <span th:text="${order.totalQuantity}">1</span>개</span>
+                                <span class="text-headline-md font-headline-md text-on-surface" th:text="${#numbers.formatInteger(order.totalPaymentPrice, 0, 'COMMA')} + '원'">34,000원</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-2 text-center">
+                        <span class="inline-block px-3 py-1 bg-surface-container border border-outline-variant rounded-full text-label-sm font-label-sm text-on-surface-variant" th:text="${order.status}">배송완료</span>
+                    </div>
+                    <div class="mypage-action-stack col-span-2 flex flex-col gap-2">
+                        <button type="button" class="open-order-btn w-full py-1.5 px-3 bg-primary text-on-primary rounded text-label-sm font-label-sm hover:bg-primary-container transition-colors"
+                                th:data-modal-id="|order-detail-${order.orderNo}|">주문상세</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        <div class="flex justify-center items-center gap-2 mt-lg mb-xl" th:if="${orderBlock != null}">
+            <a class="p-2 text-on-surface-variant hover:text-primary transition-colors" th:classappend="${orderBlock.currentPage <= 1} ? ' pointer-events-none opacity-50'" th:href="@{/my/order(pg=${orderBlock.currentPage - 1}, startDate=${startDate}, endDate=${endDate})}">
+                <span class="material-symbols-outlined">chevron_left</span>
+                <span class="sr-only">이전</span>
+            </a>
+            <div class="flex gap-1">
+                <a th:each="pageNo : ${#numbers.sequence(orderBlock.startPage, orderBlock.endPage)}"
+                   th:href="@{/my/order(pg=${pageNo}, startDate=${startDate}, endDate=${endDate})}"
+                   th:text="${pageNo}"
+                   th:class="${pageNo == orderBlock.currentPage ? 'w-8 h-8 rounded-full bg-primary text-on-primary font-label-md flex items-center justify-center' : 'w-8 h-8 rounded-full text-on-surface-variant hover:bg-surface-variant font-label-md flex items-center justify-center transition-colors'}">1</a>
+            </div>
+            <a class="p-2 text-on-surface-variant hover:text-primary transition-colors" th:classappend="${orderBlock.currentPage >= orderBlock.page.totalPages} ? ' pointer-events-none opacity-50'" th:href="@{/my/order(pg=${orderBlock.currentPage + 1}, startDate=${startDate}, endDate=${endDate})}">
+                <span class="material-symbols-outlined">chevron_right</span>
+                <span class="sr-only">다음</span>
+            </a>
+        </div>
+    </div>
+</main>
+<!-- Footer -->
+<div th:replace="~{layout/site :: footer}"></div>
+<div th:replace="~{my/_shared :: claimModal}"></div>
+<div th:replace="~{my/_shared :: orderDetailModals(${orderBlock != null ? orderBlock.page.content : null})}"></div>
+<div class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4 custom-modal" id="seller-info-modal">
+    <div class="absolute inset-0 bg-on-surface/50 modal-overlay cursor-pointer close-modal-trigger"></div>
+    <div class="relative w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-content scale-95 opacity-0 transition-all duration-300">
+        <div class="px-md py-4 border-b border-outline-variant flex justify-between items-center bg-white sticky top-0 z-10">
+            <h3 class="font-headline-md text-headline-md text-primary">판매자 정보</h3>
+            <button type="button" class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-on-surface-variant close-modal-trigger" aria-label="닫기">
+                <span class="material-symbols-outlined pointer-events-none">close</span>
+            </button>
+        </div>
+        <div class="p-md space-y-md overflow-y-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant border border-outline-variant rounded-xl overflow-hidden">
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">판매자 등급</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface">파워딜러</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">상호</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface" id="seller-modal-name">(주) 상호명</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">대표자</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface" id="seller-modal-ceo">홍길동</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">전화번호</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface" id="seller-modal-phone">051-123-1000</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">FAX</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface" id="seller-modal-fax">051-123-1001</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">Email</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface" id="seller-modal-email">company@abc.com</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">사업자번호</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface" id="seller-modal-biz-number">123-12-123457</div>
+                <div class="bg-surface-container-low px-md py-4 font-label-md text-label-md text-on-surface-variant">영업소 소재지</div>
+                <div class="bg-white px-md py-4 font-body-md text-body-md text-on-surface leading-relaxed" id="seller-modal-address">[210**] 부산광역시 부산진구 중앙대로 300 한빛빌딩 10층</div>
+            </div>
+            <p class="text-label-sm text-on-surface-variant opacity-70">※ 위 정보는 전자상거래 법 제20조 제2항 및 동 법 시행령 제25조 제2항에 의거하여 소비자보호를 위해 공개합니다.</p>
+        </div>
+        <div class="p-md bg-white border-t border-outline-variant flex justify-center gap-3 sticky bottom-0 z-10">
+            <button type="button" class="flex-1 py-3 bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all close-modal-trigger">닫기</button>
+        </div>
+    </div>
+</div>
+<script>
+    function showMyOrderModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        const modalContent = modal.querySelector('.modal-content');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            modalContent?.classList.remove('scale-95', 'opacity-0');
+            modalContent?.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function hideMyOrderModal(modal) {
+        if (!modal) return;
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent?.classList.remove('scale-100', 'opacity-100');
+        modalContent?.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            if (!document.querySelector('.custom-modal:not(.hidden)')) {
+                document.body.style.overflow = '';
+            }
+        }, 250);
+    }
+
+    document.addEventListener('click', (e) => {
+        const orderBtn = e.target.closest('.open-order-btn');
+        if (orderBtn) {
+            e.preventDefault();
+            showMyOrderModal(orderBtn.dataset.modalId);
+            return;
+        }
+
+        const periodBtn = e.target.closest('.period-quick-btn');
+        if (periodBtn) {
+            e.preventDefault();
+            const form = document.getElementById('order-period-form');
+            const startInput = document.getElementById('order-start-date');
+            const endInput = document.getElementById('order-end-date');
+            if (!form || !startInput || !endInput) return;
+
+            const endDate = new Date();
+            const startDate = new Date(endDate);
+            if (periodBtn.dataset.days) {
+                startDate.setDate(startDate.getDate() - Number(periodBtn.dataset.days) + 1);
+            }
+            if (periodBtn.dataset.months) {
+                startDate.setMonth(startDate.getMonth() - Number(periodBtn.dataset.months));
+                startDate.setDate(startDate.getDate() + 1);
+            }
+            if (periodBtn.dataset.years) {
+                startDate.setFullYear(startDate.getFullYear() - Number(periodBtn.dataset.years));
+                startDate.setDate(startDate.getDate() + 1);
+            }
+
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            startInput.value = formatDate(startDate);
+            endInput.value = formatDate(endDate);
+            form.submit();
+            return;
+        }
+
+        const sellerBtn = e.target.closest('.open-seller-btn');
+        if (sellerBtn) {
+            e.preventDefault();
+            document.getElementById('seller-modal-name').textContent = sellerBtn.dataset.shopName || '-';
+            document.getElementById('seller-modal-ceo').textContent = sellerBtn.dataset.shopCeo || '-';
+            document.getElementById('seller-modal-phone').textContent = sellerBtn.dataset.shopPhone || '-';
+            document.getElementById('seller-modal-fax').textContent = sellerBtn.dataset.shopFax || '-';
+            document.getElementById('seller-modal-email').textContent = sellerBtn.dataset.shopEmail || '-';
+            document.getElementById('seller-modal-biz-number').textContent = sellerBtn.dataset.shopBizNumber || '-';
+            document.getElementById('seller-modal-address').textContent = sellerBtn.dataset.shopAddress || '-';
+            showMyOrderModal('seller-info-modal');
+            return;
+        }
+
+        const closeBtn = e.target.closest('.close-modal-trigger');
+        if (closeBtn) {
+            e.preventDefault();
+            const modal = closeBtn.closest('.custom-modal');
+            if (modal) hideMyOrderModal(modal);
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.custom-modal:not(.hidden)').forEach(hideMyOrderModal);
+        }
+    });
+</script>
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>
+

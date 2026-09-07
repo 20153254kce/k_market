@@ -1,0 +1,395 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>K-market Admin - 약관관리</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .menu-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out, padding 0.3s ease-in-out;
+            opacity: 0;
+        }
+        .menu-item-active .menu-content {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 4px;
+            padding-bottom: 8px;
+        }
+        .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+        .menu-item-active .chevron-icon {
+            transform: rotate(180deg);
+        }
+        /* 커스텀 스크롤바 (선택사항) */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #c1c7ca;
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #a8b0b3;
+        }
+        .sortable-root > .category-item {
+            border: 1px solid #d1d5db; /* gray-300 */
+            padding: 0.5rem; /* p-2 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            background-color: white;
+        }
+        .sortable-root > .category-item > .item-header .category-name {
+            font-weight: 700; /* font-bold */
+            font-size: 1rem;
+        }
+        .sortable-root > .category-item > .item-header .expand-icon { display: inline-block; }
+        .sortable-root > .category-item > .add-child-btn { display: flex; } /* 2차 추가 버튼 보이기 */
+
+        /* [2차 카테고리 스타일] */
+        .child-list > .category-item {
+            border-top: 1px solid #e5e7eb; /* border-t gray-200 */
+            padding: 0.25rem 0; /* py-1 */
+        }
+        .child-list > .category-item > .item-header .category-name {
+            font-weight: 400; /* normal */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .child-list > .category-item > .item-header .expand-icon { display: none; } /* 확장 아이콘 숨김 */
+        .child-list > .category-item > .child-list { display: none; } /* 3차 이상 방지 */
+        .child-list > .category-item > .add-child-btn { display: none; } /* 3차 추가 버튼 숨김 */
+
+        /* 공통 요소 */
+        .drag-handle { cursor: grab; color: #9ca3af; }
+        .drag-handle:active { cursor: grabbing; }
+        .category-name {
+            border: none; background: transparent; outline: none; width: 100%;
+        }
+        .category-name:focus { border-bottom: 2px solid #3b82f6; }
+        .sortable-ghost { opacity: 0.4; background-color: #f3f4f6; }
+    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#c0ecdc",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed": "#c8e8f2",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2c4a52",
+                        "error-container": "#ffdad6",
+                        "primary": "#14333b",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "on-secondary-fixed": "#002018",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#c0ecdc",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "secondary": "#3e6659",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#acccd5",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "tertiary": "#452916",
+                        "surface": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#99b9c2",
+                        "inverse-primary": "#acccd5",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-primary-fixed": "#001f26",
+                        "surface-tint": "#45636b",
+                        "tertiary-container": "#5e3f2a",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-background": "#191c1d",
+                        "on-secondary-container": "#446c5f",
+                        "outline": "#72787a",
+                        "outline-variant": "#c1c7ca",
+                        "on-surface-variant": "#41484a",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "surface-container": "#edeeef",
+                        "surface-container-high": "#e7e8e9",
+                        "policy-bg": "#e6f0f9",
+                        "policy-btn": "#8faadc",
+                        "policy-btn-hover": "#7b99c9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "container-max": "1280px",
+                        "md": "24px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex">
+
+<!-- Shared Component: SideNavBar -->
+<div th:replace="~{admin/_layout :: sidebar('config')}"></div>
+
+<div th:replace="~{admin/_layout :: header}"></div>
+
+<main class="ml-64 mt-16 p-8 flex-1 w-full">
+    <div class="flex justify-between items-end border-b-2 border-black pb-3 mb-8">
+        <h1 class="text-2xl font-bold text-black">카테고리</h1>
+        <div class="text-sm text-gray-500 font-medium">HOME > 환경설정 > <strong class="text-black">카테고리</strong></div>
+    </div>
+
+    <div class="max-w-[800px] flex flex-col gap-2">
+
+        <ul id="category-list" class="sortable-list sortable-root min-h-[50px]">
+            <li th:each="parent : ${categoryList}" th:data-id="${parent.id}" class="category-item">
+                <div class="item-header flex items-center justify-between py-1">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="material-symbols-outlined drag-handle text-sm">drag_indicator</span>
+                        <span class="material-symbols-outlined expand-icon">expand_more</span>
+                        <input type="text" th:value="${parent.name}" class="category-name" placeholder="카테고리명 입력">
+                    </div>
+                    <button type="button" onclick="removeCategory(this)" class="text-xs text-red-600 border px-2 py-1 hover:bg-red-50 ml-4">삭제</button>
+                </div>
+
+                <ul class="child-list sortable-list pl-8 flex flex-col min-h-[10px]">
+                    <li th:each="child : ${parent.children}" th:data-id="${child.id}" class="category-item">
+                        <div class="item-header flex items-center justify-between py-1">
+                            <div class="flex items-center gap-2 flex-1">
+                                <span class="material-symbols-outlined drag-handle text-sm">drag_indicator</span>
+                                <span class="material-symbols-outlined expand-icon">expand_more</span>
+                                <input type="text" th:value="${child.name}" class="category-name" placeholder="카테고리명 입력">
+                            </div>
+                            <button type="button" onclick="removeCategory(this)" class="text-xs text-red-600 border px-2 py-1 hover:bg-red-50 ml-4">삭제</button>
+                        </div>
+                        <ul class="child-list sortable-list pl-8 flex flex-col min-h-[10px]"></ul>
+                        <div onclick="addChildCategory(this)" class="add-child-btn items-center gap-2 text-sm text-gray-500 py-2 border-t cursor-pointer hover:text-black pl-8 mt-1">
+                            <span class="border px-1">+</span> <span>2차카테고리추가</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div onclick="addChildCategory(this)" class="add-child-btn items-center gap-2 text-sm text-gray-500 py-2 border-t cursor-pointer hover:text-black pl-8 mt-1">
+                    <span class="border px-1">+</span> <span>2차카테고리추가</span>
+                </div>
+            </li>
+        </ul>
+
+        <div onclick="addRootCategory()" class="flex items-center justify-center border-2 border-dashed border-gray-300 p-3 mt-4 cursor-pointer hover:bg-gray-50 text-gray-400 font-bold">
+            + 1차카테고리추가
+        </div>
+
+        <div class="bg-yellow-100 p-4 mt-6 text-sm text-gray-700">
+            카테고리 메뉴 순서를 변경할 때 <strong>드래그 앤 드롭</strong>으로 1차, 2차 카테고리 메뉴 이동 및 텍스트 수정 후 <strong>수정하기</strong>를 클릭합니다.
+        </div>
+
+        <div class="text-right mt-4">
+            <button type="button" onclick="saveAllCategories()" class="bg-blue-500 text-white px-8 py-2 font-bold hover:bg-blue-600 rounded">
+                수정하기 (일괄저장)
+            </button>
+        </div>
+    </div>
+</main>
+
+<script th:inline="javascript">
+    let tempIdCounter = 1; // 새로 추가된 항목 구분을 위한 임시 ID
+
+    // 페이지 로드 시 드래그 앤 드롭 활성화
+    document.addEventListener("DOMContentLoaded", function() {
+        initSortable();
+    });
+
+    // 드래그 앤 드롭 세팅
+    function initSortable() {
+        const lists = document.querySelectorAll('.sortable-list');
+        lists.forEach(list => {
+            // 이미 초기화된 엘리먼트 중복 초기화 방지
+            if (list.classList.contains('sortable-initialized')) return;
+            list.classList.add('sortable-initialized');
+
+            new Sortable(list, {
+                group: 'categories', // 1차, 2차 상관없이 이동 가능
+                handle: '.drag-handle', // 점자 아이콘을 잡고 드래그
+                animation: 150,
+                fallbackOnBody: true,
+                swapThreshold: 0.65,
+                // ★ 핵심 추가 옵션: 빈 리스트(2차 카테고리가 없는 곳)에 드롭할 수 있는 감지 영역을 50px로 확대
+                emptyInsertThreshold: 50,
+                onMove: function(evt) {
+                    // 3차 깊이(Depth)로 들어가는 것을 방지
+                    const isTargetChildList = evt.to.classList.contains('child-list');
+                    const draggedHasChildren = evt.dragged.querySelector('.child-list > .category-item') !== null;
+
+                    // ★ 주의: 이미 하위(2차) 카테고리를 가지고 있는 1차 카테고리는
+                    // 다른 1차 카테고리 안으로 넣을 수 없습니다. (3차 카테고리 생성 방지 로직)
+                    if (isTargetChildList && draggedHasChildren) {
+                        return false;
+                    }
+                }
+            });
+        });
+    }
+
+    // HTML 템플릿 생성기 (항목이 어디에 추가되든 동일한 HTML 구조를 가짐)
+    function createCategoryHTML() {
+        const newId = 'new-' + tempIdCounter++;
+        return `
+            <li data-id="${newId}" class="category-item">
+                <div class="item-header flex items-center justify-between py-1">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="material-symbols-outlined drag-handle text-sm">drag_indicator</span>
+                        <span class="material-symbols-outlined expand-icon">expand_more</span>
+                        <input type="text" value="" class="category-name" placeholder="카테고리명 입력" autofocus>
+                    </div>
+                    <button type="button" onclick="removeCategory(this)" class="text-xs text-red-600 border px-2 py-1 hover:bg-red-50 ml-4">삭제</button>
+                </div>
+                <ul class="child-list sortable-list pl-8 flex flex-col min-h-[10px]"></ul>
+                <div onclick="addChildCategory(this)" class="add-child-btn items-center gap-2 text-sm text-gray-500 py-2 border-t cursor-pointer hover:text-black pl-8 mt-1">
+                    <span class="border px-1">+</span> <span>2차카테고리추가</span>
+                </div>
+            </li>
+        `;
+    }
+
+    // 1차 카테고리 추가
+    function addRootCategory() {
+        const rootList = document.getElementById('category-list');
+        rootList.insertAdjacentHTML('beforeend', createCategoryHTML());
+        initSortable(); // 새 목록에 드래그 활성화
+    }
+
+    // 2차 카테고리 추가
+    function addChildCategory(btn) {
+        const parentLi = btn.closest('.category-item');
+        const childList = parentLi.querySelector('.child-list');
+        childList.insertAdjacentHTML('beforeend', createCategoryHTML());
+        initSortable();
+    }
+
+    // 삭제 버튼 동작 (화면에서만 지움)
+    function removeCategory(btn) {
+        if(confirm('이 카테고리를 삭제하시겠습니까? (하위 카테고리도 모두 삭제됩니다)')) {
+            btn.closest('.category-item').remove();
+        }
+    }
+
+    function saveAllCategories() {
+        const categories = [];
+        const rootItems = document.querySelectorAll('#category-list > .category-item');
+
+        rootItems.forEach((root, rootIndex) => {
+            const rootName = root.querySelector('.category-name').value.trim();
+            if (rootName === '') return;
+
+            const rootId = root.dataset.id.startsWith('new-') ? null : root.dataset.id;
+
+            const categoryData = {
+                id: rootId,
+                name: rootName,
+                sortOrder: rootIndex,
+                children: []
+            };
+
+            const childItems = root.querySelectorAll(':scope > .child-list > .category-item');
+            childItems.forEach((child, childIndex) => {
+                const childName = child.querySelector('.category-name').value.trim();
+                if (childName === '') return;
+
+                const childId = child.dataset.id.startsWith('new-') ? null : child.dataset.id;
+                categoryData.children.push({
+                    id: childId,
+                    name: childName,
+                    sortOrder: childIndex
+                });
+            });
+
+            categories.push(categoryData);
+        });
+
+        // ★ 프론트엔드 로그 1: 전송 직전 데이터 확인
+        console.log("🚀 [프론트엔드] 서버로 전송할 JSON 데이터:", JSON.stringify(categories, null, 2));
+
+        const saveUrl = /*[[@{/admin/config/category/saveAll}]]*/ '/admin/config/category/saveAll';
+
+        fetch(saveUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(categories)
+        })
+            .then(response => {
+                // ★ 프론트엔드 로그 2: 서버 응답 상태 확인
+                console.log("📥 [프론트엔드] 서버 응답 상태 코드:", response.status);
+
+                if(response.ok) {
+                    alert('모든 카테고리가 성공적으로 저장되었습니다.');
+                    location.reload();
+                } else {
+                    alert('서버에서 오류를 반환했습니다. 상태 코드: ' + response.status);
+                }
+            })
+            .catch(error => {
+                // ★ 프론트엔드 로그 3: 네트워크 에러 등 완전 실패 시
+                console.error('💥 [프론트엔드] Fetch 통신 에러:', error);
+                alert('서버와 통신할 수 없습니다.');
+            });
+    }
+</script>
+<script th:src="@{/js/admin-navigation.js}" src="/js/admin-navigation.js"></script>
+</body>
+</html>
+
+

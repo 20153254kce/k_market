@@ -1,0 +1,491 @@
+<!DOCTYPE html><html lang="ko" style=""><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>K-market - 회원가입</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <!-- Theme Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#3e6659",
+                        "on-secondary-fixed": "#002018",
+                        "on-primary-container": "#99b9c2",
+                        "surface-tint": "#45636b",
+                        "surface-container-low": "#f3f4f5",
+                        "error": "#ba1a1a",
+                        "surface-container": "#edeeef",
+                        "surface": "#f8f9fa",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "primary-fixed-dim": "#acccd5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "on-background": "#191c1d",
+                        "on-secondary-container": "#446c5f",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#c0ecdc",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary-fixed": "#001f26",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#5e3f2a",
+                        "primary": "#14333b",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-tertiary-fixed": "#2d1605",
+                        "tertiary": "#452916",
+                        "on-surface": "#191c1d",
+                        "primary-container": "#2c4a52",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed": "#ffdcc7",
+                        "inverse-surface": "#2e3132",
+                        "outline-variant": "#c1c7ca",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed": "#c8e8f2",
+                        "background": "#f8f9fa",
+                        "on-surface-variant": "#41484a",
+                        "outline": "#72787a",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#c0ecdc",
+                        "inverse-primary": "#acccd5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "margin-mobile": "16px",
+                        "md": "24px",
+                        "base": "8px",
+                        "xl": "80px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Be Vietnam Pro"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-input-shadow {
+            box-shadow: 0 2px 4px rgba(44, 74, 82, 0.04);
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- TopNavBar: JSON mapped structure -->
+<div th:replace="~{layout/site :: header}"></div>
+<main class="min-h-screen pt-lg pb-xl">
+    <div class="max-w-[1000px] mx-auto px-margin-mobile"><div class="flex justify-center items-center mb-xl gap-xs md:gap-md"><div class="flex flex-col items-center gap-2 opacity-50"><div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold">1</div><span class="text-label-sm">약관동의</span></div><div class="w-12 h-[2px] bg-surface-variant mb-6"></div><div class="flex flex-col items-center gap-2"><div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">2</div><span class="text-label-sm font-bold text-primary">정보입력</span></div><div class="w-12 h-[2px] bg-surface-variant mb-6"></div><div class="flex flex-col items-center gap-2 opacity-50"><div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold">3</div><span class="text-label-sm">가입완료</span></div></div>
+        <!-- Hero Registration Section based on IMAGE_36 layout -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col md:flex-row">
+            <!-- Left Decorative Side (Representing the visual style of IMAGE_36) -->
+
+            <!-- Right Registration Form -->
+            <div class="w-full p-lg md:p-xl max-w-[800px] mx-auto">
+                <div class="mb-lg">
+                    <h2 class="font-headline-lg text-primary mb-xs">일반 회원가입</h2>
+                    <p class="font-body-md text-on-surface-variant">정확한 정보를 입력해주세요.</p>
+                </div>
+                <form th:action="@{/member/register}" method="post" class="space-y-md" id="memberRegisterForm">
+                    <p class="text-label-md text-error" th:if="${param.joinError}" th:text="${param.joinError[0]}"></p>
+                    <!-- ID Field with Availability Check -->
+                    <div class="grid grid-cols-1 gap-xs">
+                        <label class="font-label-md text-primary" for="user-id">아이디</label>
+                        <div class="flex gap-base">
+                            <input class="flex-1 bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="user-id" name="id" placeholder="아이디를 입력하세요" required type="text">
+                            <button class="bg-secondary text-on-secondary px-md rounded-lg font-label-md hover:bg-secondary/90 transition-all whitespace-nowrap" id="id-check-btn" type="button" data-check-url="/member/check-id" th:data-check-url="@{/member/check-id}">중복 확인</button>
+                        </div><!-- ID Availability Message -->
+                        <p id="id-check-msg" class="hidden text-label-sm mt-xs"></p>
+                    </div>
+                    <!-- Password Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                        <div class="grid grid-cols-1 gap-xs">
+                            <label class="font-label-md text-primary" for="password">비밀번호</label>
+                            <input class="bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="password" name="password" placeholder="비밀번호 입력" required type="password">
+                        </div>
+                        <div class="grid grid-cols-1 gap-xs">
+                            <label class="font-label-md text-primary" for="confirm-password">비밀번호 확인</label>
+                            <input class="bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="confirm-password" name="password_confirm" placeholder="비밀번호 재입력" required type="password">
+                        </div>
+                        <p id="pw-check-msg" class="hidden text-label-sm mt-xs md:col-span-2"></p>
+                    </div>
+                    <!-- Name, Birth Date & Gender -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+                        <div class="grid grid-cols-1 gap-xs">
+                            <label class="font-label-md text-primary" for="name">성함</label>
+                            <input class="bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="name" name="name" placeholder="실명을 입력하세요" required type="text">
+                        </div>
+                        <div class="grid grid-cols-1 gap-xs">
+                            <label class="font-label-md text-primary" for="birth-date">생년월일</label>
+                            <input class="bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow"
+                                   id="birth-date" name="birthDate" required type="date">
+                        </div>
+                        <div class="grid grid-cols-1 gap-xs">
+                            <label class="font-label-md text-primary">성별</label>
+                            <div class="flex h-[44px] bg-surface-container-low rounded-lg p-[4px] gap-[4px]">
+                                <button class="flex-1 rounded-md text-label-md transition-colors bg-white shadow-sm text-primary font-bold" type="button">남성</button>
+                                <button class="flex-1 rounded-md text-label-md transition-colors text-on-surface-variant hover:bg-surface-variant" type="button">여성</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Email -->
+                    <div class="grid grid-cols-1 gap-xs">
+                        <label class="font-label-md text-primary" for="email">이메일 주소</label>
+                        <div class="flex gap-base">
+                            <input class="flex-1 bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="email" name="email" placeholder="example@kmarket.com" required type="email">
+                            <button id="verify-email-btn" class="bg-secondary text-on-secondary px-md rounded-lg font-label-md hover:bg-secondary/90 transition-all whitespace-nowrap" type="button" data-send-url="/member/email/send" th:data-send-url="@{/member/email/send}">인증하기</button>
+                        </div>
+                        <div id="email-verification-container" class="hidden transition-all duration-300 mt-xs">
+                            <div class="flex gap-base">
+                                <input class="flex-1 bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="email-code" placeholder="인증번호 6자리를 입력하세요" type="text">
+                                <button id="email-code-check-btn" class="border border-primary text-primary px-md rounded-lg font-label-md hover:bg-primary/5 transition-all whitespace-nowrap" type="button" data-verify-url="/member/email/verify" th:data-verify-url="@{/member/email/verify}">확인</button>
+                            </div>
+                            <p id="email-status" class="text-label-sm text-primary mt-xs">인증번호가 발송되었습니다.</p>
+                        </div></div>
+                    <!-- Phone -->
+                    <div class="grid grid-cols-1 gap-xs">
+                        <label class="font-label-md text-primary" for="phone">휴대전화 번호</label>
+                        <div class="flex gap-base items-start">
+                            <select class="bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary w-24 h-[44px] shrink-0 pr-8">
+                                <option>010</option>
+                                <option>011</option>
+                                <option>016</option>
+                            </select>
+                            <div class="flex-1 flex flex-col gap-xs min-w-0">
+                                <div class="flex gap-base">
+                                    <input class="flex-1 min-w-0 bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="phone" name="phone" placeholder="- 없이 번호만 입력" type="tel">
+                                    <button id="verify-phone-btn" class="bg-secondary text-on-secondary px-md rounded-lg font-label-md hover:bg-secondary/90 transition-all whitespace-nowrap shrink-0" type="button">인증하기</button>
+                                </div>
+                                <p id="phone-status" class="hidden text-label-sm text-secondary leading-snug">사용 가능한 번호입니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Address with Postcode Search -->
+                    <div class="grid grid-cols-1 gap-xs">
+                        <label class="font-label-md text-primary">주소</label>
+                        <div class="space-y-base">
+                            <div class="flex gap-base">
+                                <input class="bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary w-32" id="zip" name="zip" placeholder="우편번호" readonly="" type="text">
+                                <button class="border border-primary text-primary px-md rounded-lg font-label-md hover:bg-primary/5 transition-all" onclick="Postcode('zip', 'addr1', 'addr2')" type="button">주소 검색</button>
+                            </div>
+                            <input class="w-full bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="addr1" name="addr1" placeholder="기본 주소" type="text">
+                            <input class="w-full bg-surface-container-low border-none rounded-lg p-base font-body-md focus:ring-2 focus:ring-primary form-input-shadow" id="addr2" name="addr2" placeholder="상세 주소를 입력하세요" type="text">
+                        </div>
+                    </div>
+                    <!-- Terms & Submit -->
+                    <div class="pt-base">
+                        <label class="flex items-center gap-base cursor-pointer mb-md">
+                            <input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" id="register-terms" type="checkbox" required>
+                            <span class="font-body-md text-on-surface-variant">모든 <span class="text-primary font-semibold underline">이용약관</span> 및 <span class="text-primary font-semibold underline">개인정보처리방침</span>에 동의합니다.</span>
+                        </label>
+                        <button class="w-full bg-primary text-on-primary py-md rounded-xl font-headline-md shadow-lg hover:bg-primary/95 transition-all transform hover:scale-[1.01] active:scale-[0.99]" type="submit">
+                            가입하기
+                        </button>
+                    </div>
+                </form>
+                <!-- Social Signup Placeholders -->
+                <div class="mt-xl border-t border-surface-variant pt-lg">
+                    <p class="text-center font-label-md text-outline mb-md">간편 SNS 회원가입</p>
+                    <div class="flex justify-center gap-lg">
+                        <!-- SNS Login Placeholder 1: Kakao (Yellow) -->
+                        <div class="group flex flex-col items-center gap-xs cursor-pointer">
+                            <div class="w-12 h-12 rounded-full bg-[#FEE500] flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm">
+                                <span class="material-symbols-outlined text-[#3C1E1E]">chat_bubble</span>
+                            </div>
+                            <span class="text-[10px] font-bold text-outline">카카오</span>
+                        </div>
+                        <!-- SNS Login Placeholder 2: Naver (Green) -->
+                        <div class="group flex flex-col items-center gap-xs cursor-pointer">
+                            <div class="w-12 h-12 rounded-full bg-[#03C75A] flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm">
+                                <span class="material-symbols-outlined text-white">1k</span>
+                            </div>
+                            <span class="text-[10px] font-bold text-outline">네이버</span>
+                        </div>
+                        <!-- SNS Login Placeholder 3: Google (White/Grey) -->
+                        <div class="group flex flex-col items-center gap-xs cursor-pointer">
+                            <div class="w-12 h-12 rounded-full bg-white border border-surface-variant flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm">
+                                <span class="material-symbols-outlined text-on-surface">account_circle</span>
+                            </div>
+                            <span class="text-[10px] font-bold text-outline">구글</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Help/Already a member -->
+        <div class="mt-lg text-center">
+            <p class="font-body-md text-on-surface-variant">이미 계정이 있으신가요? <a class="text-primary font-bold hover:underline" th:href="@{/member/login}" href="/member/login">로그인</a></p>
+        </div>
+    </div>
+</main>
+<!-- Footer: JSON mapped structure -->
+<div th:replace="~{layout/site :: footer}"></div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:src="@{/js/postcode.js}" src="/js/postcode.js"></script>
+<script>
+    // Gender toggle micro-interaction
+    const genderButtons = document.querySelectorAll('button[type="button"]');
+    genderButtons.forEach(btn => {
+        if (btn.textContent === '남성' || btn.textContent === '여성') {
+            btn.addEventListener('click', () => {
+                btn.parentElement.querySelectorAll('button').forEach(b => {
+                    b.classList.remove('bg-white', 'shadow-sm', 'text-primary', 'font-bold');
+                    b.classList.add('text-on-surface-variant', 'hover:bg-surface-variant');
+                });
+                btn.classList.add('bg-white', 'shadow-sm', 'text-primary', 'font-bold');
+                btn.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+            });
+        }
+    });
+
+</script>
+
+
+<script class="">
+    (function() {
+        const form = document.getElementById('memberRegisterForm');
+        const idInput = document.getElementById('user-id');
+        const idCheckBtn = document.getElementById('id-check-btn');
+        const idMessage = document.getElementById('id-check-msg');
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm-password');
+        const passwordMessage = document.getElementById('pw-check-msg');
+        const termsCheckbox = document.getElementById('register-terms');
+        const emailInput = document.getElementById('email');
+        const emailBtn = document.getElementById('verify-email-btn');
+        const emailContainer = document.getElementById('email-verification-container');
+        const emailCodeInput = document.getElementById('email-code');
+        const emailCodeBtn = document.getElementById('email-code-check-btn');
+        const emailStatus = document.getElementById('email-status');
+        const phoneInput = document.getElementById('phone');
+        const phoneBtn = document.getElementById('verify-phone-btn');
+        const phoneStatus = document.getElementById('phone-status');
+
+        let idAvailable = false;
+        let idCheckedValue = '';
+        let emailVerified = false;
+        let emailVerifiedValue = '';
+
+        if (sessionStorage.getItem('kmarket_terms_agreed') === 'true') {
+            termsCheckbox.checked = true;
+        }
+
+        const showMessage = (element, text, ok) => {
+            element.textContent = text;
+            element.classList.remove('hidden', 'text-error', 'text-secondary');
+            element.classList.add(ok ? 'text-secondary' : 'text-error');
+        };
+
+        const postForm = async (url, data) => {
+            const body = new URLSearchParams(data);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                body
+            });
+            return response.json();
+        };
+
+        const validatePassword = () => {
+            if (!passwordInput.value && !confirmInput.value) {
+                passwordMessage.classList.add('hidden');
+                return false;
+            }
+            if (passwordInput.value.length < 4) {
+                showMessage(passwordMessage, '비밀번호는 4자 이상 입력해주세요.', false);
+                return false;
+            }
+            if (passwordInput.value !== confirmInput.value) {
+                showMessage(passwordMessage, '비밀번호가 일치하지 않습니다.', false);
+                return false;
+            }
+            showMessage(passwordMessage, '비밀번호가 일치합니다.', true);
+            return true;
+        };
+
+        idInput.addEventListener('input', () => {
+            idAvailable = false;
+            idCheckedValue = '';
+            idMessage.classList.add('hidden');
+        });
+
+        idCheckBtn.addEventListener('click', async () => {
+            const id = idInput.value.trim();
+            if (!/^[A-Za-z0-9]{4,16}$/.test(id)) {
+                showMessage(idMessage, '아이디는 영문/숫자 4~16자로 입력해주세요.', false);
+                idInput.focus();
+                return;
+            }
+
+            idCheckBtn.disabled = true;
+            idCheckBtn.textContent = '확인중';
+            try {
+                const response = await fetch(`${idCheckBtn.dataset.checkUrl}?id=${encodeURIComponent(id)}`);
+                const result = await response.json();
+                idAvailable = Boolean(result.available);
+                idCheckedValue = idAvailable ? id : '';
+                showMessage(idMessage, result.message || '아이디 확인이 완료되었습니다.', idAvailable);
+            } catch (error) {
+                idAvailable = false;
+                idCheckedValue = '';
+                showMessage(idMessage, '중복 확인 중 오류가 발생했습니다.', false);
+            } finally {
+                idCheckBtn.disabled = false;
+                idCheckBtn.textContent = '중복 확인';
+            }
+        });
+
+        passwordInput.addEventListener('input', validatePassword);
+        confirmInput.addEventListener('input', validatePassword);
+
+        emailInput.addEventListener('input', () => {
+            emailVerified = false;
+            emailVerifiedValue = '';
+            if (emailStatus) {
+                emailStatus.classList.add('hidden');
+            }
+        });
+
+        if (emailBtn && emailContainer && emailStatus) {
+            emailBtn.addEventListener('click', async () => {
+                const email = emailInput.value.trim();
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    showMessage(emailStatus, '이메일 주소를 정확히 입력해주세요.', false);
+                    emailContainer.classList.remove('hidden');
+                    emailInput.focus();
+                    return;
+                }
+
+                emailBtn.disabled = true;
+                emailBtn.textContent = '발송중';
+                emailContainer.classList.remove('hidden');
+                showMessage(emailStatus, '인증번호를 발송하고 있습니다.', true);
+                try {
+                    const result = await postForm(emailBtn.dataset.sendUrl, { email });
+                    emailVerified = false;
+                    emailVerifiedValue = '';
+                    showMessage(emailStatus, result.message || '인증번호 발송 결과를 확인해주세요.', Boolean(result.success));
+                    if (result.success) {
+                        emailCodeInput.value = '';
+                        emailCodeInput.focus();
+                        emailBtn.textContent = '재발송';
+                    } else {
+                        emailBtn.textContent = '인증하기';
+                    }
+                } catch (error) {
+                    showMessage(emailStatus, '인증번호 발송 중 오류가 발생했습니다.', false);
+                    emailBtn.textContent = '인증하기';
+                } finally {
+                    emailBtn.disabled = false;
+                }
+            });
+        }
+
+        if (emailCodeBtn && emailStatus) {
+            emailCodeBtn.addEventListener('click', async () => {
+                const email = emailInput.value.trim();
+                const code = emailCodeInput.value.trim();
+                if (!/^\d{6}$/.test(code)) {
+                    showMessage(emailStatus, '인증번호 6자리를 입력해주세요.', false);
+                    emailCodeInput.focus();
+                    return;
+                }
+
+                emailCodeBtn.disabled = true;
+                emailCodeBtn.textContent = '확인중';
+                try {
+                    const result = await postForm(emailCodeBtn.dataset.verifyUrl, { email, code });
+                    emailVerified = Boolean(result.success);
+                    emailVerifiedValue = emailVerified ? email : '';
+                    showMessage(emailStatus, result.message || '인증번호 확인 결과를 확인해주세요.', emailVerified);
+                } catch (error) {
+                    emailVerified = false;
+                    emailVerifiedValue = '';
+                    showMessage(emailStatus, '인증번호 확인 중 오류가 발생했습니다.', false);
+                } finally {
+                    emailCodeBtn.disabled = false;
+                    emailCodeBtn.textContent = '확인';
+                }
+            });
+        }
+
+        if (phoneBtn && phoneStatus) {
+            phoneBtn.addEventListener('click', () => {
+                const phone = phoneInput.value.trim();
+                if (phone && !/^\d{7,8}$/.test(phone)) {
+                    phoneStatus.textContent = '휴대전화 번호를 숫자로 7~8자리 입력해주세요.';
+                    phoneStatus.classList.remove('hidden', 'text-secondary');
+                    phoneStatus.classList.add('text-error');
+                    phoneInput.focus();
+                    return;
+                }
+                phoneStatus.textContent = '사용 가능한 번호입니다.';
+                phoneStatus.classList.remove('hidden', 'text-error');
+                phoneStatus.classList.add('text-secondary');
+            });
+        }
+
+        form.addEventListener('submit', (event) => {
+            const currentId = idInput.value.trim();
+            if (!idAvailable || idCheckedValue !== currentId) {
+                event.preventDefault();
+                showMessage(idMessage, '아이디 중복 확인을 먼저 완료해주세요.', false);
+                idInput.focus();
+                return;
+            }
+            if (!validatePassword()) {
+                event.preventDefault();
+                confirmInput.focus();
+                return;
+            }
+            if (!emailVerified || emailVerifiedValue !== emailInput.value.trim()) {
+                event.preventDefault();
+                emailContainer.classList.remove('hidden');
+                showMessage(emailStatus, '이메일 인증을 완료해주세요.', false);
+                emailInput.focus();
+                return;
+            }
+            if (!termsCheckbox.checked) {
+                event.preventDefault();
+                alert('약관 동의 후 가입할 수 있습니다.');
+                termsCheckbox.focus();
+            }
+        });
+    })();
+</script><script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>

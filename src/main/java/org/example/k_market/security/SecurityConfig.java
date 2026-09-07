@@ -1,0 +1,279 @@
+package org.example.k_market.security;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.example.k_market.service.member.CustomOAuth2UserService;
+import org.example.k_market.service.member.MemberLoginActivityService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.util.UriUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+
+@EnableMethodSecurity
+@Configuration
+@Slf4j
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(
+            HttpSecurity httpSecurity,
+            CustomOAuth2UserService customOAuth2UserService,
+            MemberLoginActivityService memberLoginActivityService,
+            ObjectProvider<ClientRegistrationRepository> clientRegistrationRepository) throws Exception {
+
+        // 로그인 설정
+        httpSecurity.formLogin( form -> form
+                .loginPage("/member/login")
+                .loginProcessingUrl("/member/login")
+                .failureHandler((request, response, exception) -> {
+                    String message = loginFailureMessage(exception);
+                    response.sendRedirect(request.getContextPath()
+                            + "/member/login?error=true&loginMessage="
+                            + UriUtils.encode(message, StandardCharsets.UTF_8));
+                })
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .successHandler((request, response, authentication) -> {
+                    // 💡 현재 애플리케이션의 Context Path 가져오기 (예: "/k_market")
+                    String contextPath = request.getContextPath();
+                    String userId = authentication.getName();
+                    boolean dormantReleased;
+                    try {
+                        dormantReleased = memberLoginActivityService.recordSuccessfulLogin(userId);
+                    } catch (DisabledException e) {
+                        SecurityContextHolder.clearContext();
+                        request.getSession().invalidate();
+                        redirectLoginFailure(request, response, loginFailureMessage(e), false);
+                        return;
+                    }
+                    request.getSession().setAttribute("sessUser", userId);
+
+                    boolean isAdmin = authentication.getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+                    // 관리자 여부를 세션에 따로 저장
+                    request.getSession().setAttribute("sessUser", userId);
+                    request.getSession().setAttribute("isAdmin", isAdmin);
+
+                    if (isAdmin) {
+                        // Context Path를 앞에 붙여서 리다이렉트
+                        response.sendRedirect(contextPath + "/admin/index");
+                    } else {
+                        // 일반 유저 메인 페이지
+                        response.sendRedirect(contextPath + "/my/index" + dormantReleasedQuery(dormantReleased));
+                    }
+                })
+        );
+
+        if (clientRegistrationRepository.getIfAvailable() != null) {
+            httpSecurity.oauth2Login(oauth2 -> oauth2
+                    .loginPage("/member/login")
+                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                    .failureHandler((request, response, exception) -> {
+                        String message = oauthFailureMessage(exception);
+                        log.warn("SNS login failed: {}", exception.getMessage(), exception);
+                        response.sendRedirect(request.getContextPath()
+                                + "/member/login?error=sns&snsMessage="
+                                + UriUtils.encode(message, StandardCharsets.UTF_8));
+                    })
+                    .successHandler((request, response, authentication) -> {
+                        String contextPath = request.getContextPath();
+                        String userId = authentication.getName();
+                        boolean dormantReleased;
+                        try {
+                            dormantReleased = memberLoginActivityService.recordSuccessfulLogin(userId);
+                        } catch (DisabledException e) {
+                            SecurityContextHolder.clearContext();
+                            request.getSession().invalidate();
+                            redirectLoginFailure(request, response, loginFailureMessage(e), true);
+                            return;
+                        }
+
+                        request.getSession().setAttribute("sessUser", userId);
+                        request.getSession().setAttribute("isAdmin", false);
+
+                        response.sendRedirect(contextPath + "/my/index" + dormantReleasedQuery(dormantReleased));
+                    })
+            );
+        }
+
+        // 로그아웃 설정
+        httpSecurity.logout( config -> config
+                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout", "GET"))
+                .invalidateHttpSession(true)
+                .logoutSuccessHandler((request, response, authentication) ->
+                        response.sendRedirect(request.getContextPath() + "/member/login?logout=success"))
+        );
+
+        // 인가 설정 (권한 제어)
+        httpSecurity.authorizeHttpRequests( authorize -> authorize
+                .requestMatchers("/member/find/changePassword").authenticated()
+                .requestMatchers(
+                        "/member/login", "/member/join", "/member/signup", "/member/welcome",
+                        "/member/session", "/member/check-id", "/member/email/send", "/member/email/verify",
+                        "/member/register", "/member/registerseller", "/member/find/**",
+                        "/oauth2/**", "/login/oauth2/**",
+                        "/resources/**", "/css/**", "/js/**", "/images/**", "/uploads/**"
+                ).permitAll()
+                //셀러 권한 필요하면 여기에 추가
+                .requestMatchers("/admin/product/**").hasAnyRole("ADMIN", "SELLER")
+                .requestMatchers("/admin/order/**").hasAnyRole("ADMIN", "SELLER")
+                .requestMatchers("/admin/coupon/**").hasAnyRole("ADMIN", "SELLER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/my/**").authenticated()
+                .requestMatchers("/product/cart", "/product/cart/**").authenticated()
+                .requestMatchers("/cs/notice/write").hasRole("ADMIN")
+                .anyRequest().permitAll()
+        );
+
+        // 예외 처리 (JavaScript로 alert 띄우고 리다이렉트)
+        LoginUrlAuthenticationEntryPoint loginEntryPoint = new LoginUrlAuthenticationEntryPoint("/member/login");
+        httpSecurity.exceptionHandling( exception -> exception
+                .defaultAuthenticationEntryPointFor(loginEntryPoint, new AntPathRequestMatcher("/admin/**"))
+                .defaultAuthenticationEntryPointFor(loginEntryPoint, new AntPathRequestMatcher("/my/**"))
+                .defaultAuthenticationEntryPointFor(loginEntryPoint, new AntPathRequestMatcher("/product/cart/**"))
+                .defaultAuthenticationEntryPointFor(loginEntryPoint, new AntPathRequestMatcher("/product/cart"))
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    String contextPath = request.getContextPath();
+                    boolean seller = SecurityContextHolder.getContext().getAuthentication() != null
+                            && SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                            .anyMatch(authority -> "ROLE_SELLER".equals(authority.getAuthority()));
+
+                    response.setContentType("text/html; charset=UTF-8");
+                    PrintWriter out = response.getWriter();
+                    out.print("<script>");
+                    if (seller && accessDeniedException.getMessage() != null
+                            && accessDeniedException.getMessage().contains("운영 준비")) {
+                        out.print("alert('운영 준비중인 판매자는 관리자 페이지를 이용할 수 없습니다.');");
+                        out.print("location.href='" + contextPath + "/my/index';");
+                    } else if (seller && accessDeniedException.getMessage() != null
+                            && accessDeniedException.getMessage().contains("운영 중지")) {
+                        out.print("alert('운영 중지된 판매자는 관리자 페이지를 이용할 수 없습니다.');");
+                        out.print("location.href='" + contextPath + "/my/index';");
+                    } else if (seller && request.getRequestURI().contains("/admin/")) {
+                        out.print("alert('상품관리와 주문관리 페이지를 제외하고는 admin만 이용할 수 있습니다.');");
+                        out.print("location.href='" + contextPath + "/admin/product/list';");
+                    } else {
+                        out.print("alert('접근 권한이 없는 페이지입니다.');");
+                        out.print("location.href='" + contextPath + "/';");
+                    }
+                    out.print("</script>");
+                    out.flush();
+                })
+        );
+
+        httpSecurity.csrf(CsrfConfigurer::disable);
+        return httpSecurity.build();
+    }
+
+
+    private void redirectLoginFailure(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            String message,
+            boolean sns) throws IOException {
+        String queryName = sns ? "snsMessage" : "loginMessage";
+        String errorValue = sns ? "sns" : "true";
+        response.sendRedirect(request.getContextPath()
+                + "/member/login?error=" + errorValue
+                + "&" + queryName + "="
+                + UriUtils.encode(message, StandardCharsets.UTF_8));
+    }
+
+    private String dormantReleasedQuery(boolean dormantReleased) {
+        return dormantReleased ? "?dormantReleased=true" : "";
+    }
+
+    private String oauthFailureMessage(Exception exception) {
+        String message = exceptionChainMessage(exception);
+        String lowerMessage = message.toLowerCase(Locale.ROOT);
+        String accountStatusMessage = accountStatusFailureMessage(message, lowerMessage);
+
+        if (accountStatusMessage != null) {
+            return accountStatusMessage;
+        }
+
+        if (lowerMessage.contains("invalid_scope") || lowerMessage.contains("koe205")) {
+            return "카카오 동의항목 설정이 맞지 않습니다. 카카오 개발자 콘솔의 동의항목을 확인해주세요.";
+        }
+        if (lowerMessage.contains("redirect_uri") || lowerMessage.contains("redirect uri")) {
+            return "SNS Redirect URI 설정이 현재 접속 주소와 다릅니다.";
+        }
+        if (lowerMessage.contains("invalid_token_response")
+                || lowerMessage.contains("invalid_client")
+                || lowerMessage.contains("client_secret")
+                || lowerMessage.contains("401")) {
+            return "SNS 앱 키 또는 Client Secret 설정을 확인해주세요. 카카오는 REST API 키와 Client Secret 사용 여부가 일치해야 합니다.";
+        }
+
+        return "SNS 로그인 처리 중 오류가 발생했습니다. 서버 로그를 확인해주세요.";
+    }
+
+    private String loginFailureMessage(Exception exception) {
+        String message = exceptionChainMessage(exception);
+        String lowerMessage = message.toLowerCase(Locale.ROOT);
+        String accountStatusMessage = accountStatusFailureMessage(message, lowerMessage);
+
+        if (accountStatusMessage != null) {
+            return accountStatusMessage;
+        }
+        return "아이디 또는 비밀번호를 확인해주세요.";
+    }
+
+    private String accountStatusFailureMessage(String message, String lowerMessage) {
+        if (message.contains("탈퇴") || lowerMessage.contains("withdrawn") || lowerMessage.contains("deleted")) {
+            return "탈퇴한 아이디라서 로그인할 수 없습니다.";
+        }
+        if (message.contains("중지")
+                || lowerMessage.contains("suspended")
+                || lowerMessage.contains("blocked")
+                || lowerMessage.contains("stopped")) {
+            return "중지된 계정입니다. 고객센터에 문의해주세요.";
+        }
+        if (message.contains("휴면") || message.contains("휴먼") || lowerMessage.contains("dormant")) {
+            return "휴면 계정입니다. 고객센터에 문의해주세요.";
+        }
+        return null;
+    }
+
+    private String exceptionChainMessage(Throwable throwable) {
+        StringBuilder message = new StringBuilder();
+        Throwable current = throwable;
+        while (current != null) {
+            if (current.getMessage() != null) {
+                if (!message.isEmpty()) {
+                    message.append(" ");
+                }
+                message.append(current.getMessage());
+            }
+            current = current.getCause();
+        }
+        return message.toString();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

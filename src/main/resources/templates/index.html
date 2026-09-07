@@ -1,0 +1,755 @@
+<!DOCTYPE html><html class="light" lang="ko" xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title th:text="${siteConfig.title != null and !siteConfig.title.isBlank() ? siteConfig.title : 'K-market | 당신을 위한 친절한 온라인 쇼핑몰'}">K-market | 당신을 위한 친절한 온라인 쇼핑몰</title>
+    <base th:href="@{/}" href="/k_market/">
+    <link th:if="${siteConfig.favicon_stored != null and !siteConfig.favicon_stored.isBlank()}"
+          th:href="@{/uploads/{file}(file=${siteConfig.favicon_stored})}"
+          rel="icon" type="image/x-icon">
+    <!-- 폰트와 아이콘 불러오기 -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#14333b",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-container": "#99b9c2",
+                        "on-secondary-fixed": "#002018",
+                        "background": "#f8f9fa",
+                        "primary-fixed-dim": "#acccd5",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface-variant": "#41484a",
+                        "tertiary-fixed": "#ffdcc7",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#446c5f",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#c0ecdc",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "tertiary-container": "#5e3f2a",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "primary-fixed": "#c8e8f2",
+                        "error": "#ba1a1a",
+                        "tertiary": "#452916",
+                        "surface": "#f8f9fa",
+                        "surface-tint": "#45636b",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#3e6659",
+                        "primary-container": "#2c4a52",
+                        "inverse-primary": "#acccd5",
+                        "outline-variant": "#c1c7ca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#c0ecdc",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-primary-fixed": "#001f26",
+                        "outline": "#72787a",
+                        "inverse-on-surface": "#f0f1f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "container-max": "1280px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "80px",
+                        "margin-mobile": "16px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .standard-border {
+            border: 1px solid #e1e3e4;
+        }
+        #hit-products,
+        #recommended-products,
+        #new-arrivals,
+        #best-products,
+        #on-sale {
+            scroll-margin-top: 96px;
+        }
+        /* Placeholder image classes for developer reference */
+        .placeholder-image {
+            background-color: #f3f4f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #72787a;
+        }
+        .home-side-banner {
+            position: sticky;
+            top: 135px;
+            width: 200px;
+            height: 560px;
+            z-index: 35;
+            pointer-events: auto;
+        }
+        .home-side-banner-rail {
+            position: absolute;
+            top: 24px;
+            bottom: 24px;
+            width: 200px;
+            pointer-events: none;
+        }
+        .home-side-banner-rail-left {
+            left: -224px;
+        }
+        .home-side-banner-rail-right {
+            right: -224px;
+        }
+        .home-side-banner-stack {
+            position: sticky;
+            top: 135px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            pointer-events: auto;
+        }
+        .home-side-banner-stack .home-side-banner {
+            position: static;
+            top: auto;
+        }
+        @media (max-width: 1743px) {
+            .home-side-banner-rail {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- 메인 상단 고정 배너 -->
+<section class="relative z-40 w-full bg-surface-container-low overflow-hidden"
+         data-top-banner-frame
+         th:style="${topBanner != null} ? |aspect-ratio: ${topBanner.aspectRatio};| : 'min-height: 72px;'">
+    <a th:if="${topBanner != null}"
+       th:href="${#strings.isEmpty(topBanner.linkUrl) ? null : topBanner.linkUrl}"
+       class="block w-full h-full">
+        <img th:src="${topBanner.fileUrl_stored}"
+             th:alt="${#strings.isEmpty(topBanner.name) ? '메인 상단 배너' : topBanner.name}"
+             data-top-banner-image
+             class="block w-full h-full object-cover">
+    </a>
+    <div th:unless="${topBanner != null}"
+         class="w-full min-h-[72px] h-full flex items-center justify-center text-on-surface-variant font-medium">
+        배너를 준비중입니다
+    </div>
+</section>
+<!-- 헤더 영역 -->
+<header class="bg-white border-b border-outline-variant sticky top-0 w-full z-50">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-4">
+        <div class="flex justify-between items-center gap-md">
+            <!-- 로고 -->
+            <a class="flex items-center gap-2 shrink-0" th:href="@{/}" href="./">
+                <img th:if="${siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                     th:src="@{/uploads/{file}(file=${siteConfig.headerLogo_stored})}"
+                     class="h-10 w-auto max-w-48 object-contain"
+                     alt="K-market 헤더 로고">
+                <span th:if="${siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                      class="text-3xl font-extrabold text-primary">K-market</span>
+                <span th:unless="${siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                      class="text-3xl font-extrabold text-primary">K-market</span>
+            </a>
+            <!-- 상품 검색창 -->
+            <div class="hidden md:flex flex-1 max-w-lg relative">
+                <input class="w-full bg-white border border-outline rounded py-2 px-4 focus:ring-1 focus:ring-primary focus:outline-none" placeholder="어떤 상품을 찾으시나요?" type="text">
+                <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white p-1 rounded">
+                    <span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+                </button>
+            </div>
+            <!-- 로그인·회원가입·고객센터·장바구니 -->
+            <div class="flex items-center gap-md">
+                <div class="hidden lg:flex items-center gap-base font-label-md text-on-surface-variant">
+                    <a class="hover:underline" href="member/login">로그인</a>
+                    <span class="text-outline-variant">/</span>
+                    <a class="hover:underline" href="member/join">회원가입</a>
+                    <span class="hidden text-outline-variant" data-auth-required="true">/</span>
+                    <a class="hidden hover:underline" href="my/index" data-auth-required="true">마이페이지</a>
+                    <span class="text-outline-variant">/</span><a href="cs/index" class="hover:underline flex items-center gap-1"><span class="material-symbols-outlined text-sm">support_agent</span>고객센터</a></div>
+                <div class="flex items-center gap-base">
+                    <div th:replace="~{fragments/cart-button :: button}"></div>
+                    <button class="md:hidden p-2 border border-outline-variant rounded">
+                        <span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="relative max-w-container-max mx-auto px-margin-mobile md:px-gutter py-md">
+    <div class="home-side-banner-rail home-side-banner-rail-left">
+        <aside class="home-side-banner overflow-hidden rounded-lg border border-outline-variant bg-white shadow-md"
+               aria-label="왼쪽 사이드 배너">
+            <a th:if="${leftSideBanner != null}"
+               th:href="${#strings.isEmpty(leftSideBanner.linkUrl) ? null : leftSideBanner.linkUrl}"
+               class="block w-full h-full">
+                <img th:src="${leftSideBanner.fileUrl_stored}"
+                     th:alt="${#strings.isEmpty(leftSideBanner.name) ? '메인 왼쪽 사이드 배너' : leftSideBanner.name}"
+                     class="block w-full h-full object-cover">
+            </a>
+            <div th:unless="${leftSideBanner != null}"
+                 class="w-full h-full flex items-center justify-center px-3 text-center text-sm text-on-surface-variant">
+                배너를<br>준비중입니다
+            </div>
+        </aside>
+    </div>
+
+    <div class="home-side-banner-rail home-side-banner-rail-right">
+        <div class="home-side-banner-stack">
+            <aside class="home-side-banner overflow-hidden rounded-lg border border-outline-variant bg-white shadow-md"
+                   aria-label="오른쪽 사이드 배너">
+                <a th:if="${rightSideBanner != null}"
+                   th:href="${#strings.isEmpty(rightSideBanner.linkUrl) ? null : rightSideBanner.linkUrl}"
+                   class="block w-full h-full">
+                    <img th:src="${rightSideBanner.fileUrl_stored}"
+                         th:alt="${#strings.isEmpty(rightSideBanner.name) ? '메인 오른쪽 사이드 배너' : rightSideBanner.name}"
+                         class="block w-full h-full object-cover">
+                </a>
+                <div th:unless="${rightSideBanner != null}"
+                     class="w-full h-full flex items-center justify-center px-3 text-center text-sm text-on-surface-variant">
+                    배너를<br>준비중입니다
+                </div>
+            </aside>
+
+            <button type="button"
+                    onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+                    class="flex h-14 w-14 flex-col items-center justify-center rounded-full border border-outline-variant bg-white text-primary shadow-md transition-all hover:-translate-y-0.5 hover:bg-surface-container-low hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    aria-label="페이지 맨 위로 이동">
+                <span class="material-symbols-outlined text-[22px] leading-none">arrow_upward</span>
+                <span class="mt-0.5 text-[9px] font-bold leading-none whitespace-nowrap">맨위로</span>
+            </button>
+        </div>
+    </div>
+    <div th:replace="~{fragments/nav :: productTabs('deal')}"></div>
+    <div class="flex flex-col md:flex-row gap-lg items-start">
+        <!-- 왼쪽 사이드바: 카테고리와 판매량 기준 베스트 상품 5개 -->
+        <div th:replace="~{fragments/nav :: productSidebar(
+        ${categories},
+        ${subCategoryMap},
+        ${mainCateNo},
+        ${rankingProducts}
+)}"></div>
+        <!-- Main Column -->
+        <div class="flex-1 flex flex-col gap-xl">
+            <!-- Hero Banner -->
+            <div class="banner-image relative w-full aspect-[2/1] md:aspect-[16/6] rounded overflow-hidden placeholder-image"
+                 data-main-banner-slider>
+                <div th:if="${mainBanners == null or mainBanners.isEmpty()}"
+                     class="absolute inset-0 flex items-center justify-center text-on-surface-variant font-medium">
+                    배너를 준비중입니다
+                </div>
+
+                <a th:each="banner, stat : ${mainBanners}"
+                   th:href="${#strings.isEmpty(banner.linkUrl) ? null : banner.linkUrl}"
+                   th:classappend="${stat.first} ? ' opacity-100' : ' opacity-0 pointer-events-none'"
+                   class="absolute inset-0 block transition-opacity duration-300"
+                   data-main-banner-slide
+                   th:attr="aria-hidden=${!stat.first}">
+                    <img th:src="${banner.fileUrl_stored}"
+                         th:alt="${#strings.isEmpty(banner.name) ? '메인 슬라이드 배너' : banner.name}"
+                         class="block w-full h-full object-cover">
+                </a>
+
+                <th:block th:if="${mainBanners != null and mainBanners.size() > 1}">
+                    <button type="button" data-banner-prev aria-label="이전 배너"
+                            class="absolute z-10 left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-primary shadow flex items-center justify-center hover:bg-white transition-colors">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button type="button" data-banner-next aria-label="다음 배너"
+                            class="absolute z-10 right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-primary shadow flex items-center justify-center hover:bg-white transition-colors">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="absolute z-10 bottom-3 left-1/2 -translate-x-1/2 flex gap-2" aria-hidden="true">
+                        <span th:each="banner, stat : ${mainBanners}"
+                              th:classappend="${stat.first} ? ' bg-primary' : ' bg-white/80'"
+                              class="w-2 h-2 rounded-full shadow-sm"
+                              data-banner-dot></span>
+                    </div>
+                </th:block>
+            </div>
+            <!-- 히트 상품: 조회수 높은 순 8개 -->
+            <section id="hit-products">
+                <div class="flex justify-between items-center mb-md border-b border-outline-variant pb-2">
+                    <h3 class="text-2xl font-bold text-primary">히트 상품</h3>
+                    <a class="text-primary font-medium hover:underline flex items-center gap-1"
+                       th:href="@{/product/list}" href="product/list">
+                        전체보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    <div class="product-card group flex flex-col"
+                         th:each="product : ${hitProducts}">
+
+                        <a th:href="@{/product/view(prodNo=${product.prodNo})}"
+                           class="block">
+                            <div class="product-image relative aspect-square placeholder-image standard-border rounded overflow-hidden mb-sm">
+                                <img th:if="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                     th:src="${product.thumb1}"
+                                     th:alt="${product.name}"
+                                     class="w-full h-full object-cover">
+
+                                <span th:unless="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                      class="material-symbols-outlined text-4xl">image</span>
+                                <div class="absolute top-2 left-2 bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded">HIT</div>
+                            </div>
+
+                            <h4 class="font-medium text-on-surface-variant line-clamp-2 mb-1"
+                                th:text="${product.name}">상품명</h4>
+                        </a>
+                        <div class="mb-1" th:replace="~{fragments/rating :: productRating(${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].averageRating : 0}, ${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].reviewCount : 0})}"></div>
+
+                        <div class="mt-auto">
+                            <div class="flex items-center gap-1">
+                                <span class="text-lg font-bold text-primary"
+                                      th:text="|${#numbers.formatInteger(product.price - (product.price * (product.discountRate != null ? product.discountRate : 0) / 100), 3, 'COMMA')}원|">
+                                    27,000원
+                                </span>
+                                <span th:if="${product.discountRate != null and product.discountRate > 0}"
+                                      class="text-xs text-error font-bold"
+                                      th:text="|-${product.discountRate}%|">-10%</span>
+                            </div>
+                            <p th:if="${product.discountRate != null and product.discountRate > 0}"
+                               class="text-[10px] text-outline line-through"
+                               th:text="|${#numbers.formatInteger(product.price, 3, 'COMMA')}원|">39,800원</p>
+
+                            <form th:action="@{/product/cart/add}" method="post" class="mt-2">
+                                <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit"
+                                        class="w-full py-2 border border-primary text-primary text-sm font-bold rounded hover:bg-primary hover:text-white transition-colors">
+                                    장바구니 담기
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${hitProducts == null or hitProducts.isEmpty()}"
+                         class="col-span-full py-lg text-center text-on-surface-variant">
+                        등록된 히트 상품이 없습니다.
+                    </div>
+                </div>
+            </section>
+            <!-- 추천 상품: 리뷰 평점 높은 순 8개 -->
+            <section id="recommended-products">
+                <div class="flex justify-between items-center mb-md border-b border-outline-variant pb-2">
+                    <h3 class="text-2xl font-bold text-primary">추천 상품</h3>
+                    <a class="text-primary font-medium hover:underline flex items-center gap-1"
+                       th:href="@{/product/list}" href="product/list">
+                        전체보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    <div class="product-card group flex flex-col"
+                         th:each="product : ${recommendedProducts}">
+
+                        <a th:href="@{/product/view(prodNo=${product.prodNo})}"
+                           class="block">
+                            <div class="product-image relative aspect-square placeholder-image standard-border rounded overflow-hidden mb-sm">
+                                <img th:if="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                     th:src="${product.thumb1}"
+                                     th:alt="${product.name}"
+                                     class="w-full h-full object-cover">
+
+                                <span th:unless="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                      class="material-symbols-outlined text-4xl">image</span>
+                                <div class="absolute top-2 left-2 bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded">추천</div>
+                            </div>
+
+                            <h4 class="font-medium text-on-surface-variant line-clamp-2 mb-1"
+                                th:text="${product.name}">상품명</h4>
+                        </a>
+                        <div class="mb-1" th:replace="~{fragments/rating :: productRating(${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].averageRating : 0}, ${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].reviewCount : 0})}"></div>
+
+                        <div class="mt-auto">
+                            <div class="flex items-center gap-1">
+                                <span class="text-lg font-bold text-primary"
+                                      th:text="|${#numbers.formatInteger(product.price - (product.price * (product.discountRate != null ? product.discountRate : 0) / 100), 3, 'COMMA')}원|">
+                                    27,000원
+                                </span>
+                                <span th:if="${product.discountRate != null and product.discountRate > 0}"
+                                      class="text-xs text-error font-bold"
+                                      th:text="|-${product.discountRate}%|">-10%</span>
+                            </div>
+                            <p th:if="${product.discountRate != null and product.discountRate > 0}"
+                               class="text-[10px] text-outline line-through"
+                               th:text="|${#numbers.formatInteger(product.price, 3, 'COMMA')}원|">39,800원</p>
+
+                            <form th:action="@{/product/cart/add}" method="post" class="mt-2">
+                                <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit"
+                                        class="w-full py-2 border border-primary text-primary text-sm font-bold rounded hover:bg-primary hover:text-white transition-colors">
+                                    장바구니 담기
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${recommendedProducts == null or recommendedProducts.isEmpty()}"
+                         class="col-span-full py-lg text-center text-on-surface-variant">
+                        등록된 추천 상품이 없습니다.
+                    </div>
+                </div>
+            </section>
+            <!-- 최신 상품: 최근 등록 순 8개 -->
+            <section id="new-arrivals">
+                <div class="flex justify-between items-center mb-md border-b border-outline-variant pb-2">
+                    <h3 class="text-2xl font-bold text-primary">최신 상품</h3>
+                    <a class="text-primary font-medium hover:underline flex items-center gap-1"
+                       th:href="@{/product/list}" href="product/list">
+                        전체보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    <div class="product-card group flex flex-col"
+                         th:each="product : ${latestProducts}">
+
+                        <a th:href="@{/product/view(prodNo=${product.prodNo})}"
+                           class="block">
+                            <div class="product-image relative aspect-square placeholder-image standard-border rounded overflow-hidden mb-sm">
+                                <img th:if="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                     th:src="${product.thumb1}"
+                                     th:alt="${product.name}"
+                                     class="w-full h-full object-cover">
+
+                                <span th:unless="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                      class="material-symbols-outlined text-4xl">image</span>
+                                <div class="absolute top-2 left-2 bg-error text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</div>
+                            </div>
+
+                            <h4 class="font-medium text-on-surface-variant line-clamp-2 mb-1"
+                                th:text="${product.name}">상품명</h4>
+                        </a>
+                        <div class="mb-1" th:replace="~{fragments/rating :: productRating(${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].averageRating : 0}, ${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].reviewCount : 0})}"></div>
+
+                        <div class="mt-auto">
+                            <div class="flex items-center gap-1">
+                                <span class="text-lg font-bold text-primary"
+                                      th:text="|${#numbers.formatInteger(product.price - (product.price * (product.discountRate != null ? product.discountRate : 0) / 100), 3, 'COMMA')}원|">
+                                    27,000원
+                                </span>
+                                <span th:if="${product.discountRate != null and product.discountRate > 0}"
+                                      class="text-xs text-error font-bold"
+                                      th:text="|-${product.discountRate}%|">-10%</span>
+                            </div>
+                            <p th:if="${product.discountRate != null and product.discountRate > 0}"
+                               class="text-[10px] text-outline line-through"
+                               th:text="|${#numbers.formatInteger(product.price, 3, 'COMMA')}원|">39,800원</p>
+
+                            <form th:action="@{/product/cart/add}" method="post" class="mt-2">
+                                <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit"
+                                        class="w-full py-2 border border-primary text-primary text-sm font-bold rounded hover:bg-primary hover:text-white transition-colors">
+                                    장바구니 담기
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${latestProducts == null or latestProducts.isEmpty()}"
+                         class="col-span-full py-lg text-center text-on-surface-variant">
+                        등록된 최신 상품이 없습니다.
+                    </div>
+                </div>
+            </section>
+            <!-- 할인 상품: 할인율 높은 순 8개 -->
+            <section id="on-sale">
+                <div class="flex justify-between items-center mb-md border-b border-outline-variant pb-2">
+                    <h3 class="text-2xl font-bold text-primary">할인 상품</h3>
+                    <a class="text-primary font-medium hover:underline flex items-center gap-1"
+                       th:href="@{/product/list}" href="product/list">
+                        전체보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    <div class="product-card group flex flex-col"
+                         th:each="product : ${discountProducts}">
+
+                        <a th:href="@{/product/view(prodNo=${product.prodNo})}"
+                           class="block">
+                            <div class="product-image relative aspect-square placeholder-image standard-border rounded overflow-hidden mb-sm">
+                                <img th:if="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                     th:src="${product.thumb1}"
+                                     th:alt="${product.name}"
+                                     class="w-full h-full object-cover">
+
+                                <span th:unless="${product.thumb1 != null and !product.thumb1.isBlank()}"
+                                      class="material-symbols-outlined text-4xl">image</span>
+                                <div class="absolute top-2 left-2 bg-error text-white text-[10px] font-bold px-2 py-0.5 rounded">SALE</div>
+                            </div>
+
+                            <h4 class="font-medium text-on-surface-variant line-clamp-2 mb-1"
+                                th:text="${product.name}">상품명</h4>
+                        </a>
+                        <div class="mb-1" th:replace="~{fragments/rating :: productRating(${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].averageRating : 0}, ${reviewStats[product.prodNo] != null ? reviewStats[product.prodNo].reviewCount : 0})}"></div>
+
+                        <div class="mt-auto">
+                            <div class="flex items-center gap-1">
+                                <span class="text-lg font-bold text-primary"
+                                      th:text="|${#numbers.formatInteger(product.price - (product.price * (product.discountRate != null ? product.discountRate : 0) / 100), 3, 'COMMA')}원|">
+                                    27,000원
+                                </span>
+                                <span th:if="${product.discountRate != null and product.discountRate > 0}"
+                                      class="text-xs text-error font-bold"
+                                      th:text="|-${product.discountRate}%|">-10%</span>
+                            </div>
+                            <p th:if="${product.discountRate != null and product.discountRate > 0}"
+                               class="text-[10px] text-outline line-through"
+                               th:text="|${#numbers.formatInteger(product.price, 3, 'COMMA')}원|">39,800원</p>
+
+                            <form th:action="@{/product/cart/add}" method="post" class="mt-2">
+                                <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit"
+                                        class="w-full py-2 border border-primary text-primary text-sm font-bold rounded hover:bg-primary hover:text-white transition-colors">
+                                    장바구니 담기
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${discountProducts == null or discountProducts.isEmpty()}"
+                         class="col-span-full py-lg text-center text-on-surface-variant">
+                        등록된 할인 상품이 없습니다.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+<!-- 푸터 영역 -->
+<footer class="bg-white border-t border-outline-variant mt-xl py-lg">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter">
+        <!-- 약관 및 회사 안내 링크 -->
+        <div class="flex flex-wrap gap-md text-sm font-medium text-on-surface-variant mb-8 border-b border-surface-container pb-4">
+            <a class="hover:text-primary" href="company/main">회사소개</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary" href="policy/buyer">서비스이용약관</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary font-bold text-on-surface" href="policy/buyer">개인정보처리방침</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary" href="policy/buyer">전자금융거래약관</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+            <!-- 회사 정보 -->
+            <div class="flex flex-col md:flex-row gap-md items-start">
+                <div class="footer-logo w-32 h-24 flex items-center justify-center rounded shrink-0">
+                    <img th:if="${siteConfig.footerLogo_stored != null and !siteConfig.footerLogo_stored.isBlank()}"
+                         th:src="@{/uploads/{file}(file=${siteConfig.footerLogo_stored})}"
+                         alt="K-market 푸터 로고"
+                         class="w-full h-full object-contain">
+                    <span th:unless="${siteConfig.footerLogo_stored != null and !siteConfig.footerLogo_stored.isBlank()}"
+                          class="material-symbols-outlined text-4xl text-outline">storefront</span>
+                </div>
+                <div class="text-sm text-on-surface-variant space-y-1">
+                    <h2 class="text-xl font-bold text-primary mb-2"
+                        th:text="${siteConfig.companyName != null and !siteConfig.companyName.isBlank() ? siteConfig.companyName : '(주)케이마켓'}">(주)케이마켓</h2>
+                    <p th:text="|${siteConfig.baseAddress ?: ''} ${siteConfig.detailAddress ?: ''}|">부산광역시 부산진구 중앙대로 103 그린타워 13층</p>
+                    <p>대표이사 : <span th:text="${siteConfig.ceo ?: '-'}">홍길동</span></p>
+                    <p>사업자등록번호 : <span th:text="${siteConfig.bizNumber ?: '-'}">123-45-12345</span></p>
+                    <p th:if="${siteConfig.mailOrderNumber != null and !siteConfig.mailOrderNumber.isBlank()}">
+                        통신판매업신고 : <span th:text="${siteConfig.mailOrderNumber}"></span>
+                    </p>
+                    <p class="mt-4 text-[10px] text-outline">
+                        Version <span th:text="${latestVersion != null and !latestVersion.isBlank() ? latestVersion : '등록된 버전 없음'}">0.0.6-SNAPSHOT</span>
+                    </p>
+                    <p class="text-[10px] text-outline"
+                       th:if="${siteConfig.copyright != null and !siteConfig.copyright.isBlank()}"
+                       th:text="${siteConfig.copyright}">Copyright © K-market. All rights reserved.</p>
+                </div>
+            </div>
+            <!-- 고객센터 정보 -->
+            <div class="flex flex-col gap-2">
+                <h3 class="font-bold text-lg text-primary">고객센터</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md text-sm text-on-surface-variant">
+                    <div>
+                        <p class="font-bold text-on-surface">Tel : <span th:text="${siteConfig.csPhone ?: '-'}">1234-5678</span></p>
+                        <p th:text="${siteConfig.csHours ?: '운영시간 정보가 등록되지 않았습니다.'}">평일 09:00 ~ 18:00</p>
+                        <p th:if="${siteConfig.csEmail != null and !siteConfig.csEmail.isBlank()}">
+                            Email : <a class="hover:underline" th:href="|mailto:${siteConfig.csEmail}|" th:text="${siteConfig.csEmail}"></a>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface">전자금융거래 분쟁 담당</p>
+                        <p th:text="${siteConfig.finDisputeManager ?: '담당자 정보가 등록되지 않았습니다.'}">1234-1234 (365일 09:00 ~ 18:00)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-4">
+                    <a class="p-2 border border-outline-variant rounded hover:bg-surface-container" href="#"><span class="material-symbols-outlined text-sm">share</span></a>
+                    <a class="p-2 border border-outline-variant rounded hover:bg-surface-container" href="#"><span class="material-symbols-outlined text-sm">mail</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- 모바일 하단 메뉴 -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-outline-variant flex justify-around py-3 z-50">
+    <a class="flex flex-col items-center gap-1 text-primary" href="./">
+        <span class="material-symbols-outlined">home</span>
+        <span class="text-[10px] font-bold">홈</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="product/list">
+        <span class="material-symbols-outlined">grid_view</span>
+        <span class="text-[10px]">메뉴</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" href="product/search">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-[10px]">검색</span>
+    </a>
+    <a class="hidden flex flex-col items-center gap-1 text-on-surface-variant" href="my/index" data-auth-required="true">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-[10px]">마이페이지</span>
+    </a>
+</nav>
+<script>
+    // 검색 버튼 또는 Enter 입력 시 상품 검색 페이지로 이동
+    const searchInput = document.querySelector('header input[type="text"]');
+    const searchButton = document.querySelector('header button .material-symbols-outlined[data-icon="search"]')?.closest('button');
+
+    function submitProductSearch() {
+        if (!searchInput) return;
+
+        const keyword = searchInput.value.trim();
+        const searchUrl = new URL('product/search', document.baseURI);
+        searchUrl.searchParams.set('keyword', keyword);
+        window.location.href = searchUrl.toString();
+    }
+
+    if (searchButton) {
+        searchButton.addEventListener('click', submitProductSearch);
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                submitProductSearch();
+            }
+        });
+    }
+
+    // 검색창 선택 시 테두리 강조
+    const searchInputForFocus = searchInput;
+    if (searchInputForFocus) {
+        searchInputForFocus.addEventListener('focus', () => {
+            searchInputForFocus.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInputForFocus.addEventListener('blur', () => {
+            searchInputForFocus.classList.remove('ring-2', 'ring-primary/20');
+        });
+    }
+</script>
+
+
+
+
+<script>
+    const topBannerImage = document.querySelector('[data-top-banner-image]');
+    const topBannerFrame = document.querySelector('[data-top-banner-frame]');
+
+    function fitTopBannerToImage() {
+        if (topBannerImage?.naturalWidth && topBannerImage?.naturalHeight && topBannerFrame) {
+            topBannerFrame.style.aspectRatio = `${topBannerImage.naturalWidth} / ${topBannerImage.naturalHeight}`;
+        }
+    }
+
+    if (topBannerImage) {
+        if (topBannerImage.complete) {
+            fitTopBannerToImage();
+        } else {
+            topBannerImage.addEventListener('load', fitTopBannerToImage, {once: true});
+        }
+    }
+
+    const mainBannerSlider = document.querySelector('[data-main-banner-slider]');
+    if (mainBannerSlider) {
+        const slides = [...mainBannerSlider.querySelectorAll('[data-main-banner-slide]')];
+        const dots = [...mainBannerSlider.querySelectorAll('[data-banner-dot]')];
+        const previousButton = mainBannerSlider.querySelector('[data-banner-prev]');
+        const nextButton = mainBannerSlider.querySelector('[data-banner-next]');
+        let currentIndex = 0;
+
+        function showBanner(index) {
+            if (!slides.length) return;
+            currentIndex = (index + slides.length) % slides.length;
+            slides.forEach((slide, slideIndex) => {
+                const isActive = slideIndex === currentIndex;
+                slide.classList.toggle('opacity-100', isActive);
+                slide.classList.toggle('opacity-0', !isActive);
+                slide.classList.toggle('pointer-events-none', !isActive);
+                slide.setAttribute('aria-hidden', String(!isActive));
+            });
+            dots.forEach((dot, dotIndex) => {
+                dot.classList.toggle('bg-primary', dotIndex === currentIndex);
+                dot.classList.toggle('bg-white/80', dotIndex !== currentIndex);
+            });
+        }
+
+        previousButton?.addEventListener('click', () => showBanner(currentIndex - 1));
+        nextButton?.addEventListener('click', () => showBanner(currentIndex + 1));
+    }
+
+</script>
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>

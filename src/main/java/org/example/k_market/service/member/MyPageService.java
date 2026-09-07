@@ -1,0 +1,406 @@
+package org.example.k_market.service.member;
+
+import lombok.RequiredArgsConstructor;
+import org.example.k_market.dto.mypage.MyPageDtos;
+import org.example.k_market.entity.*;
+import org.example.k_market.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class MyPageService {
+    public static final int PAGE_SIZE = 6;
+    private static final int PAGE_BLOCK_SIZE = 5;
+
+    private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailsRepository orderDetailsRepository;
+    private final ProductRepository productRepository;
+    private final ShopRepository shopRepository;
+    private final PointHistoryRepository pointHistoryRepository;
+    private final CouponRepository couponRepository;
+    private final CouponDetailsRepository couponDetailsRepository;
+    private final ReviewRepository reviewRepository;
+    private final QnaRepository qnaRepository;
+    private final OrderClaimRepository orderClaimRepository;
+
+    public MyPageDtos.Dashboard dashboard(int memberNo) {
+        return new MyPageDtos.Dashboard(
+                summary(memberNo),
+                orders(memberNo, 1).page().getContent(),
+                points(memberNo, 1).page().getContent(),
+                qnas(memberNo, 1).page().getContent()
+        );
+    }
+
+    public MyPageDtos.Summary summary(int memberNo) {
+        int points = memberRepository.findById(memberNo)
+                .map(Member::getPoints)
+                .orElse(0);
+        long availableCouponCount = couponDetailsRepository.findByMemberNoOrderByIssuedAtDesc(memberNo).stream()
+                .map(this::toCouponItem)
+                .filter(coupon -> "사용가능".equals(coupon.statusLabel()))
+                .count();
+        return new MyPageDtos.Summary(
+                orderRepository.countByMemberNo(memberNo),
+                availableCouponCount,
+                points,
+                qnaRepository.countByMemberNoAndParentNo(memberNo, 0)
+        );
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.OrderSummary> orders(int memberNo, int page) {
+        return orders(memberNo, page, null, null);
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.OrderSummary> orders(int memberNo, int page, LocalDate startDate, LocalDate endDate) {
+        Pageable pageable = pageRequest(page);
+        Page<Order> orders;
+        if (startDate == null && endDate == null) {
+            orders = orderRepository.findByMemberNoOrderByCreatedAtDesc(memberNo, pageable);
+        } else {
+            LocalDateTime startDateTime = (startDate == null ? LocalDate.of(1970, 1, 1) : startDate).atStartOfDay();
+            LocalDateTime endDateTime = (endDate == null ? LocalDate.now() : endDate).plusDays(1).atStartOfDay();
+            orders = orderRepository.findByMemberNoAndCreatedAtBetweenOrderByCreatedAtDesc(
+                    memberNo, startDateTime, endDateTime, pageable);
+        }
+        Page<MyPageDtos.OrderSummary> mapped = orders.map(this::toOrderSummary);
+        return block(mapped);
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.PointItem> points(int memberNo, int page) {
+        return points(memberNo, page, null, null);
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.PointItem> points(int memberNo, int page, LocalDate startDate, LocalDate endDate) {
+        Pageable pageable = pageRequest(page);
+        LocalDateTime startDateTime = startDate == null ? null : startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate == null ? null : endDate.plusDays(1).atStartOfDay();
+        Page<PointHistory> points = startDateTime == null && endDateTime == null
+                ? pointHistoryRepository.findByMemberNoOrderByCreatedAtDesc(memberNo, pageable)
+                : pointHistoryRepository.findByMemberNoAndCreatedAtBetween(memberNo, startDateTime, endDateTime, pageable);
+        Page<MyPageDtos.PointItem> mapped = points
+                .map(this::toPointItem);
+        return block(mapped);
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.CouponItem> coupons(int memberNo, int page) {
+        Page<CouponDetails> details = couponDetailsRepository.findUnusedByMemberNo(memberNo, pageRequest(page));
+        List<MyPageDtos.CouponItem> items = details.getContent().stream()
+                .map(this::toCouponItem)
+                .toList();
+        return block(new PageImpl<>(items, details.getPageable(), details.getTotalElements()));
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.ReviewItem> reviews(int memberNo, int page) {
+        Page<MyPageDtos.ReviewItem> mapped = reviewRepository.findByMemberNoOrderByCreatedAtDesc(memberNo, pageRequest(page))
+                .map(this::toReviewItem);
+        return block(mapped);
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.ReviewItem> sellerReviews(int shopNo, int page) {
+        Page<MyPageDtos.ReviewItem> mapped = reviewRepository
+                .findSellerProductReviews(shopNo, pageRequest(page))
+                .map(this::toReviewItem);
+        return block(mapped);
+    }
+
+    public MyPageDtos.PageBlock<MyPageDtos.QnaItem> qnas(int memberNo, int page) {
+        Page<MyPageDtos.QnaItem> mapped = qnaRepository.findByMemberNoAndParentNoOrderByNoDesc(memberNo, 0, pageRequest(page))
+                .map(this::toQnaItem);
+        return block(mapped);
+    }
+
+    @Transactional
+    public void confirmOrder(long orderDetailNo, int memberNo) {
+        OrderDetails detail = requireOwnedOrderDetail(orderDetailNo, memberNo);
+        if (!"배송완료".equals(detail.getStatus())) {
+            throw new IllegalArgumentException("배송완료 상태의 상품만 구매확정할 수 있습니다.");
+        }
+        orderDetailsRepository.updateStatus(detail.getOrderDetailNo(), "구매확정");
+        if (detail.getRewardPoints() > 0) {
+            Member member = memberRepository.findByIdForUpdate(memberNo)
+                    .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+            int remainedPoints = member.getPoints() + detail.getRewardPoints();
+            member.changePoints(remainedPoints);
+            pointHistoryRepository.save(PointHistory.builder()
+                    .memberNo(memberNo)
+                    .amount(detail.getRewardPoints())
+                    .remainedAmount(remainedPoints)
+                    .description("구매확정 포인트 적립 (주문번호: " + detail.getOrderNo() + ")")
+                    .createdAt(LocalDateTime.now())
+                    .expiredAt(LocalDate.now().plusYears(1))
+                    .build());
+        }
+    }
+
+    @Transactional
+    public void requestOrderCancellation(long orderDetailNo, int memberNo) {
+        OrderDetails detail = requireOwnedOrderDetail(orderDetailNo, memberNo);
+        String status = valueOr(detail.getStatus(), "");
+        if (!List.of("입금대기", "결제완료", "주문완료").contains(status)) {
+            throw new IllegalArgumentException("입금대기 또는 결제완료 상태의 상품만 주문 취소를 요청할 수 있습니다.");
+        }
+        orderDetailsRepository.updateStatus(detail.getOrderDetailNo(), "취소요청");
+    }
+
+    @Transactional
+    public void claimOrder(int orderNo, int memberNo, String type, String reasonType, String reasonDetail, String attachedImage) {
+        Order order = requireOwnedOrder(orderNo, memberNo);
+        List<OrderDetails> details = orderDetailsRepository.findByOrderNo(order.getOrderNo());
+        if (details.isEmpty()) {
+            throw new IllegalArgumentException("주문 상품을 찾을 수 없습니다.");
+        }
+        if (details.stream().anyMatch(detail -> !"배송완료".equals(detail.getStatus()))) {
+            throw new IllegalArgumentException("주문의 모든 상품이 배송완료 상태일 때 반품 또는 교환을 신청할 수 있습니다.");
+        }
+        String safeType = "exchange".equalsIgnoreCase(type) ? "교환" : "반품";
+        for (OrderDetails detail : details) {
+            if (orderClaimRepository.existsByOrderDetailNoAndMemberNoAndTypeAndStatus(
+                    detail.getOrderDetailNo(), memberNo, safeType, "접수")) {
+                continue;
+            }
+            OrderClaim claim = OrderClaim.builder()
+                    .orderDetailNo(detail.getOrderDetailNo())
+                    .memberNo(memberNo)
+                    .type(safeType)
+                    .reasonType(valueOr(reasonType, "사유 미선택"))
+                    .reasonDetail(valueOr(reasonDetail, ""))
+                    .attachedImage(valueOr(attachedImage, ""))
+                    .status("접수")
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            orderClaimRepository.save(claim);
+            orderDetailsRepository.updateStatus(detail.getOrderDetailNo(), safeType + "신청");
+        }
+    }
+
+    @Transactional
+    public void cancelReturnClaim(int orderNo, int memberNo) {
+        Order order = requireOwnedOrder(orderNo, memberNo);
+        List<OrderDetails> details = orderDetailsRepository.findByOrderNo(order.getOrderNo());
+        boolean cancelled = false;
+        for (OrderDetails detail : details) {
+            Optional<OrderClaim> claim = orderClaimRepository
+                    .findFirstByOrderDetailNoAndMemberNoAndTypeAndStatusOrderByCreatedAtDesc(
+                            detail.getOrderDetailNo(), memberNo, "반품", "접수");
+            if (claim.isPresent()) {
+                claim.get().cancel();
+                orderDetailsRepository.updateStatus(detail.getOrderDetailNo(), "배송완료");
+                cancelled = true;
+            }
+        }
+        if (!cancelled) {
+            throw new IllegalArgumentException("취소할 반품 신청이 없습니다.");
+        }
+    }
+
+    @Transactional
+    public void deleteReview(long reviewNo, int memberNo) {
+        reviewRepository.findById(reviewNo)
+                .filter(review -> review.getMemberNo() == memberNo)
+                .ifPresent(review -> {
+                    Long productNo = review.getProdNo();
+                    reviewRepository.delete(review);
+                    reviewRepository.flush();
+                    Product product = productRepository.findById(productNo).orElse(null);
+                    if (product != null) {
+                        Double average = reviewRepository.findAverageRatingByProdNo(productNo);
+                        product.setRating(average == null ? null : java.math.BigDecimal.valueOf(average)
+                                .setScale(2, java.math.RoundingMode.HALF_UP));
+                    }
+                });
+    }
+
+    private OrderDetails requireOwnedOrderDetail(long orderDetailNo, int memberNo) {
+        OrderDetails detail = orderDetailsRepository.findById(orderDetailNo)
+                .orElseThrow(() -> new IllegalArgumentException("주문 상품을 찾을 수 없습니다."));
+        Order order = orderRepository.findById((int) detail.getOrderNo())
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        if (order.getMemberNo() != memberNo) {
+            throw new IllegalArgumentException("본인의 주문만 처리할 수 있습니다.");
+        }
+        return detail;
+    }
+
+    private Order requireOwnedOrder(int orderNo, int memberNo) {
+        return orderRepository.findById(orderNo)
+                .filter(order -> order.getMemberNo() == memberNo)
+                .orElseThrow(() -> new IllegalArgumentException("본인의 주문만 처리할 수 있습니다."));
+    }
+
+    private MyPageDtos.OrderItem toOrderItem(OrderDetails detail) {
+        Order order = orderRepository.findById((int) detail.getOrderNo()).orElse(null);
+        Product product = productRepository.findById(detail.getProductNo()).orElse(null);
+        Shop shop = detail.getShopNo() > 0 ? shopRepository.findByShopNo((int) detail.getShopNo()).orElse(null) : null;
+        int totalPrice = (detail.getPrice() * detail.getQuantity()) - detail.getDiscountPrice() + detail.getShippingFee();
+
+        return new MyPageDtos.OrderItem(
+                detail.getOrderDetailNo(),
+                (int) detail.getOrderNo(),
+                detail.getProductNo(),
+                product == null ? "상품 정보 없음" : product.getName(),
+                product == null ? null : product.getThumb1(),
+                shop == null ? "상호명 없음" : shop.getName(),
+                shop == null ? "-" : shop.getCeo(),
+                shop == null ? "-" : shop.getPhone(),
+                shop == null ? "-" : shop.getFax(),
+                "-",
+                shop == null ? "-" : shop.getBizNumber(),
+                shop == null ? "-" : joinAddress(shop.getZipCode(), shop.getBaseAddress(), shop.getDetailAddress()),
+                detail.getQuantity(),
+                detail.getPrice(),
+                Math.max(totalPrice, 0),
+                valueOr(detail.getStatus(), order == null ? "주문완료" : order.getStatus()),
+                order == null ? null : order.getCreatedAt()
+        );
+    }
+
+    private MyPageDtos.OrderSummary toOrderSummary(Order order) {
+        List<MyPageDtos.OrderItem> details = orderDetailsRepository.findByOrderNo(order.getOrderNo()).stream()
+                .map(this::toOrderItem)
+                .toList();
+        MyPageDtos.OrderItem representative = details.isEmpty() ? null : details.get(0);
+        int totalQuantity = details.stream()
+                .map(MyPageDtos.OrderItem::quantity)
+                .filter(java.util.Objects::nonNull)
+                .mapToInt(Integer::intValue)
+                .sum();
+        String detailStatus = details.stream()
+                .map(MyPageDtos.OrderItem::status)
+                .filter(status -> status != null && !status.isBlank())
+                .distinct()
+                .limit(2)
+                .reduce((first, second) -> "상품별 상이")
+                .orElse(valueOr(order.getStatus(), "주문완료"));
+        String orderName = buildProductSummary(details);
+
+        return new MyPageDtos.OrderSummary(
+                order.getOrderNo(),
+                orderName,
+                representative == null ? null : representative.thumb(),
+                details.size(),
+                totalQuantity,
+                order.getTotalProductPrice(),
+                order.getTotalDiscountPrice(),
+                order.getTotalShippingFee(),
+                order.getUsedPoints(),
+                order.getTotalPaymentPrice(),
+                detailStatus,
+                order.getCreatedAt(),
+                valueOr(order.getRecipientName(), "-"),
+                valueOr(order.getRecipientPhone(), "-"),
+                valueOr(joinAddress(order.getZipCode(), order.getBaseAddress(), order.getDetailAddress()), "-"),
+                valueOr(order.getMemo(), "없음"),
+                details
+        );
+    }
+
+    private String buildProductSummary(List<MyPageDtos.OrderItem> details) {
+        if (details.isEmpty()) return "상품 정보 없음";
+        String name = valueOr(details.get(0).productName(), "상품 정보 없음");
+        if (details.size() > 1) name += " 외 " + (details.size() - 1) + "건";
+        return name.length() <= 20 ? name : name.substring(0, 20);
+    }
+
+    private MyPageDtos.PointItem toPointItem(PointHistory point) {
+        return new MyPageDtos.PointItem(
+                point.getPointNo(),
+                point.getAmount() < 0 ? "사용" : "적립",
+                point.getAmount(),
+                point.getRemainedAmount(),
+                valueOr(point.getDescription(), "-"),
+                point.getCreatedAt(),
+                point.getExpiredAt()
+        );
+    }
+
+    private MyPageDtos.CouponItem toCouponItem(CouponDetails detail) {
+        CouponRepository.CouponSummary coupon = couponRepository.findSummaryByCouponNo(detail.getCouponNo()).orElse(null);
+        String used = valueOr(detail.getIsUsed(), "N");
+        LocalDate endDate = coupon == null ? null : coupon.getEndDate();
+        if (endDate == null && coupon != null && coupon.getValidDays() != null && detail.getIssuedAt() != null) {
+            endDate = detail.getIssuedAt().toLocalDate().plusDays(coupon.getValidDays());
+        }
+        String status = "Y".equalsIgnoreCase(used) ? "사용완료" : valueOr(detail.getStatus(), "사용가능");
+        if (!"사용완료".equals(status) && endDate != null && endDate.isBefore(LocalDate.now())) status = "기간만료";
+        if (!"사용완료".equals(status) && coupon != null && !"ACTIVE".equalsIgnoreCase(coupon.getStatus())) status = "사용중단";
+        return new MyPageDtos.CouponItem(
+                detail.getCouponDetailNo(),
+                coupon == null ? "쿠폰 정보 없음" : coupon.getName(),
+                coupon == null ? "-" : benefitLabel(coupon.getBenefitType(), coupon.getBenefitValue()),
+                coupon == null ? "-" : valueOr(coupon.getNotes(), "제한조건 없음"),
+                status,
+                endDate,
+                detail.getIssuedAt()
+        );
+    }
+
+    private MyPageDtos.ReviewItem toReviewItem(Review review) {
+        Product product = productRepository.findById(review.getProdNo()).orElse(null);
+        return new MyPageDtos.ReviewItem(
+                review.getReviewNO(),
+                review.getProdNo(),
+                product == null ? "상품 정보 없음" : product.getName(),
+                review.getRating(),
+                valueOr(review.getContent(), ""),
+                review.getCreatedAt()
+        );
+    }
+
+    private MyPageDtos.QnaItem toQnaItem(Qna qna) {
+        String status = "답변완료".equals(qna.getIsAnswered()) || qnaRepository.findByParentNo(qna.getNo()).isPresent()
+                ? "답변완료"
+                : "검토중";
+        return new MyPageDtos.QnaItem(
+                qna.getNo(),
+                qna.getProdNo() == null ? "고객센터" : "상품문의",
+                valueOr(qna.getType1(), valueOr(qna.getType2(), "-")),
+                valueOr(qna.getTitle(), "-"),
+                status,
+                qna.getCreatedAt()
+        );
+    }
+
+    private Pageable pageRequest(int page) {
+        return PageRequest.of(Math.max(page, 1) - 1, PAGE_SIZE);
+    }
+
+    private <T> MyPageDtos.PageBlock<T> block(Page<T> page) {
+        int current = page.getNumber() + 1;
+        int totalPages = Math.max(page.getTotalPages(), 1);
+        int start = ((current - 1) / PAGE_BLOCK_SIZE) * PAGE_BLOCK_SIZE + 1;
+        int end = Math.min(start + PAGE_BLOCK_SIZE - 1, totalPages);
+        return new MyPageDtos.PageBlock<>(page, current, start, end);
+    }
+
+    private String benefitLabel(String benefitType, Integer benefitValue) {
+        String type = valueOr(benefitType, "");
+        int value = benefitValue == null ? 0 : benefitValue;
+        if (type.equalsIgnoreCase("FREE_SHIPPING")) return "배송비 무료";
+        if (type.contains("%") || type.equalsIgnoreCase("RATE") || type.contains("율")) {
+            return value + "%";
+        }
+        return String.format("%,d원", value);
+    }
+
+    private String joinAddress(String zipCode, String baseAddress, String detailAddress) {
+        String zip = zipCode == null || zipCode.isBlank() ? "" : "[" + zipCode + "] ";
+        return (zip + valueOr(baseAddress, "") + " " + valueOr(detailAddress, "")).trim();
+    }
+
+    private String valueOr(String value, String fallback) {
+        return value == null || value.isBlank() ? fallback : value;
+    }
+}

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html class="light" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>K-market | 상세 정보</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- th:inline="none" 추가로 타임리프 파싱 에러 방지 -->
+    <script id="tailwind-config" th:inline="none">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#14333b",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-container": "#99b9c2",
+                        "on-secondary-fixed": "#002018",
+                        "background": "#f8f9fa",
+                        "primary-fixed-dim": "#acccd5",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface-variant": "#41484a",
+                        "tertiary-fixed": "#ffdcc7",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#446c5f",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#c0ecdc",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "tertiary-container": "#5e3f2a",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "primary-fixed": "#c8e8f2",
+                        "error": "#ba1a1a",
+                        "tertiary": "#452916",
+                        "surface": "#f8f9fa",
+                        "surface-tint": "#45636b",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#3e6659",
+                        "primary-container": "#2c4a52",
+                        "inverse-primary": "#acccd5",
+                        "outline-variant": "#c1c7ca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#c0ecdc",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-primary-fixed": "#001f26",
+                        "outline": "#72787a",
+                        "inverse-on-surface": "#f0f1f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "container-max": "1280px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "80px",
+                        "margin-mobile": "16px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .standard-border {
+            border: 1px solid #e1e3e4;
+        }
+        .placeholder-image {
+            background-color: #f3f4f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #72787a;
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+
+<!-- Simple Navigation Bar -->
+<header class="bg-white border-b border-outline-variant sticky top-0 w-full z-50">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-4">
+        <div class="flex justify-between items-center gap-md">
+            <!-- Brand -->
+            <a class="flex items-center gap-2 shrink-0" th:href="@{/}" href="/">
+                <img th:if="${siteConfig != null and siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                     th:src="@{/uploads/{file}(file=${siteConfig.headerLogo_stored})}"
+                     class="h-10 w-auto max-w-48 object-contain"
+                     alt="K-market">
+                <span th:unless="${siteConfig != null and siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                      class="logo-area w-8 h-8 placeholder-image rounded">
+                    <span class="material-symbols-outlined text-sm">storefront</span>
+                </span>
+                <span class="text-3xl font-extrabold text-primary shrink-0">K-market</span>
+            </a>
+            <!-- Search Bar -->
+            <form class="hidden md:flex flex-1 max-w-lg relative" th:action="@{/product/search}" action="/product/search" method="get">
+                <input name="keyword" class="w-full bg-white border border-outline rounded py-2 px-4 focus:ring-1 focus:ring-primary focus:outline-none" placeholder="어떤 상품을 찾으시나요?" type="text"/>
+                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white p-1 rounded">
+                    <span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+                </button>
+            </form>
+            <!-- Simple Utility -->
+            <div class="flex items-center gap-md">
+                <div class="hidden lg:flex items-center gap-base font-label-md text-on-surface-variant">
+                    <a class="hover:underline" th:href="@{/member/login}">로그인</a>
+                    <span class="text-outline-variant">/</span>
+                    <a class="hover:underline" th:href="@{/member/join}">회원가입</a>
+                    <span class="hidden text-outline-variant" data-auth-required="true">/</span>
+                    <a class="hidden hover:underline" th:href="@{/my/index}" data-auth-required="true">마이페이지</a>
+                </div>
+                <div class="flex items-center gap-base">
+                    <div th:replace="~{fragments/cart-button :: button}"></div>
+                    <button class="md:hidden p-2 border border-outline-variant rounded">
+                        <span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-md">
+    <div th:replace="~{fragments/nav :: productTabs('')}"></div>
+
+    <div class="flex flex-col md:flex-row gap-lg items-start">
+        <div th:replace="~{fragments/nav :: productSidebar(${categories}, ${subCategoryMap}, ${mainCateNo}, ${rankingProducts})}"></div>
+
+        <!-- Main Column (Product Detail View) -->
+        <div class="flex-1 min-w-0 flex flex-col gap-xl">
+            <!-- Breadcrumb (안전 표기법으로 교체) -->
+            <nav class="flex items-center gap-xs text-on-surface-variant text-xs mb-1 border-b border-outline-variant pb-2">
+                <a class="hover:text-primary" th:href="@{/product/list}">홈</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <a class="hover:text-primary" th:href="@{/product/list(parentCateNo=${parentCategory?.cateNo})}"
+                   th:text="${parentCategory != null ? parentCategory.name : ''}">카테고리</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-primary font-bold" th:text="${category != null ? category.name : ''}">서브카테고리</span>
+            </nav>
+
+            <!-- Product Summary Section -->
+            <div class="flex flex-col lg:flex-row gap-lg mb-md">
+                <!-- Left: Product Image Area -->
+                <div class="flex-1">
+                    <div class="bg-surface-container-lowest rounded-xl aspect-square relative overflow-hidden shadow-sm flex items-center justify-center group border border-outline-variant">
+                        <img id="mainProductImage" th:alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                             th:src="@{${product.thumb1 ?: '/images/no-image.png'}}"/>
+                        <div class="absolute bottom-md right-md bg-surface/80 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">zoom_in</span>
+                            <span class="text-xs font-semibold">확대보기</span>
+                        </div>
+                    </div>
+                    <!-- Product 엔티티에 thumb1~thumb3까지 3개 이미지 컬럼이 있으므로 그대로 사용. null이면 해당 썸네일은 표시 안 함 -->
+                    <div class="flex gap-sm mt-md overflow-x-auto scroll-hide">
+                        <img th:if="${product.thumb1 != null}" th:src="@{${product.thumb1}}" th:alt="${product.name} + ' 이미지 1'"
+                             class="w-20 h-20 object-cover bg-surface-container border-2 border-primary rounded-lg flex-shrink-0 cursor-pointer"
+                             th:onclick="|document.getElementById('mainProductImage').src=this.src|"/>
+                        <img th:if="${product.thumb2 != null}" th:src="@{${product.thumb2}}" th:alt="${product.name} + ' 이미지 2'"
+                             class="w-20 h-20 object-cover bg-surface-container rounded-lg flex-shrink-0 cursor-pointer"
+                             th:onclick="|document.getElementById('mainProductImage').src=this.src|"/>
+                        <img th:if="${product.thumb3 != null}" th:src="@{${product.thumb3}}" th:alt="${product.name} + ' 이미지 3'"
+                             class="w-20 h-20 object-cover bg-surface-container rounded-lg flex-shrink-0 cursor-pointer"
+                             th:onclick="|document.getElementById('mainProductImage').src=this.src|"/>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex flex-col gap-md">
+                    <div class="flex flex-col gap-xs">
+                        <span class="text-on-surface-variant text-xs">상품코드: <span th:text="${product.prodNo}">0000</span></span>
+                        <h1 class="text-2xl font-bold text-primary" th:text="${product.name}">상품명</h1>
+                        <p th:if="${product.description != null and !product.description.isBlank()}"
+                           class="text-sm leading-relaxed text-on-surface-variant"
+                           th:text="${product.description}">상품 설명</p>
+                        <div th:replace="~{fragments/rating :: productRating(${productAverageRating}, ${reviewTotalElements})}"></div>
+                    </div>
+                    <div class="bg-surface-container-low p-md rounded-lg flex flex-col gap-xs">
+                        <div class="flex items-center gap-sm">
+                            <span th:if="${product.discountRate > 0}" class="text-2xl font-bold text-error" th:text="${product.discountRate} + '%'">15%</span>
+                            <span class="text-2xl font-bold text-primary">
+                <span th:text="${#numbers.formatInteger(product.price * (100 - product.discountRate) / 100, 3, 'COMMA')}">0</span>원
+            </span>
+                        </div>
+                        <span th:if="${product.discountRate > 0}" class="text-on-surface-variant line-through text-sm">
+            <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}">0</span>원
+        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-y-sm text-sm border-y border-outline-variant py-md">
+                        <span class="text-on-surface-variant">배송정보</span>
+                        <span class="text-on-surface font-bold">무료배송 (내일 도착 보장)</span>
+                        <span class="text-on-surface-variant">제조사/원산지</span>
+                        <span class="text-on-surface" th:text="${(product.manufacturer != null ? product.manufacturer : '') + ' / ' + (product.origin != null ? product.origin : '정보 없음')}">국산</span>
+                        <span class="text-on-surface-variant">판매자</span>
+                        <span class="flex flex-wrap items-center gap-xs">
+                            <span class="text-on-surface underline underline-offset-4 cursor-pointer" th:text="${shopName}">상호명</span>
+                            <span th:if="${sellerAverageRating != null and sellerAverageRating >= 4.5}"
+                                  class="inline-flex items-center gap-[2px] rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold leading-none text-amber-700 ring-1 ring-inset ring-amber-300"
+                                  th:title="${'판매자 평균 평점 ' + #numbers.formatDecimal(sellerAverageRating, 1, 1) + '점'}">
+                                <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                우수판매자
+                            </span>
+                        </span>
+                    </div>
+                    <!-- Options & Actions -->
+                    <form id="selected-product-form" th:action="@{/product/cart/add-selected}" method="post" onsubmit="return validateSelectedProducts()">
+                        <input type="hidden" name="prodNo" th:value="${product.prodNo}"/>
+
+                        <p th:if="${cartError != null}" class="mb-sm rounded-lg border border-error bg-error-container px-sm py-2 text-sm text-error" th:text="${cartError}"></p>
+
+                        <div th:if="${productSkus != null and !#lists.isEmpty(productSkus)}" class="flex flex-col gap-sm mb-md">
+                            <label class="text-sm font-semibold text-on-surface-variant">옵션 선택</label>
+                            <select id="skuSelect" onchange="addSelectedSku()"
+                                    class="w-full bg-white border border-outline-variant rounded-lg p-sm text-sm focus:ring-primary focus:border-primary focus:outline-none pr-8">
+                                <option value="">색상/사이즈를 선택하세요</option>
+                                <option th:each="sku : ${productSkus}"
+                                        th:value="${sku.skuNo}"
+                                        th:data-name="${sku.skuName}"
+                                        th:data-add-price="${sku.price != null ? sku.price : 0}"
+                                        th:data-stock="${sku.stock != null ? sku.stock : 0}"
+                                        th:disabled="${sku.stock == null or sku.stock <= 0}"
+                                        th:text="${sku.skuName + (sku.price != null and sku.price > 0 ? ' (+' + #numbers.formatInteger(sku.price, 1, 'COMMA') + '원)' : '') + (sku.stock == null or sku.stock <= 0 ? ' - 품절' : '')}">옵션</option>
+                            </select>
+                        </div>
+
+                        <div id="selected-options"
+                             class="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-low"
+                             th:data-has-skus="${productSkus != null and !#lists.isEmpty(productSkus)}"
+                             th:data-base-price="${product.price}"
+                             th:data-discount-rate="${product.discountRate != null ? product.discountRate : 0}"
+                             th:data-base-stock="${product.stockQuantity != null ? product.stockQuantity : 0}"
+                             th:data-product-name="${product.name}">
+                            <p id="selected-options-empty" class="px-md py-5 text-center text-sm text-on-surface-variant">
+                                옵션을 선택하면 이곳에서 수량을 조절할 수 있습니다.
+                            </p>
+                        </div>
+
+                        <div class="mt-sm flex items-center justify-between rounded-lg border border-outline-variant bg-white px-md py-sm">
+                            <span class="text-sm font-bold">총 <strong id="selected-total-quantity" class="text-error">0</strong>개</span>
+                            <div class="text-right">
+                                <span class="text-xs text-on-surface-variant">총 상품금액</span>
+                                <h3 class="text-xl font-bold text-error"><span id="selected-total-price">0</span>원</h3>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-sm pt-sm">
+                            <button type="submit" class="py-3 px-4 bg-white border-2 border-primary text-primary font-bold rounded-lg hover:bg-surface-container transition-all flex items-center justify-center gap-xs">
+                                <span class="material-symbols-outlined">shopping_cart</span>
+                                장바구니
+                            </button>
+                            <button type="button" onclick="buySelectedNow()" class="py-3 px-4 bg-primary text-white font-bold rounded-lg hover:bg-primary-container transition-all flex items-center justify-center gap-xs shadow-md">
+                                <span class="material-symbols-outlined">bolt</span>
+                                바로구매
+                            </button>
+                        </div>
+                    </form>
+
+                    <aside th:if="${productCoupon != null}"
+                           class="mt-sm h-16 w-full max-w-[550px] overflow-hidden rounded-lg border border-outline-variant bg-white"
+                           aria-label="상품 쿠폰 발급">
+                        <a th:href="@{/coupon/claim(couponNo=${productCoupon.couponNo})}"
+                           class="block h-full w-full" title="쿠폰 발급받기">
+                            <img th:if="${productDetailBanner != null}"
+                                 th:src="${productDetailBanner.fileUrl_stored}"
+                                 th:alt="${#strings.isEmpty(productDetailBanner.name) ? '상품 상세보기 배너' : productDetailBanner.name}"
+                                 class="h-full w-full object-cover">
+                            <span th:unless="${productDetailBanner != null}"
+                                  class="flex h-full w-full items-center justify-between bg-gradient-to-r from-cyan-900 to-teal-500 px-5 text-white">
+                                <strong th:text="${productCoupon.name}">상품 할인 쿠폰</strong>
+                                <span class="rounded-full bg-white px-3 py-1 text-xs font-bold text-primary">쿠폰 받기</span>
+                            </span>
+                        </a>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- Tabbed Navigation -->
+            <div class="border-b border-outline-variant mb-lg sticky top-[73px] bg-white backdrop-blur z-40">
+                <nav class="flex gap-lg">
+                    <button class="text-sm py-3 border-b-2 border-primary text-primary font-bold" onclick="scrollToSection('desc')">상세정보</button>
+                    <button class="text-sm py-3 text-on-surface-variant hover:text-primary" onclick="scrollToSection('notice')">상품정보 제공고시</button>
+                    <button class="text-sm py-3 text-on-surface-variant hover:text-primary" onclick="scrollToSection('reviews')"
+                            th:text="'상품후기 (' + ${reviewTotalElements != null ? reviewTotalElements : 0} + ')'">상품후기 (824)</button>
+                    <button class="text-sm py-3 text-on-surface-variant hover:text-primary" onclick="scrollToSection('qa')"
+                            th:text="'Q&amp;A (' + ${qnaList != null ? #lists.size(qnaList) : 0} + ')'">Q&amp;A</button>
+                </nav>
+            </div>
+
+            <!-- Detail Sections -->
+            <div class="mb-xl scroll-mt-[130px]" id="desc">
+                <h3 class="text-lg font-bold text-primary mb-md">상품 상세 정보</h3>
+                <!-- 상세 이미지가 있으면 배경과 테두리 없이 이미지만 표시 -->
+                <div th:if="${product.detailContent != null and !product.detailContent.isBlank()}"
+                     class="flex justify-center overflow-hidden">
+                    <img th:src="${product.detailContent}"
+                         th:alt="${product.name + ' 상세 이미지'}"
+                         class="h-auto max-w-full object-contain"/>
+                </div>
+
+                <!-- 상세 이미지가 없을 때만 회색 안내 박스 표시 -->
+                <div th:unless="${product.detailContent != null and !product.detailContent.isBlank()}"
+                     class="flex min-h-[500px] items-center justify-center rounded-xl border border-dashed border-outline bg-surface-container">
+                    <p class="p-md text-sm text-on-surface-variant">등록된 상세 설명이 없습니다.</p>
+                </div>
+            </div>
+
+            <div class="mb-xl scroll-mt-[130px]" id="notice">
+                <h3 class="text-lg font-bold text-primary mb-md">상품정보 제공고시</h3>
+                <p class="text-xs text-on-surface-variant mb-md">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거 등록되는 정보입니다.</p>
+                <div class="overflow-hidden rounded-lg border border-outline-variant bg-white">
+                    <table class="w-full text-left border-collapse">
+                        <tbody>
+                        <tr class="border-b border-outline-variant">
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant w-1/3 text-sm">상품번호</th>
+                            <td class="p-md text-sm" th:text="${product.prodNo}">0000</td>
+                        </tr>
+                        <tr class="border-b border-outline-variant">
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant text-sm">상품상태</th>
+                            <td class="p-md text-sm" th:text="${product.status != null ? product.status : '-'}">새상품</td>
+                        </tr>
+                        <tr class="border-b border-outline-variant">
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant text-sm">부가세 면세여부</th>
+                            <td class="p-md text-sm" th:text="${product.taxFreeYn != null ? product.taxFreeYn : '-'}">과세상품</td>
+                        </tr>
+                        <tr class="border-b border-outline-variant">
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant text-sm">영수증 발행</th>
+                            <td class="p-md text-sm" th:text="${product.receiptYn != null ? product.receiptYn : '-'}">발행가능</td>
+                        </tr>
+                        <tr class="border-b border-outline-variant">
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant text-sm">사업자구분</th>
+                            <td class="p-md text-sm" th:text="${product.bizType != null ? product.bizType : '-'}">일반</td>
+                        </tr>
+                        <tr class="border-b border-outline-variant">
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant text-sm">브랜드</th>
+                            <td class="p-md text-sm" th:text="${product.manufacturer != null ? product.manufacturer : '-'}">브랜드명</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-surface-container-low p-md font-semibold text-on-surface-variant text-sm">원산지</th>
+                            <td class="p-md text-sm" th:text="${product.origin != null ? product.origin : '-'}">국내산</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="scroll-mt-[130px] mb-xl" id="reviews">
+                <div class="flex items-center justify-between mb-md">
+                    <h3 class="text-lg font-bold text-primary">상품 후기</h3>
+                </div>
+
+                <p th:if="${reviewError != null}" class="mb-md rounded-lg border border-error bg-error-container px-md py-sm text-sm text-error" th:text="${reviewError}"></p>
+
+                <form th:if="${reviewEligible}" th:action="@{/product/review/add}" method="post" enctype="multipart/form-data"
+                      class="bg-white border border-outline-variant rounded-xl p-md mb-md flex flex-col gap-sm">
+                    <input type="hidden" name="prodNo" th:value="${product.prodNo}"/>
+                    <div class="flex items-center gap-sm">
+                        <label class="text-sm font-semibold text-on-surface-variant">평점</label>
+                        <select name="rating" class="border border-outline-variant rounded p-xs text-sm pr-8">
+                            <option value="5">★★★★★ (5)</option>
+                            <option value="4">★★★★☆ (4)</option>
+                            <option value="3">★★★☆☆ (3)</option>
+                            <option value="2">★★☆☆☆ (2)</option>
+                            <option value="1">★☆☆☆☆ (1)</option>
+                        </select>
+                    </div>
+                    <textarea name="content" required maxlength="1000" rows="3" placeholder="상품에 대한 후기를 남겨주세요."
+                              class="w-full border border-outline-variant rounded-lg p-sm text-sm focus:ring-primary focus:border-primary focus:outline-none"></textarea>
+                    <div class="flex flex-col gap-xs">
+                        <label for="review-images" class="text-sm font-semibold text-on-surface-variant">사진 첨부 <span class="font-normal">(최대 3장, 장당 5MB)</span></label>
+                        <input id="review-images" name="images" type="file" accept="image/*" multiple
+                               onchange="validateReviewImages(this)"
+                               class="w-full rounded-lg border border-outline-variant bg-surface-container-low p-sm text-sm file:mr-sm file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:font-bold file:text-white">
+                        <p id="review-image-help" class="text-xs text-on-surface-variant">JPG, PNG, GIF 등 이미지 파일을 등록할 수 있습니다.</p>
+                    </div>
+                    <button type="submit" class="self-end py-2 px-4 bg-primary text-white font-bold rounded-lg text-sm">후기 등록</button>
+                </form>
+                <div th:unless="${reviewEligible}" class="bg-surface-container-low border border-outline-variant rounded-xl p-md mb-md text-sm text-on-surface-variant">
+                    <p th:text="${reviewEligibilityMessage}">구매확정한 상품에만 후기를 작성할 수 있습니다.</p>
+                </div>
+                <div class="overflow-hidden rounded-xl border border-outline-variant bg-white" th:if="${reviewList != null and !reviewList.isEmpty()}">
+                    <article class="border-b border-outline-variant p-md last:border-b-0" th:each="review : ${reviewList}">
+                        <div class="flex justify-between items-start mb-sm">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-on-surface" th:text="${reviewWriterNames[review.reviewNO]}">이**</span>
+                                <span class="text-xs text-on-surface-variant" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">2024.05.12</span>
+                            </div>
+                            <div th:replace="~{fragments/rating :: reviewRating(${review.rating})}"></div>
+                        </div>
+                        <div class="flex flex-col gap-md sm:flex-row">
+                            <div th:if="${review.imageUrl1 != null or review.imageUrl2 != null or review.imageUrl3 != null}"
+                                 class="flex shrink-0 gap-xs sm:w-44 sm:flex-wrap">
+                                <a th:if="${review.imageUrl1 != null}" th:href="${review.imageUrl1}" target="_blank" rel="noopener" class="block h-20 w-20 overflow-hidden rounded-lg border border-outline-variant bg-surface-container">
+                                    <img th:src="${review.imageUrl1}" alt="후기 사진 1" class="h-full w-full object-cover">
+                                </a>
+                                <a th:if="${review.imageUrl2 != null}" th:href="${review.imageUrl2}" target="_blank" rel="noopener" class="block h-20 w-20 overflow-hidden rounded-lg border border-outline-variant bg-surface-container">
+                                    <img th:src="${review.imageUrl2}" alt="후기 사진 2" class="h-full w-full object-cover">
+                                </a>
+                                <a th:if="${review.imageUrl3 != null}" th:href="${review.imageUrl3}" target="_blank" rel="noopener" class="block h-20 w-20 overflow-hidden rounded-lg border border-outline-variant bg-surface-container">
+                                    <img th:src="${review.imageUrl3}" alt="후기 사진 3" class="h-full w-full object-cover">
+                                </a>
+                            </div>
+                            <p class="min-w-0 flex-1 text-sm leading-relaxed text-on-surface-variant whitespace-pre-line" th:text="${review.content}">리뷰 내용</p>
+                        </div>
+                    </article>
+                </div>
+                <p th:if="${reviewList == null or reviewList.isEmpty()}" class="text-sm text-on-surface-variant">등록된 후기가 없습니다.</p>
+
+                <nav th:if="${reviewTotalPages != null and reviewTotalPages > 1}" aria-label="상품 후기 페이지" class="mt-md flex items-center justify-center gap-xs">
+                    <a th:if="${reviewCurrentPage > 1}"
+                       th:href="@{/product/view(prodNo=${product.prodNo}, reviewPage=${reviewCurrentPage - 1})} + '#reviews'"
+                       class="rounded border border-outline-variant px-3 py-2 text-sm hover:bg-surface-container">이전</a>
+                    <span th:unless="${reviewCurrentPage > 1}" class="rounded border border-outline-variant px-3 py-2 text-sm text-outline-variant">이전</span>
+
+                    <a th:each="p : ${#numbers.sequence(1, reviewTotalPages)}"
+                       th:href="@{/product/view(prodNo=${product.prodNo}, reviewPage=${p})} + '#reviews'"
+                       th:text="${p}"
+                       th:classappend="${p == reviewCurrentPage} ? ' bg-primary text-white font-bold' : ' bg-white hover:bg-surface-container'"
+                       class="flex h-9 w-9 items-center justify-center rounded border border-outline-variant text-sm">1</a>
+
+                    <a th:if="${reviewCurrentPage < reviewTotalPages}"
+                       th:href="@{/product/view(prodNo=${product.prodNo}, reviewPage=${reviewCurrentPage + 1})} + '#reviews'"
+                       class="rounded border border-outline-variant px-3 py-2 text-sm hover:bg-surface-container">다음</a>
+                    <span th:unless="${reviewCurrentPage < reviewTotalPages}" class="rounded border border-outline-variant px-3 py-2 text-sm text-outline-variant">다음</span>
+                </nav>
+            </div>
+
+            <!-- Q&A Section -->
+            <div class="scroll-mt-[130px] mb-xl" id="qa">
+                <div class="flex items-center justify-between mb-md">
+                    <h3 class="text-lg font-bold text-primary">상품 Q&amp;A</h3>
+                    <button class="text-primary font-bold text-sm flex items-center gap-xs hover:underline" th:onclick="|location.href='@{/cs/qna/write(productNo=${product.prodNo})}'|">
+                        문의하기 <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </button>
+                </div>
+                <div class="flex flex-col gap-sm" th:if="${qnaList != null and !qnaList.isEmpty()}">
+                    <!-- qnaList: ProductIndexController.view()에서
+                         qnaRepository.findByProductNoAndParentNoOrderByNoDesc(product.getProdNo(), 0)로 조회해서 담아줌 -->
+                    <div class="bg-white border border-outline-variant p-md rounded-xl" th:each="qna : ${qnaList}">
+                        <div class="flex justify-between items-start mb-xs">
+                            <div class="flex items-center gap-sm">
+                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                                      th:classappend="${qna.isAnswered == '답변완료'} ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-high text-on-surface-variant'"
+                                      th:text="${qna.isAnswered == '답변완료'} ? '답변완료' : '답변대기'">답변상태</span>
+                                <span class="text-sm font-bold text-on-surface" th:text="${qna.maskedId}">writer**</span>
+                            </div>
+                            <span class="text-xs text-on-surface-variant" th:text="${#temporals.format(qna.createdAt, 'yyyy.MM.dd')}">2024.05.12</span>
+                        </div>
+                        <p class="text-sm font-semibold text-on-surface mb-xs" th:text="${qna.title}">문의 제목</p>
+                        <p class="text-sm text-on-surface-variant mb-sm" th:text="${qna.content}">문의 내용</p>
+                    </div>
+                </div>
+                <p th:if="${qnaList == null or qnaList.isEmpty()}" class="text-sm text-on-surface-variant">등록된 문의가 없습니다.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Detailed Footer -->
+<footer class="bg-white border-t border-outline-variant mt-xl py-lg">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter">
+        <!-- Top Links -->
+        <div class="flex flex-wrap gap-md text-sm font-medium text-on-surface-variant mb-8 border-b border-surface-container pb-4">
+            <a class="hover:text-primary" th:href="@{/company/main}">회사소개</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary" th:href="@{/policy/buyer}">서비스이용약관</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary font-bold text-on-surface" th:href="@{/policy/buyer}">개인정보처리방침</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary" th:href="@{/policy/buyer}">전자금융거래약관</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+            <!-- Company Info -->
+            <div class="flex flex-col md:flex-row gap-md items-start">
+                <div class="footer-logo w-24 h-24 placeholder-image flex items-center justify-center rounded shrink-0 overflow-hidden">
+                    <img th:if="${siteConfig != null and siteConfig.footerLogo_stored != null and !siteConfig.footerLogo_stored.isBlank()}"
+                         th:src="@{/uploads/{file}(file=${siteConfig.footerLogo_stored})}"
+                         class="w-full h-full object-contain"
+                         alt="K-market">
+                    <span th:unless="${siteConfig != null and siteConfig.footerLogo_stored != null and !siteConfig.footerLogo_stored.isBlank()}"
+                          class="material-symbols-outlined text-4xl">storefront</span>
+                </div>
+                <div class="text-sm text-on-surface-variant space-y-1">
+                    <h2 class="text-xl font-bold text-primary mb-2"
+                        th:text="${siteConfig != null and siteConfig.companyName != null and !siteConfig.companyName.isBlank() ? siteConfig.companyName : '(주)케이마켓'}">(주)케이마켓</h2>
+                    <p th:text="|${siteConfig != null and siteConfig.baseAddress != null ? siteConfig.baseAddress : ''} ${siteConfig != null and siteConfig.detailAddress != null ? siteConfig.detailAddress : ''}|">부산광역시 부산진구 중앙대로 103 그린타워 13층</p>
+                    <p>대표이사 : <span th:text="${siteConfig != null and siteConfig.ceo != null and !siteConfig.ceo.isBlank() ? siteConfig.ceo : '-'}">홍길동</span></p>
+                    <p>사업자등록번호 : <span th:text="${siteConfig != null and siteConfig.bizNumber != null and !siteConfig.bizNumber.isBlank() ? siteConfig.bizNumber : '-'}">123-45-12345</span></p>
+                    <p th:if="${siteConfig != null and siteConfig.mailOrderNumber != null and !siteConfig.mailOrderNumber.isBlank()}">통신판매업신고 : <span th:text="${siteConfig.mailOrderNumber}"></span></p>
+                    <p class="mt-4 text-[10px] text-outline">Version <span th:text="${latestVersion != null and !latestVersion.isBlank() ? latestVersion : '등록된 버전 없음'}">0.0.6-SNAPSHOT</span></p>
+                    <p class="text-[10px] text-outline"
+                       th:if="${siteConfig != null and siteConfig.copyright != null and !siteConfig.copyright.isBlank()}"
+                       th:text="${siteConfig.copyright}">© 2026 K-market. 모든 권리 보유.</p>
+                </div>
+            </div>
+            <!-- Customer Center -->
+            <div class="flex flex-col gap-2">
+                <h3 class="font-bold text-lg text-primary">고객센터</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md text-sm text-on-surface-variant">
+                    <div>
+                        <p class="font-bold text-on-surface">Tel : <span th:text="${siteConfig != null and siteConfig.csPhone != null and !siteConfig.csPhone.isBlank() ? siteConfig.csPhone : '-'}">1234-5678</span></p>
+                        <p th:text="${siteConfig != null and siteConfig.csHours != null and !siteConfig.csHours.isBlank() ? siteConfig.csHours : '운영시간 정보가 등록되지 않았습니다.'}">평일 09:00 ~ 18:00</p>
+                        <p th:if="${siteConfig != null and siteConfig.csEmail != null and !siteConfig.csEmail.isBlank()}">Email : <a class="hover:underline" th:href="|mailto:${siteConfig.csEmail}|" th:text="${siteConfig.csEmail}"></a></p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface">전자금융거래 분쟁 담당</p>
+                        <p th:text="${siteConfig != null and siteConfig.finDisputeManager != null and !siteConfig.finDisputeManager.isBlank() ? siteConfig.finDisputeManager : '담당자 정보가 등록되지 않았습니다.'}">1234-1234 (365일 09:00 ~ 18:00)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-4">
+                    <a class="p-2 border border-outline-variant rounded hover:bg-surface-container" href="#"><span class="material-symbols-outlined text-sm">share</span></a>
+                    <a class="p-2 border border-outline-variant rounded hover:bg-surface-container" href="#"><span class="material-symbols-outlined text-sm">mail</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Mobile Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-outline-variant flex justify-around py-3 z-50">
+    <a class="flex flex-col items-center gap-1 text-primary" th:href="@{/}" href="/">
+        <span class="material-symbols-outlined">home</span>
+        <span class="text-[10px] font-bold">홈</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" th:href="@{/product/list}" href="/product/list">
+        <span class="material-symbols-outlined">grid_view</span>
+        <span class="text-[10px]">메뉴</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" th:href="@{/product/search}" href="/product/search">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-[10px]">검색</span>
+    </a>
+    <a class="hidden flex flex-col items-center gap-1 text-on-surface-variant" th:href="@{/my/index}" href="/my/index" data-auth-required="true">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-[10px]">마이페이지</span>
+    </a>
+</nav>
+
+<!-- th:inline="none" 추가로 자바스크립트 중괄호 매핑 무시 조치 -->
+<script th:inline="none">
+    const selectedProducts = new Map();
+
+    function discountedPrice(basePrice, addPrice, discountRate) {
+        return Math.floor((basePrice + addPrice) * (100 - discountRate) / 100);
+    }
+
+    function addSelectedSku() {
+        const select = document.getElementById('skuSelect');
+        const container = document.getElementById('selected-options');
+        if (!select || !container || !select.value) return;
+        const option = select.options[select.selectedIndex];
+        const basePrice = Number(container.dataset.basePrice || 0);
+        const discountRate = Number(container.dataset.discountRate || 0);
+        const addPrice = Number(option?.dataset.addPrice || 0);
+        const stock = Number(option?.dataset.stock || 0);
+        const key = String(select.value);
+
+        if (stock <= 0) {
+            select.value = '';
+            return;
+        }
+        if (selectedProducts.has(key)) {
+            const selected = selectedProducts.get(key);
+            selected.quantity = Math.min(selected.quantity + 1, selected.stock);
+        } else {
+            selectedProducts.set(key, {
+                skuNo: key,
+                name: option.dataset.name || option.textContent.trim(),
+                unitPrice: discountedPrice(basePrice, addPrice, discountRate),
+                stock,
+                quantity: 1
+            });
+        }
+        select.value = '';
+        renderSelectedProducts();
+    }
+
+    function changeSelectedQuantity(key, delta) {
+        const selected = selectedProducts.get(String(key));
+        if (!selected) return;
+        selected.quantity = Math.max(1, Math.min(selected.quantity + delta, selected.stock));
+        renderSelectedProducts();
+    }
+
+    function removeSelectedProduct(key) {
+        selectedProducts.delete(String(key));
+        renderSelectedProducts();
+    }
+
+    function escapeHtml(value) {
+        const element = document.createElement('span');
+        element.textContent = String(value ?? '');
+        return element.innerHTML;
+    }
+
+    function renderSelectedProducts() {
+        const container = document.getElementById('selected-options');
+        const totalQuantityEl = document.getElementById('selected-total-quantity');
+        const totalPriceEl = document.getElementById('selected-total-price');
+        if (!container || !totalQuantityEl || !totalPriceEl) return;
+
+        if (selectedProducts.size === 0) {
+            container.innerHTML = '<p id="selected-options-empty" class="px-md py-5 text-center text-sm text-on-surface-variant">옵션을 선택하면 이곳에서 수량을 조절할 수 있습니다.</p>';
+            totalQuantityEl.textContent = '0';
+            totalPriceEl.textContent = '0';
+            return;
+        }
+
+        let totalQuantity = 0;
+        let totalPrice = 0;
+        container.innerHTML = Array.from(selectedProducts.entries()).map(([key, item]) => {
+            totalQuantity += item.quantity;
+            totalPrice += item.unitPrice * item.quantity;
+            return `
+                <div class="border-b border-outline-variant p-md last:border-b-0">
+                    <div class="mb-sm flex items-start justify-between gap-sm">
+                        <strong class="min-w-0 flex-1 text-sm text-on-surface">${escapeHtml(item.name)}</strong>
+                        <button type="button" onclick="removeSelectedProduct('${key}')" class="shrink-0 p-1 text-on-surface-variant hover:text-error" aria-label="선택 옵션 삭제">
+                            <span class="material-symbols-outlined text-[18px]">close</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between gap-md">
+                        <div class="inline-flex h-9 items-stretch overflow-hidden rounded-md border border-outline-variant bg-white">
+                            <button type="button" onclick="changeSelectedQuantity('${key}', -1)" class="flex w-9 items-center justify-center hover:bg-surface-container" aria-label="수량 줄이기">
+                                <span class="material-symbols-outlined text-[18px]">remove</span>
+                            </button>
+                            <span class="flex w-11 items-center justify-center border-x border-outline-variant text-sm font-bold">${item.quantity}</span>
+                            <button type="button" onclick="changeSelectedQuantity('${key}', 1)" class="flex w-9 items-center justify-center hover:bg-surface-container" aria-label="수량 늘리기">
+                                <span class="material-symbols-outlined text-[18px]">add</span>
+                            </button>
+                        </div>
+                        <strong class="text-base text-primary">${(item.unitPrice * item.quantity).toLocaleString('ko-KR')}원</strong>
+                    </div>
+                    <input type="hidden" name="selectedSkuNos" value="${item.skuNo}">
+                    <input type="hidden" name="quantities" value="${item.quantity}">
+                </div>`;
+        }).join('');
+        totalQuantityEl.textContent = String(totalQuantity);
+        totalPriceEl.textContent = totalPrice.toLocaleString('ko-KR');
+    }
+
+    function validateSelectedProducts() {
+        if (selectedProducts.size > 0) return true;
+        alert('상품 옵션을 선택해주세요.');
+        return false;
+    }
+
+    function buySelectedNow() {
+        if (!validateSelectedProducts()) return;
+        const sourceForm = document.getElementById('selected-product-form');
+        const prodNo = sourceForm.querySelector('input[name="prodNo"]').value;
+        const directForm = document.createElement('form');
+        directForm.method = 'post';
+        directForm.action = sourceForm.action.replace('/cart/add-selected', '/order/direct');
+
+        function appendField(name, value) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = String(value);
+            directForm.appendChild(input);
+        }
+
+        appendField('prodNo', prodNo);
+        selectedProducts.forEach(item => {
+            appendField('selectedSkuNos', item.skuNo);
+            appendField('quantities', item.quantity);
+        });
+        document.body.appendChild(directForm);
+        directForm.submit();
+    }
+
+    function validateReviewImages(input) {
+        const files = Array.from(input.files || []);
+        const help = document.getElementById('review-image-help');
+        const invalid = files.length > 3 || files.some(file => file.size > 5 * 1024 * 1024 || !file.type.startsWith('image/'));
+        if (!invalid) {
+            help.textContent = files.length ? `${files.length}장의 사진을 선택했습니다.` : 'JPG, PNG, GIF 등 이미지 파일을 등록할 수 있습니다.';
+            help.classList.remove('text-error');
+            return;
+        }
+        input.value = '';
+        help.textContent = '이미지 파일을 최대 3장, 장당 5MB 이하로 선택해주세요.';
+        help.classList.add('text-error');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('selected-options');
+        if (!container || container.dataset.hasSkus === 'true') return;
+        const stock = Number(container.dataset.baseStock || 0);
+        if (stock <= 0) {
+            container.innerHTML = '<p class="px-md py-5 text-center text-sm font-bold text-error">품절된 상품입니다.</p>';
+            return;
+        }
+        const basePrice = Number(container.dataset.basePrice || 0);
+        const discountRate = Number(container.dataset.discountRate || 0);
+        selectedProducts.set('base', {
+            skuNo: 'none',
+            name: container.dataset.productName || '상품',
+            unitPrice: discountedPrice(basePrice, 0, discountRate),
+            stock,
+            quantity: 1
+        });
+        renderSelectedProducts();
+    });
+
+    // Focus search interaction
+    const searchInput = document.querySelector('input[type="text"]');
+    if(searchInput) {
+        searchInput.addEventListener('focus', () => {
+            searchInput.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.classList.remove('ring-2', 'ring-primary/20');
+        });
+    }
+
+    // Scroll to section function
+    function scrollToSection(id) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+            const tabs = document.querySelectorAll('nav button');
+            tabs.forEach(tab => {
+                tab.classList.remove('border-b-2', 'border-primary', 'text-primary', 'font-bold');
+                tab.classList.add('text-on-surface-variant');
+            });
+            event.currentTarget.classList.add('border-b-2', 'border-primary', 'text-primary', 'font-bold');
+            event.currentTarget.classList.remove('text-on-surface-variant');
+        }
+    }
+</script>
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>

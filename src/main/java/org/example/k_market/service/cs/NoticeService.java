@@ -1,0 +1,88 @@
+package org.example.k_market.service.cs;
+
+import lombok.RequiredArgsConstructor;
+import org.example.k_market.dto.NoticeDTO;
+import org.example.k_market.entity.Notice;
+import org.example.k_market.repository.NoticeRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class NoticeService {
+
+    private final NoticeRepository noticeRepository;
+
+    // 공지사항 목록 전체 조회
+    public List<Notice> findAll() {
+        return noticeRepository.findAllByOrderByNoDesc();
+    }
+
+    // 고객센터 메인 공지사항 최신 5개 조회
+    public List<Notice> findTop5() {
+        return noticeRepository.findTop5ByOrderByNoDesc();
+    }
+
+    // 공지사항 상세 조회
+    public Notice findById(int no) {
+        return noticeRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+    }
+
+    // 공지사항 등록 (admin)
+    public void save(Notice notice) {
+        noticeRepository.save(notice);
+    }
+
+    //공지사항 수정
+    @Transactional
+    public Notice update(int no, NoticeDTO dto) {
+        Notice notice = findById(no);
+
+        notice.setType(dto.getType());
+        notice.setTitle(dto.getTitle());
+        notice.setContent(dto.getContent());
+
+        return notice;
+    }
+
+    // 공지사항 삭제
+    @Transactional
+    public void delete(int no) {
+        noticeRepository.deleteById(no);
+    }
+
+    @Transactional
+    public void deleteChecked(List<Integer> nos) {
+        noticeRepository.deleteAllById(nos);
+    }
+
+    // 유형별 검색 (상단 버튼 누르면 해당 글만 조회)
+    @Transactional(readOnly = true)
+    public List<Notice> findByType(String type) {
+
+        // 전체를 선택했거나 값이 없으면 전체 조회
+        if (type == null || type.isBlank() || "전체".equals(type)) {
+            return noticeRepository.findAllByOrderByNoDesc();
+        }
+
+        return noticeRepository.findAllByTypeOrderByNoDesc(type);
+    }
+
+    //조회수증가
+    @Transactional
+    public Notice getNoticeAndIncreaseViewCount(int no) {
+        Notice notice = noticeRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항입니다."));
+
+        // 조회수 1 증가 (Notice 엔티티에 setViewCount 메서드가 있어야 합니다)
+        notice.setViewCount(notice.getViewCount() + 1);
+
+        return notice; // @Transactional에 의해 메서드가 끝날 때 자동으로 DB에 UPDATE 쿼리가 날아갑니다.
+    }
+
+    
+
+}

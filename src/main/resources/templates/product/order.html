@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>K-market | 주문하기</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#edeeef",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#14333b",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-container": "#99b9c2",
+                        "on-secondary-fixed": "#002018",
+                        "background": "#f8f9fa",
+                        "primary-fixed-dim": "#acccd5",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface-variant": "#41484a",
+                        "tertiary-fixed": "#ffdcc7",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary-container": "#446c5f",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#c0ecdc",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "tertiary-container": "#5e3f2a",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "primary-fixed": "#c8e8f2",
+                        "error": "#ba1a1a",
+                        "tertiary": "#452916",
+                        "surface": "#f8f9fa",
+                        "surface-tint": "#45636b",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#3e6659",
+                        "primary-container": "#2c4a52",
+                        "inverse-primary": "#acccd5",
+                        "outline-variant": "#c1c7ca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#c0ecdc",
+                        "inverse-surface": "#2e3132",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-primary-fixed": "#001f26",
+                        "outline": "#72787a",
+                        "inverse-on-surface": "#f0f1f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "container-max": "1280px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "80px",
+                        "margin-mobile": "16px",
+                        "lg": "48px",
+                        "sm": "12px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .standard-border {
+            border: 1px solid #e1e3e4;
+        }
+        .placeholder-image {
+            background-color: #f3f4f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #72787a;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #14333b !important;
+            ring: 2px;
+            ring-color: #2c4a52;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+
+<header class="bg-white border-b border-outline-variant sticky top-0 w-full z-50">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-4">
+        <div class="flex justify-between items-center gap-md">
+            <a class="flex items-center gap-2 shrink-0" th:href="@{/}" href="/">
+                <img th:if="${siteConfig != null and siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                     th:src="@{/uploads/{file}(file=${siteConfig.headerLogo_stored})}"
+                     class="h-10 w-auto max-w-48 object-contain"
+                     alt="K-market">
+                <span th:unless="${siteConfig != null and siteConfig.headerLogo_stored != null and !siteConfig.headerLogo_stored.isBlank()}"
+                      class="logo-area w-8 h-8 placeholder-image rounded">
+                    <span class="material-symbols-outlined text-sm">storefront</span>
+                </span>
+                <span class="text-3xl font-extrabold text-primary shrink-0">K-market</span>
+            </a>
+            <form class="hidden md:flex flex-1 max-w-lg relative" th:action="@{/product/search}" action="/product/search" method="get">
+                <input name="keyword" class="w-full bg-white border border-outline rounded py-2 px-4 focus:ring-1 focus:ring-primary focus:outline-none" placeholder="어떤 상품을 찾으시나요?" type="text"/>
+                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white p-1 rounded">
+                    <span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+                </button>
+            </form>
+            <div class="flex items-center gap-md">
+                <div class="hidden lg:flex items-center gap-base font-label-md text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" th:href="@{/member/login}">로그인</a>
+                    <a class="hover:text-primary transition-colors" th:href="@{/member/join}">회원가입</a>
+                    <a class="hidden hover:text-primary transition-colors" th:href="@{/my/index}" data-auth-required="true">마이페이지</a>
+                    <a class="flex items-center gap-xs text-primary font-bold" th:href="@{/product/cart}">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                        장바구니
+                    </a>
+                </div>
+                <div class="flex items-center gap-base">
+                    <button class="md:hidden p-2 border border-outline-variant rounded">
+                        <span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation Links -->
+        <nav class="flex gap-lg items-center overflow-x-auto pb-1 no-scrollbar">
+            <a class="text-label-md text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors" th:href="@{/product/list}" href="/product/list">인기 상품</a>
+            <a class="text-label-md text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors" th:href="@{/product/list}" href="/product/list">추천 상품</a>
+            <a class="text-label-md text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors" th:href="@{/product/list}" href="/product/list">신상품</a>
+            <a class="text-label-md text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors" th:href="@{/product/list}" href="/product/list">베스트</a>
+            <a class="text-label-md text-on-surface-variant whitespace-nowrap hover:text-primary transition-colors" th:href="@{/product/list}" href="/product/list">세일</a>
+        </nav>
+    </div>
+</header>
+
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-gutter py-md">
+    <div th:replace="~{fragments/nav :: productTabs('')}"></div>
+
+    <div class="flex flex-col md:flex-row gap-lg items-start">
+        <div th:replace="~{fragments/nav :: productSidebar(${categories}, ${subCategoryMap}, ${mainCateNo}, ${rankingProducts})}"></div>
+
+        <div class="flex-1 flex flex-col gap-xl">
+            <div class="flex justify-between items-end border-b border-outline-variant pb-2">
+                <div>
+                    <h2 class="text-2xl font-bold text-primary">주문하기</h2>
+                </div>
+                <nav class="text-xs text-on-surface-variant flex items-center gap-1">
+                    <span>HOME</span> &gt; <span>장바구니</span> &gt; <span class="font-bold text-primary">주문하기</span>
+                </nav>
+            </div>
+
+            <form id="checkout-form" th:action="@{/product/order/complete}" method="post" class="flex flex-col gap-xl">
+                <input th:each="cartNo : ${selectedCartNos}" type="hidden" name="cartNos" th:value="${cartNo}">
+                <input th:if="${directProdNo != null}" type="hidden" name="directProdNo" th:value="${directProdNo}">
+                <input th:each="directSkuNo : ${directSkuNos}" type="hidden" name="directSkuNos" th:value="${directSkuNo}">
+                <input th:each="directQuantity : ${directQuantities}" type="hidden" name="directQuantities" th:value="${directQuantity}">
+
+            <section class="bg-white standard-border rounded overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-surface-container-low text-label-md text-on-surface-variant">
+                        <tr class="border-b border-outline-variant">
+                            <th class="p-md font-bold">상품명</th>
+                            <th class="p-md font-bold text-center">수량</th>
+                            <th class="p-md font-bold text-right">판매가</th>
+                            <th class="p-md font-bold text-center">할인</th>
+                            <th class="p-md font-bold text-center">포인트</th>
+                            <th class="p-md font-bold text-center">배송비</th>
+                            <th class="p-md font-bold text-right">총합</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/30 text-sm">
+                        <tr class="hover:bg-surface-container-low/30 transition-colors" th:each="item : ${orderItems}">
+                            <td class="p-md">
+                                <div class="flex items-center gap-md">
+                                    <div class="w-20 h-20 placeholder-image rounded shrink-0 overflow-hidden">
+                                        <img th:if="${item.thumb1 != null and !item.thumb1.isBlank()}"
+                                             th:src="${#strings.startsWith(item.thumb1, 'http://') or #strings.startsWith(item.thumb1, 'https://') ? item.thumb1 : '/uploads/' + item.thumb1}"
+                                             class="h-full w-full object-cover" th:alt="${item.name}">
+                                        <span th:unless="${item.thumb1 != null and !item.thumb1.isBlank()}" class="material-symbols-outlined text-2xl">image</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-on-surface" th:text="${item.name}">상품명</p>
+                                        <p class="text-xs text-on-surface-variant mt-1" th:text="${item.description}">상품 설명</p>
+                                        <p th:if="${item.skuName != null}" class="text-xs font-bold text-primary mt-1" th:text="${'옵션: ' + item.skuName}">옵션</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-md text-center" th:text="${item.quantity}">1</td>
+                            <td class="p-md text-right font-medium" th:text="${#numbers.formatInteger(item.unitPrice, 1, 'COMMA') + '원'}">0원</td>
+                            <td class="p-md text-center text-error font-bold" th:text="${item.discountRate > 0 ? item.discountRate + '%' : '-'}">-</td>
+                            <td class="p-md text-center" th:text="${#numbers.formatInteger(item.lineRewardPoints, 1, 'COMMA') + 'p'}">0p</td>
+                            <td class="p-md text-center text-on-surface-variant">
+                                <span th:text="${item.shippingFee == 0 ? '무료배송' : #numbers.formatInteger(item.shippingFee, 1, 'COMMA') + '원'}"
+                                      class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded font-bold">무료배송</span>
+                            </td>
+                            <td class="p-md text-right font-bold text-primary" th:text="${#numbers.formatInteger(item.lineTotal, 1, 'COMMA') + '원'}">0원</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+                <div class="lg:col-span-8 flex flex-col gap-lg">
+                    <section id="order-info" class="flex flex-col gap-md bg-white standard-border rounded p-md">
+                        <div class="flex items-center gap-sm pb-2 border-b border-outline-variant">
+                            <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">1</span>
+                            <h3 class="font-bold text-lg text-primary">주문정보</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-y-sm gap-x-md items-center text-sm mt-2">
+                            <label class="font-semibold text-on-surface-variant">주문자</label>
+                            <input data-order-field="name" name="ordererName" required maxlength="50" class="rounded border-outline bg-white p-2 text-body-md" placeholder="이름을 입력하세요" type="text" th:value="${orderMember?.name}">
+
+                            <label class="font-semibold text-on-surface-variant">휴대폰</label>
+                            <input data-order-field="phone" name="ordererPhone" required maxlength="30" class="rounded border-outline bg-white p-2 text-body-md" placeholder="010-0000-0000" type="tel" th:value="${orderMember?.phone}">
+
+                            <label class="font-semibold text-on-surface-variant">우편번호</label>
+                            <div class="flex gap-sm">
+                                <input data-order-field="zipCode" name="ordererZipCode" class="flex-1 rounded border-outline bg-surface-container-low p-2 text-body-md" placeholder="우편번호" readonly type="text" th:value="${orderMember?.zipCode}">
+                                <button type="button" onclick="openPostcodeFor(document.getElementById('order-info'))" class="px-4 py-2 bg-surface-container-high hover:bg-surface-dim transition-colors rounded text-sm font-bold standard-border">주소 검색</button>
+                            </div>
+
+                            <label class="font-semibold text-on-surface-variant">기본주소</label>
+                            <input data-order-field="baseAddress" name="ordererBaseAddress" required class="rounded border-outline bg-surface-container-low p-2 text-body-md" placeholder="검색을 통해 입력하세요" readonly type="text" th:value="${orderMember?.baseAddress}">
+
+                            <label class="font-semibold text-on-surface-variant">상세주소</label>
+                            <input data-order-field="detailAddress" name="ordererDetailAddress" maxlength="255" class="rounded border-outline bg-white p-2 text-body-md" placeholder="나머지 주소를 입력하세요" type="text" th:value="${orderMember?.detailAddress}">
+                        </div>
+                    </section>
+
+                    <section class="flex flex-col gap-md bg-white standard-border rounded p-md">
+                        <div class="flex items-center gap-sm pb-2 border-b border-outline-variant">
+                            <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">2</span>
+                            <h3 class="font-bold text-lg text-primary">배송정보</h3>
+                        </div>
+
+                        <div id="shipment-list" class="flex flex-col gap-md">
+                            <div class="shipment-card rounded-lg border border-outline-variant bg-surface-container-low p-md" data-shipment-index="0">
+                                <div class="mb-md flex items-center justify-between gap-sm">
+                                    <div class="flex items-center gap-sm">
+                                        <h4 class="shipment-title font-bold text-primary">배송지 1</h4>
+                                        <label class="flex cursor-pointer items-center gap-2 text-xs font-semibold text-on-surface-variant">
+                                            <input type="checkbox" class="same-as-order rounded text-primary focus:ring-primary" checked onchange="copyOrderInfo(this)">
+                                            주문정보와 동일
+                                        </label>
+                                    </div>
+                                    <button type="button" class="remove-shipment hidden text-xs font-bold text-error" onclick="removeShipment(this)">삭제</button>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-y-sm gap-x-md items-center text-sm">
+                                    <label class="font-semibold text-on-surface-variant">수령자</label>
+                                    <input data-shipment-field="recipientName" name="shipments[0].recipientName" required maxlength="50" class="rounded border-outline bg-white p-2 text-body-md" type="text" th:value="${orderMember?.name}">
+
+                                    <label class="font-semibold text-on-surface-variant">휴대폰</label>
+                                    <input data-shipment-field="recipientPhone" name="shipments[0].recipientPhone" required maxlength="30" class="rounded border-outline bg-white p-2 text-body-md" type="tel" th:value="${orderMember?.phone}">
+
+                                    <label class="font-semibold text-on-surface-variant">우편번호</label>
+                                    <div class="flex gap-sm">
+                                        <input data-shipment-field="zipCode" name="shipments[0].zipCode" class="flex-1 rounded border-outline bg-white p-2 text-body-md" readonly type="text" th:value="${orderMember?.zipCode}">
+                                        <button type="button" onclick="openPostcodeFor(this.closest('.shipment-card'))" class="px-4 py-2 bg-surface-container-high rounded text-sm font-bold standard-border">주소 검색</button>
+                                    </div>
+
+                                    <label class="font-semibold text-on-surface-variant">기본주소</label>
+                                    <input data-shipment-field="baseAddress" name="shipments[0].baseAddress" required class="rounded border-outline bg-white p-2 text-body-md" readonly type="text" th:value="${orderMember?.baseAddress}">
+
+                                    <label class="font-semibold text-on-surface-variant">상세주소</label>
+                                    <input data-shipment-field="detailAddress" name="shipments[0].detailAddress" maxlength="255" class="rounded border-outline bg-white p-2 text-body-md" type="text" th:value="${orderMember?.detailAddress}">
+
+                            <label class="font-semibold text-on-surface-variant">배송 요청사항</label>
+                                    <textarea data-shipment-field="memo" name="shipments[0].memo" maxlength="255" class="rounded border-outline bg-white p-2 text-body-md h-20" placeholder="배송 시 요청사항을 적어주세요"></textarea>
+                                </div>
+
+                                <div class="mt-md border-t border-outline-variant pt-md">
+                                    <p class="mb-sm text-xs font-bold text-primary">이 배송지로 보낼 수량</p>
+                                    <div class="grid grid-cols-1 gap-2">
+                                        <div th:each="item, itemStat : ${orderItems}" class="shipment-item flex items-center justify-between gap-md rounded bg-white px-3 py-2 text-xs">
+                                            <input type="hidden" th:name="|shipments[0].items[${itemStat.index}].itemKey|" th:value="${item.itemKey}" data-item-key-input>
+                                            <span class="min-w-0 flex-1 truncate" th:text="${item.skuName == null ? item.name : item.name + ' / ' + item.skuName}">상품명</span>
+                                            <label class="flex items-center gap-2 whitespace-nowrap">
+                                                수량
+                                                <input type="number" min="0" th:max="${item.quantity}" th:value="${item.quantity}"
+                                                       th:name="|shipments[0].items[${itemStat.index}].quantity|"
+                                                       th:data-item-key="${item.itemKey}" th:data-ordered-quantity="${item.quantity}"
+                                                       class="shipment-quantity w-20 rounded border-outline p-1 text-right">
+                                                <span th:text="|/ ${item.quantity}개|">/ 1개</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="addShipment()" class="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-primary py-3 text-sm font-bold text-primary hover:bg-surface-container-low">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                            배송정보 추가
+                        </button>
+                        <p class="text-xs text-outline">상품 수량을 각 배송지에 나누어 입력할 수 있습니다. 모든 배송지의 합계는 주문 수량과 같아야 합니다.</p>
+                    </section>
+
+                    <section class="flex flex-col gap-md bg-white standard-border rounded p-md">
+                        <div class="flex items-center gap-sm pb-2 border-b border-outline-variant">
+                            <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">3</span>
+                            <h3 class="font-bold text-lg text-primary">할인정보</h3>
+                        </div>
+                        <div class="bg-surface-container-low p-md rounded flex flex-col gap-md mt-2 text-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-outline-variant pb-md">
+                                <label for="coupon-select" class="font-semibold text-on-surface-variant">쿠폰 사용</label>
+                                <select id="coupon-select" name="couponDetailNo"
+                                        class="w-full sm:w-96 rounded border-outline bg-white p-2 text-sm pr-8">
+                                    <option value="" data-discount="0">쿠폰 사용 안 함</option>
+                                    <option th:each="coupon : ${availableCoupons}"
+                                            th:value="${coupon.couponDetailNo}"
+                                            th:data-discount="${coupon.estimatedDiscount}"
+                                            th:text="|${coupon.name} (-${#numbers.formatInteger(coupon.estimatedDiscount, 1, 'COMMA')}원)|">
+                                        쿠폰명
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <span class="text-on-surface-variant">현재 사용 가능 포인트: <span class="font-bold text-primary" th:text="${#numbers.formatInteger(orderMember != null ? orderMember.points : 0, 1, 'COMMA')}">0</span> 점</span>
+                                <div class="flex gap-sm">
+                                    <input id="used-points" name="usedPoints" value="0" min="0"
+                                           th:max="${orderMember != null ? orderMember.points : 0}"
+                                           th:data-available-points="${orderMember != null ? orderMember.points : 0}"
+                                           th:data-order-price="${totalOrderPrice}"
+                                           class="w-32 rounded border-outline bg-white p-1.5 text-right" placeholder="0" type="number">
+                                    <button type="button" onclick="applyPoints()" class="px-3 py-1.5 bg-primary text-white rounded text-xs hover:opacity-90 transition-opacity">포인트 사용</button>
+                                    <button type="button" onclick="useAllPoints()" class="px-3 py-1.5 bg-secondary text-white rounded text-xs hover:opacity-90 transition-opacity">전부사용</button>
+                                </div>
+                            </div>
+                            <p class="text-xs text-outline font-medium">※ 5,000점 이상 보유 시 현금처럼 사용 가능합니다.</p>
+                        </div>
+                    </section>
+
+                    <section class="flex flex-col gap-md bg-white standard-border rounded p-md">
+                        <div class="flex items-center gap-sm pb-2 border-b border-outline-variant">
+                            <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">4</span>
+                            <h3 class="font-bold text-lg text-primary">결제방법</h3>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-sm mt-2 text-sm">
+                            <label class="flex items-center gap-base p-3 border border-outline rounded cursor-pointer hover:bg-surface-container transition-colors has-[:checked]:border-primary has-[:checked]:bg-surface-container-low font-medium">
+                                <input checked class="text-primary focus:ring-primary" name="paymentMethod" value="CARD" type="radio">
+                                <span>신용카드</span>
+                            </label>
+                            <label class="flex items-center gap-base p-3 border border-outline rounded cursor-pointer hover:bg-surface-container transition-colors has-[:checked]:border-primary has-[:checked]:bg-surface-container-low font-medium">
+                                <input class="text-primary focus:ring-primary" name="paymentMethod" value="BANK_TRANSFER" type="radio">
+                                <span>계좌이체</span>
+                            </label>
+                            <label class="flex items-center gap-base p-3 border border-outline rounded cursor-pointer hover:bg-surface-container transition-colors has-[:checked]:border-primary has-[:checked]:bg-surface-container-low font-medium">
+                                <input class="text-primary focus:ring-primary" name="paymentMethod" value="MOBILE" type="radio">
+                                <span>휴대폰결제</span>
+                            </label>
+                            <label class="flex items-center gap-base p-3 border border-outline rounded cursor-pointer hover:bg-surface-container transition-colors has-[:checked]:border-primary has-[:checked]:bg-surface-container-low font-medium">
+                                <input class="text-primary focus:ring-primary" name="paymentMethod" value="CHECK_CARD" type="radio">
+                                <span>체크카드</span>
+                            </label>
+                            <label class="flex items-center gap-base p-3 border border-outline rounded cursor-pointer hover:bg-surface-container transition-colors has-[:checked]:border-primary has-[:checked]:bg-surface-container-low font-medium">
+                                <input class="text-primary focus:ring-primary" name="paymentMethod" value="DEPOSIT" type="radio">
+                                <span>무통장입금</span>
+                            </label>
+                            <label class="flex items-center gap-base p-3 border border-outline rounded cursor-pointer hover:bg-surface-container transition-colors has-[:checked]:border-primary has-[:checked]:bg-surface-container-low font-medium">
+                                <input class="text-primary focus:ring-primary" name="paymentMethod" value="KAKAO_PAY" type="radio">
+                                <div class="flex items-center gap-xs">
+                                    <span>카카오페이</span>
+                                    <span class="bg-[#FEE500] text-[#000000] text-[9px] px-1 rounded-sm font-bold uppercase">Pay</span>
+                                </div>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="lg:col-span-4 sticky top-[100px] flex flex-col gap-md">
+                    <div class="bg-white standard-border rounded p-md">
+                        <h3 class="font-bold text-lg text-primary border-b border-outline-variant pb-2 mb-4">최종결제정보</h3>
+                        <ul class="flex flex-col gap-sm text-sm mb-4">
+                            <li class="flex justify-between items-center">
+                                <span class="text-on-surface-variant">상품수</span>
+                                <span class="font-bold" th:text="|${totalQuantity}개|">0개</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-on-surface-variant">상품금액</span>
+                                <span class="font-bold" th:text="${#numbers.formatInteger(totalProductPrice, 1, 'COMMA') + '원'}">0원</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-on-surface-variant">할인금액</span>
+                                <span class="font-bold text-error" th:text="${totalDiscount > 0 ? '-' + #numbers.formatInteger(totalDiscount, 1, 'COMMA') + '원' : '0원'}">0원</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-on-surface-variant">배송비 <small class="block text-[9px] text-outline">판매자별 최고 배송비 1회</small></span>
+                                <span class="font-bold" th:text="${#numbers.formatInteger(totalShippingFee, 1, 'COMMA') + '원'}">0원</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-on-surface-variant">포인트 할인</span>
+                                <span id="point-discount" class="font-bold text-error">0원</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-on-surface-variant">쿠폰 할인</span>
+                                <span id="coupon-discount" class="font-bold text-error">0원</span>
+                            </li>
+                            <li class="pt-sm border-t border-outline-variant/60 mt-2">
+                                <div class="flex justify-between items-end">
+                                    <span class="font-bold text-primary">전체주문금액</span>
+                                    <span id="final-payment-price" class="text-xl font-extrabold text-error"
+                                          th:data-order-price="${totalOrderPrice}"
+                                          th:text="${#numbers.formatInteger(totalOrderPrice, 1, 'COMMA') + '원'}">0원</span>
+                                </div>
+                            </li>
+                            <li class="flex justify-between items-center text-xs text-outline mt-1">
+                                <span>적립 예정 포인트</span>
+                                <span th:text="${#numbers.formatInteger(totalRewardPoints, 1, 'COMMA') + '점'}">0점</span>
+                            </li>
+                        </ul>
+                        <button id="checkout-submit" type="submit" class="w-full py-3 bg-primary text-white font-bold rounded hover:bg-opacity-90 active:scale-[0.99] transition-all shadow-sm disabled:cursor-not-allowed disabled:opacity-50">
+                            결제하기
+                        </button>
+                        <p class="text-center text-xs text-outline mt-3">
+                            주문 내용을 확인하였으며 결제에 동의합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+
+<footer class="bg-white border-t border-outline-variant mt-xl py-lg">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-gutter">
+        <div class="flex flex-wrap gap-md text-sm font-medium text-on-surface-variant mb-8 border-b border-surface-container pb-4">
+            <a class="hover:text-primary" th:href="@{/company/main}">회사소개</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary" th:href="@{/policy/buyer}">서비스이용약관</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary font-bold text-on-surface" th:href="@{/policy/buyer}">개인정보처리방침</a>
+            <span class="text-outline-variant">|</span>
+            <a class="hover:text-primary" th:href="@{/policy/buyer}">전자금융거래약관</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+            <div class="flex flex-col md:flex-row gap-md items-start">
+                <div class="footer-logo w-24 h-24 placeholder-image flex items-center justify-center rounded shrink-0 overflow-hidden">
+                    <img th:if="${siteConfig != null and siteConfig.footerLogo_stored != null and !siteConfig.footerLogo_stored.isBlank()}"
+                         th:src="@{/uploads/{file}(file=${siteConfig.footerLogo_stored})}"
+                         class="w-full h-full object-contain"
+                         alt="K-market">
+                    <span th:unless="${siteConfig != null and siteConfig.footerLogo_stored != null and !siteConfig.footerLogo_stored.isBlank()}"
+                          class="material-symbols-outlined text-4xl">storefront</span>
+                </div>
+                <div class="text-sm text-on-surface-variant space-y-1">
+                    <h2 class="text-xl font-bold text-primary mb-2"
+                        th:text="${siteConfig != null and siteConfig.companyName != null and !siteConfig.companyName.isBlank() ? siteConfig.companyName : '(주)케이마켓'}">(주)케이마켓</h2>
+                    <p th:text="|${siteConfig != null and siteConfig.baseAddress != null ? siteConfig.baseAddress : ''} ${siteConfig != null and siteConfig.detailAddress != null ? siteConfig.detailAddress : ''}|">부산광역시 부산진구 중앙대로 103 그린타워 13층</p>
+                    <p>대표이사 : <span th:text="${siteConfig != null and siteConfig.ceo != null and !siteConfig.ceo.isBlank() ? siteConfig.ceo : '-'}">홍길동</span></p>
+                    <p>사업자등록번호 : <span th:text="${siteConfig != null and siteConfig.bizNumber != null and !siteConfig.bizNumber.isBlank() ? siteConfig.bizNumber : '-'}">123-45-12345</span></p>
+                    <p th:if="${siteConfig != null and siteConfig.mailOrderNumber != null and !siteConfig.mailOrderNumber.isBlank()}">통신판매업신고 : <span th:text="${siteConfig.mailOrderNumber}"></span></p>
+                    <p class="mt-4 text-[10px] text-outline">Version <span th:text="${latestVersion != null and !latestVersion.isBlank() ? latestVersion : '등록된 버전 없음'}">0.0.6-SNAPSHOT</span></p>
+                    <p class="text-[10px] text-outline"
+                       th:if="${siteConfig != null and siteConfig.copyright != null and !siteConfig.copyright.isBlank()}"
+                       th:text="${siteConfig.copyright}">© 2025 K-market. 모든 권리 보유.</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <h3 class="font-bold text-lg text-primary">고객센터</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md text-sm text-on-surface-variant">
+                    <div>
+                        <p class="font-bold text-on-surface">Tel : <span th:text="${siteConfig != null and siteConfig.csPhone != null and !siteConfig.csPhone.isBlank() ? siteConfig.csPhone : '-'}">1234-5678</span></p>
+                        <p th:text="${siteConfig != null and siteConfig.csHours != null and !siteConfig.csHours.isBlank() ? siteConfig.csHours : '운영시간 정보가 등록되지 않았습니다.'}">평일 09:00 ~ 18:00</p>
+                        <p th:if="${siteConfig != null and siteConfig.csEmail != null and !siteConfig.csEmail.isBlank()}">Email : <a class="hover:underline" th:href="|mailto:${siteConfig.csEmail}|" th:text="${siteConfig.csEmail}"></a></p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface">전자금융거래 분쟁 담당</p>
+                        <p th:text="${siteConfig != null and siteConfig.finDisputeManager != null and !siteConfig.finDisputeManager.isBlank() ? siteConfig.finDisputeManager : '담당자 정보가 등록되지 않았습니다.'}">1234-1234 (365일 09:00 ~ 18:00)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-4">
+                    <a class="p-2 border border-outline-variant rounded hover:bg-surface-container" href="#"><span class="material-symbols-outlined text-sm">share</span></a>
+                    <a class="p-2 border border-outline-variant rounded hover:bg-surface-container" href="#"><span class="material-symbols-outlined text-sm">mail</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-outline-variant flex justify-around py-3 z-50">
+    <a class="flex flex-col items-center gap-1 text-primary" th:href="@{/}" href="/">
+        <span class="material-symbols-outlined">home</span>
+        <span class="text-[10px] font-bold">홈</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" th:href="@{/product/list}" href="/product/list">
+        <span class="material-symbols-outlined">grid_view</span>
+        <span class="text-[10px]">메뉴</span>
+    </a>
+    <a class="flex flex-col items-center gap-1 text-on-surface-variant" th:href="@{/product/search}" href="/product/search">
+        <span class="material-symbols-outlined">search</span>
+        <span class="text-[10px]">검색</span>
+    </a>
+    <a class="hidden flex flex-col items-center gap-1 text-on-surface-variant" th:href="@{/my/index}" href="/my/index" data-auth-required="true">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-[10px]">마이페이지</span>
+    </a>
+</nav>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    const formatter = new Intl.NumberFormat('ko-KR');
+
+    function openPostcodeFor(container) {
+        if (typeof daum === 'undefined' || !daum.Postcode) {
+            alert('주소 검색 서비스를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+            return;
+        }
+        new daum.Postcode({
+            oncomplete: function(data) {
+                const address = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+                const isOrderInfo = container?.id === 'order-info';
+                const selectorPrefix = isOrderInfo ? 'data-order-field' : 'data-shipment-field';
+                const zipField = isOrderInfo ? 'zipCode' : 'zipCode';
+                const baseField = isOrderInfo ? 'baseAddress' : 'baseAddress';
+                const detailField = isOrderInfo ? 'detailAddress' : 'detailAddress';
+                container?.querySelector(`[${selectorPrefix}="${zipField}"]`)?.setAttribute('value', data.zonecode || '');
+                const zipInput = container?.querySelector(`[${selectorPrefix}="${zipField}"]`);
+                const baseInput = container?.querySelector(`[${selectorPrefix}="${baseField}"]`);
+                const detailInput = container?.querySelector(`[${selectorPrefix}="${detailField}"]`);
+                if (zipInput) zipInput.value = data.zonecode || '';
+                if (baseInput) baseInput.value = address || '';
+                detailInput?.focus();
+                if (isOrderInfo) syncCheckedShipments();
+            }
+        }).open();
+    }
+
+    const orderToShipmentFields = {
+        name: 'recipientName',
+        phone: 'recipientPhone',
+        zipCode: 'zipCode',
+        baseAddress: 'baseAddress',
+        detailAddress: 'detailAddress'
+    };
+
+    function copyOrderInfo(checkbox) {
+        const card = checkbox.closest('.shipment-card');
+        if (!card || !checkbox.checked) return;
+        Object.entries(orderToShipmentFields).forEach(([orderField, shipmentField]) => {
+            const source = document.querySelector(`[data-order-field="${orderField}"]`);
+            const target = card.querySelector(`[data-shipment-field="${shipmentField}"]`);
+            if (source && target) target.value = source.value;
+        });
+    }
+
+    function syncCheckedShipments() {
+        document.querySelectorAll('.same-as-order:checked').forEach(copyOrderInfo);
+    }
+
+    function renumberShipments() {
+        document.querySelectorAll('.shipment-card').forEach((card, shipmentIndex) => {
+            card.dataset.shipmentIndex = String(shipmentIndex);
+            const title = card.querySelector('.shipment-title');
+            if (title) title.textContent = `배송지 ${shipmentIndex + 1}`;
+            card.querySelectorAll('[name]').forEach(input => {
+                input.name = input.name.replace(/shipments\[\d+]/, `shipments[${shipmentIndex}]`);
+            });
+            const removeButton = card.querySelector('.remove-shipment');
+            removeButton?.classList.toggle('hidden', shipmentIndex === 0 && document.querySelectorAll('.shipment-card').length === 1);
+        });
+    }
+
+    function addShipment() {
+        const list = document.getElementById('shipment-list');
+        const source = list?.querySelector('.shipment-card');
+        if (!list || !source) return;
+        const clone = source.cloneNode(true);
+        clone.querySelector('.same-as-order').checked = false;
+        clone.querySelectorAll('[data-shipment-field]').forEach(input => input.value = '');
+        clone.querySelectorAll('.shipment-quantity').forEach(input => input.value = '0');
+        clone.querySelector('.remove-shipment')?.classList.remove('hidden');
+        list.appendChild(clone);
+        renumberShipments();
+        clone.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
+
+    function removeShipment(button) {
+        const cards = document.querySelectorAll('.shipment-card');
+        if (cards.length <= 1) return;
+        button.closest('.shipment-card')?.remove();
+        renumberShipments();
+    }
+
+    function validateShipmentQuantities() {
+        const totals = new Map();
+        const ordered = new Map();
+        document.querySelectorAll('.shipment-quantity').forEach(input => {
+            const key = input.dataset.itemKey;
+            const quantity = Math.max(Number(input.value || 0), 0);
+            totals.set(key, (totals.get(key) || 0) + quantity);
+            ordered.set(key, Number(input.dataset.orderedQuantity || 0));
+        });
+        for (const [key, orderedQuantity] of ordered.entries()) {
+            if ((totals.get(key) || 0) !== orderedQuantity) return false;
+        }
+        return true;
+    }
+
+    function normalizedUsedPoints(showAlert) {
+        const input = document.getElementById('used-points');
+        const available = Number(input?.dataset.availablePoints || 0);
+        const orderPrice = Math.max(Number(input?.dataset.orderPrice || 0) - selectedCouponDiscount(), 0);
+        let value = Math.max(Number(input?.value || 0), 0);
+        if (value > 0 && available < 5000) {
+            if (showAlert) alert('포인트는 5,000점 이상 보유한 경우 사용할 수 있습니다.');
+            value = 0;
+        }
+        value = Math.min(value, available, orderPrice);
+        if (input) input.value = String(Math.floor(value));
+        return Math.floor(value);
+    }
+
+    function updatePaymentSummary(usedPoints) {
+        const finalPrice = document.getElementById('final-payment-price');
+        const orderPrice = Number(finalPrice?.dataset.orderPrice || 0);
+        const couponDiscountValue = selectedCouponDiscount();
+        const pointDiscount = document.getElementById('point-discount');
+        const couponDiscount = document.getElementById('coupon-discount');
+        if (pointDiscount) pointDiscount.textContent = usedPoints > 0 ? `-${formatter.format(usedPoints)}원` : '0원';
+        if (couponDiscount) couponDiscount.textContent = couponDiscountValue > 0 ? `-${formatter.format(couponDiscountValue)}원` : '0원';
+        if (finalPrice) finalPrice.textContent = `${formatter.format(Math.max(orderPrice - couponDiscountValue - usedPoints, 0))}원`;
+    }
+
+    function selectedCouponDiscount() {
+        const selected = document.getElementById('coupon-select')?.selectedOptions?.[0];
+        return Math.max(Number(selected?.dataset.discount || 0), 0);
+    }
+
+    function applyPoints() {
+        updatePaymentSummary(normalizedUsedPoints(true));
+    }
+
+    function useAllPoints() {
+        const input = document.getElementById('used-points');
+        const available = Number(input?.dataset.availablePoints || 0);
+        const orderPrice = Math.max(Number(input?.dataset.orderPrice || 0) - selectedCouponDiscount(), 0);
+        if (available < 5000) {
+            alert('포인트는 5,000점 이상 보유한 경우 사용할 수 있습니다.');
+            return;
+        }
+        input.value = String(Math.min(available, orderPrice));
+        applyPoints();
+    }
+
+    // Focus search interaction
+    const searchInput = document.querySelector('input[type="text"]');
+    if(searchInput) {
+        searchInput.addEventListener('focus', () => {
+            searchInput.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.classList.remove('ring-2', 'ring-primary/20');
+        });
+    }
+
+    document.getElementById('used-points')?.addEventListener('change', applyPoints);
+    document.getElementById('coupon-select')?.addEventListener('change', () => {
+        const usedPoints = normalizedUsedPoints(false);
+        updatePaymentSummary(usedPoints);
+    });
+    document.querySelectorAll('[data-order-field]').forEach(input => {
+        input.addEventListener('input', syncCheckedShipments);
+    });
+    renumberShipments();
+    syncCheckedShipments();
+    document.getElementById('checkout-form')?.addEventListener('submit', (event) => {
+        applyPoints();
+        if (!validateShipmentQuantities()) {
+            event.preventDefault();
+            alert('각 상품의 배송 수량 합계가 주문 수량과 같도록 입력해주세요.');
+            return;
+        }
+        if (!event.currentTarget.checkValidity()) return;
+        const submitButton = document.getElementById('checkout-submit');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = '주문 처리 중...';
+        }
+    });
+</script>
+
+
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+</body></html>

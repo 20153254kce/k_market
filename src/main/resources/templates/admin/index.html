@@ -1,0 +1,407 @@
+<!DOCTYPE html><html lang="ko" xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>K-market Admin Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .menu-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out, padding 0.3s ease-in-out;
+            opacity: 0;
+        }
+        .menu-item-active .menu-content {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 4px;
+            padding-bottom: 8px;
+        }
+        .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+        .menu-item-active .chevron-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#c0ecdc",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed": "#c8e8f2",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2c4a52",
+                        "error-container": "#ffdad6",
+                        "primary": "#14333b",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "on-secondary-fixed": "#002018",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#c0ecdc",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "secondary": "#3e6659",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#acccd5",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "tertiary": "#452916",
+                        "surface": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#99b9c2",
+                        "inverse-primary": "#acccd5",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-primary-fixed": "#001f26",
+                        "surface-tint": "#45636b",
+                        "tertiary-container": "#5e3f2a",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-background": "#191c1d",
+                        "on-secondary-container": "#446c5f",
+                        "outline": "#72787a",
+                        "outline-variant": "#c1c7ca",
+                        "on-surface-variant": "#41484a",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "surface-container": "#edeeef",
+                        "surface-container-high": "#e7e8e9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "container-max": "1280px",
+                        "md": "24px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex">
+<!-- Shared Component: SideNavBar -->
+<div th:replace="~{admin/_layout :: sidebar('dashboard')}"></div>
+<!-- Shared Component: TopAppBar -->
+<div th:replace="~{admin/_layout :: header}"></div>
+<!-- Main Canvas -->
+<main class="ml-64 mt-16 p-lg flex-1 w-full max-w-[1400px] mx-auto">
+    <div class="mb-lg">
+        <h1 class="font-headline-lg text-headline-lg text-on-background mb-2">관리자 메인</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">쇼핑몰의 주요 현황을 한눈에 파악하세요.</p>
+    </div>
+
+    <div class="flex flex-col gap-lg">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-md">
+
+            <section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-md">
+                <h3 class="font-headline-md text-headline-md text-on-background mb-md border-b border-outline-variant pb-sm">운영현황 (주문상세 기준)</h3>
+                <div class="grid grid-cols-5 gap-sm">
+                    <div class="flex flex-col items-center justify-center bg-surface p-sm rounded border border-outline-variant hover:bg-surface-container-low transition-colors">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant mb-1">입금대기</span>
+                        <span class="font-headline-md text-headline-md text-primary font-bold"
+                              th:text="${todayStats != null ? todayStats.pendingDeposit : 0}">0</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-surface p-sm rounded border border-outline-variant hover:bg-surface-container-low transition-colors">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant mb-1">배송준비</span>
+                        <span class="font-headline-md text-headline-md text-primary font-bold"
+                              th:text="${todayStats != null ? todayStats.preparingDelivery : 0}">0</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-surface p-sm rounded border border-outline-variant hover:bg-surface-container-low transition-colors">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant mb-1">취소요청</span>
+                        <span class="font-headline-md text-headline-md text-error font-bold"
+                              th:text="${todayStats != null ? todayStats.cancelRequest : 0}">0</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-surface p-sm rounded border border-outline-variant hover:bg-surface-container-low transition-colors">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant mb-1">교환요청</span>
+                        <span class="font-headline-md text-headline-md text-secondary font-bold"
+                              th:text="${todayStats != null ? todayStats.exchangeRequest : 0}">0</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-surface p-sm rounded border border-outline-variant hover:bg-surface-container-low transition-colors">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant mb-1">반품요청</span>
+                        <span class="font-headline-md text-headline-md text-tertiary font-bold"
+                              th:text="${todayStats != null ? todayStats.returnRequest : 0}">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-md">
+                <h3 class="font-headline-md text-headline-md text-on-background mb-md border-b border-outline-variant pb-sm">주요 지표 (오늘 / 어제)</h3>
+                <div class="grid grid-cols-5 gap-2 text-center">
+
+                    <div class="flex flex-col justify-center bg-surface p-2 rounded border border-outline-variant">
+                        <span class="font-label-sm text-[11px] text-on-surface-variant mb-1">주문건수</span>
+                        <span class="font-headline-md text-sm text-primary font-bold">
+                            <span th:text="${todayStats != null ? #numbers.formatInteger(todayStats.orderCount, 0, 'COMMA') : 0}">0</span><span class="text-xs font-normal">건</span>
+                        </span>
+                        <span class="text-[11px] text-gray-400 mt-0.5">
+                            어제: <span th:text="${yesterdayStats != null ? #numbers.formatInteger(yesterdayStats.orderCount, 0, 'COMMA') : 0}">0</span>
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col justify-center bg-surface p-2 rounded border border-outline-variant">
+                        <span class="font-label-sm text-[11px] text-on-surface-variant mb-1">주문금액</span>
+                        <span class="font-headline-md text-sm text-primary font-bold tracking-tight">
+                            <span th:text="${todayStats != null ? #numbers.formatInteger(todayStats.orderAmount, 0, 'COMMA') : 0}">0</span><span class="text-xs font-normal">원</span>
+                        </span>
+                        <span class="text-[11px] text-gray-400 mt-0.5 tracking-tight">
+                            어제: <span th:text="${yesterdayStats != null ? #numbers.formatInteger(yesterdayStats.orderAmount, 0, 'COMMA') : 0}">0</span>
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col justify-center bg-surface p-2 rounded border border-outline-variant">
+                        <span class="font-label-sm text-[11px] text-on-surface-variant mb-1">회원가입</span>
+                        <span class="font-headline-md text-sm text-primary font-bold">
+                            <span th:text="${todayStats != null ? #numbers.formatInteger(todayStats.memberJoinCount, 0, 'COMMA') : 0}">0</span><span class="text-xs font-normal">명</span>
+                        </span>
+                        <span class="text-[11px] text-gray-400 mt-0.5">
+                            어제: <span th:text="${yesterdayStats != null ? #numbers.formatInteger(yesterdayStats.memberJoinCount, 0, 'COMMA') : 0}">0</span>
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col justify-center bg-surface p-2 rounded border border-outline-variant">
+                        <span class="font-label-sm text-[11px] text-on-surface-variant mb-1">방문자수</span>
+                        <span class="font-headline-md text-sm text-primary font-bold">
+                            <span th:text="${todayStats != null ? #numbers.formatInteger(todayStats.visitorCount, 0, 'COMMA') : 0}">0</span><span class="text-xs font-normal">명</span>
+                        </span>
+                        <span class="text-[11px] text-gray-400 mt-0.5">
+                            어제: <span th:text="${yesterdayStats != null ? #numbers.formatInteger(yesterdayStats.visitorCount, 0, 'COMMA') : 0}">0</span>
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col justify-center bg-surface p-2 rounded border border-outline-variant">
+                        <span class="font-label-sm text-[11px] text-on-surface-variant mb-1">문의게시글</span>
+                        <span class="font-headline-md text-sm text-primary font-bold">
+                            <span th:text="${todayStats != null ? #numbers.formatInteger(todayStats.qnaCount, 0, 'COMMA') : 0}">0</span><span class="text-xs font-normal">건</span>
+                        </span>
+                        <span class="text-[11px] text-gray-400 mt-0.5">
+                            어제: <span th:text="${yesterdayStats != null ? #numbers.formatInteger(yesterdayStats.qnaCount, 0, 'COMMA') : 0}">0</span>
+                        </span>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-md">
+            <h3 class="font-headline-md text-headline-md text-on-background mb-md border-b border-outline-variant pb-sm">집계 및 매출 현황 (최근 5일)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-lg min-h-[18rem]">
+
+                <div class="flex flex-col h-full border border-outline-variant rounded p-sm bg-surface">
+                    <span class="font-label-md text-label-md text-on-surface-variant mb-3">최근 5일 주문 · 결제 · 취소 집계</span>
+                    <div class="flex-1 relative w-full h-64 flex items-center justify-center">
+                        <canvas id="dailySummaryChart"></canvas>
+                        <div th:if="${dailySummaryList == null or dailySummaryList.isEmpty()}" class="absolute text-gray-400 text-xs">
+                            집계 데이터가 없습니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col h-full border border-outline-variant rounded p-sm bg-surface">
+                    <span class="font-label-md text-label-md text-on-surface-variant mb-3">5일간 주요 카테고리 매출 (Top 3 + 기타)</span>
+                    <div class="flex-1 relative w-full h-64 flex items-center justify-center">
+                        <canvas id="topSalesChart"></canvas>
+                        <div th:if="${topSalesList == null or topSalesList.isEmpty()}" class="absolute text-gray-400 text-xs">
+                            매출 집계 데이터가 없습니다.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+
+            <section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-md">
+                <div class="flex justify-between items-center border-b border-outline-variant pb-sm mb-sm">
+                    <h3 class="font-headline-md text-headline-md text-on-background">공지사항</h3>
+                    <a th:href="@{/admin/cs/notice/list}" class="font-label-sm text-label-sm text-primary hover:underline">더보기 +</a>
+                </div>
+                <ul class="flex flex-col">
+                    <li th:each="notice, stat : ${noticeList}" th:if="${stat.index < 5}"
+                        class="py-2 border-b border-surface-variant flex justify-between items-center group cursor-pointer hover:bg-surface transition-colors px-2 -mx-2 rounded"
+                        th:onclick="|location.href='@{/admin/cs/notice/view/{no}(no=${notice.no})}'|">
+                        <span class="font-body-md text-body-md text-on-background truncate max-w-[70%] group-hover:text-primary"
+                              th:text="${'[' + notice.type + '] ' + notice.title}">[안내] 공지사항 제목</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant"
+                              th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}">2026.07.13</span>
+                    </li>
+                    <li th:if="${noticeList == null or noticeList.isEmpty()}" class="py-8 text-center text-sm text-gray-400">
+                        등록된 공지사항이 없습니다.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-md">
+                <div class="flex justify-between items-center border-b border-outline-variant pb-sm mb-sm">
+                    <h3 class="font-headline-md text-headline-md text-on-background">최근 고객문의 (QnA)</h3>
+                    <a th:href="@{/admin/cs/qna/list}" class="font-label-sm text-label-sm text-primary hover:underline">더보기 +</a>
+                </div>
+                <ul class="flex flex-col">
+                    <li th:each="qna, stat : ${qnaList}" th:if="${stat.index < 5}"
+                        class="py-2 border-b border-surface-variant flex items-center justify-between group cursor-pointer hover:bg-surface transition-colors px-2 -mx-2 rounded"
+                        th:onclick="|location.href='@{/admin/cs/qna/view/{no}(no=${qna.no})}'|">
+                        <div class="flex items-center gap-3 truncate max-w-[75%]">
+                            <span th:if="${qna.isAnswered == 'N' or qna.isAnswered == '미답변'}"
+                                  class="bg-error-container text-on-error-container font-label-sm text-[10px] px-2 py-0.5 rounded flex-shrink-0">미답변</span>
+                            <span th:unless="${qna.isAnswered == 'N' or qna.isAnswered == '미답변'}"
+                                  class="bg-surface-dim text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded border border-outline-variant flex-shrink-0">답변완료</span>
+                            <span class="font-body-md text-body-md text-on-background truncate group-hover:text-primary"
+                                  th:text="${'[' + qna.type1 + '] ' + qna.title}">[문의] 질문 내용</span>
+                        </div>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant flex-shrink-0 ml-2"
+                              th:text="${qna.id != null ? (qna.id.length() > 3 ? qna.id.substring(0, 3) + '**' : qna.id) : '익명'}">홍*동</span>
+                    </li>
+                    <li th:if="${qnaList == null or qnaList.isEmpty()}" class="py-8 text-center text-sm text-gray-400">
+                        최근 접수된 고객문의가 없습니다.
+                    </li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<script>
+    function toggleAccordion(button) {
+        const menuItem = button.closest('.group\\/menu');
+        if (!menuItem) return;
+
+        const isActive = menuItem.classList.contains('menu-item-active');
+        if (isActive) {
+            menuItem.classList.remove('menu-item-active');
+        } else {
+            document.querySelectorAll('.menu-item-active').forEach(item => {
+                if (item !== menuItem) item.classList.remove('menu-item-active');
+            });
+            menuItem.classList.add('menu-item-active');
+        }
+    }
+</script>
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        /* [1] 최근 5일 주문·결제·취소 집계 (막대 그래프) */
+        const dailyData = /*[[${dailySummaryList}]]*/ [];
+        if (dailyData && dailyData.length > 0) {
+            const labels = dailyData.map(item => item.date);
+            const orderCounts = dailyData.map(item => item.orderCount);
+            const payCounts = dailyData.map(item => item.payCount);
+            const cancelCounts = dailyData.map(item => item.cancelCount);
+
+            const ctxDaily = document.getElementById('dailySummaryChart').getContext('2d');
+            new Chart(ctxDaily, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '주문', data: orderCounts, backgroundColor: '#3b82f6', borderRadius: 4 },
+                        { label: '결제', data: payCounts, backgroundColor: '#22c55e', borderRadius: 4 },
+                        { label: '취소', data: cancelCounts, backgroundColor: '#ef4444', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } }
+                }
+            });
+        }
+
+        /* [2] 5일간 주요 카테고리 매출 (원 그래프 - 도넛) */
+        const topSalesData = /*[[${topSalesList}]]*/ [];
+        if (topSalesData && topSalesData.length > 0) {
+            const salesLabels = topSalesData.map(item => item.categoryName);
+            const salesValues = topSalesData.map(item => item.totalSales);
+            const bgColors = ['#14333b', '#3e6659', '#452916', '#9ca3af', '#6b7280'];
+
+            const ctxSales = document.getElementById('topSalesChart').getContext('2d');
+            new Chart(ctxSales, {
+                type: 'doughnut',
+                data: {
+                    labels: salesLabels,
+                    datasets: [{
+                        data: salesValues,
+                        backgroundColor: bgColors.slice(0, salesLabels.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('ko-KR').format(context.parsed) + '원';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+<script th:src="@{/js/admin-navigation.js}" src="/js/admin-navigation.js"></script>
+</body></html>

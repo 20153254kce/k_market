@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>K-market Admin Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Accordion Smooth Animation from SCREEN_146 */
+        .menu-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out, padding 0.3s ease-in-out;
+            opacity: 0;
+        }
+        .menu-item-active .menu-content {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 4px;
+            padding-bottom: 8px;
+        }
+        .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+        .menu-item-active .chevron-icon {
+            transform: rotate(180deg);
+        }
+        /* 모달 애니메이션 */
+        .modal-fade {
+            transition: opacity 0.2s ease-in-out;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-fade.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#c0ecdc",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed": "#c8e8f2",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "on-surface": "#191c1d",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2c4a52",
+                        "error-container": "#ffdad6",
+                        "primary": "#14333b",
+                        "on-tertiary-fixed-variant": "#5f402b",
+                        "on-secondary-fixed": "#002018",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#c0ecdc",
+                        "tertiary-fixed-dim": "#eabda2",
+                        "secondary": "#3e6659",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#acccd5",
+                        "on-secondary-fixed-variant": "#264e42",
+                        "tertiary": "#452916",
+                        "surface": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#99b9c2",
+                        "inverse-primary": "#acccd5",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-container": "#d6ab90",
+                        "on-primary-fixed": "#001f26",
+                        "surface-tint": "#45636b",
+                        "tertiary-container": "#5e3f2a",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#a5d0c0",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#2d1605",
+                        "on-background": "#191c1d",
+                        "on-secondary-container": "#446c5f",
+                        "outline": "#72787a",
+                        "outline-variant": "#c1c7ca",
+                        "on-surface-variant": "#41484a",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed-variant": "#2d4b53",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "surface-container": "#edeeef",
+                        "surface-container-high": "#e7e8e9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "container-max": "1280px",
+                        "md": "24px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex">
+<!-- Shared Component: SideNavBar (Updated with Accordion from SCREEN_146) -->
+<div th:replace="~{admin/_layout :: sidebar('config')}"></div>
+<!-- Shared Component: TopAppBar -->
+<div th:replace="~{admin/_layout :: header}"></div>
+<!-- Main Canvas -->
+<main class="ml-64 mt-16 p-8 flex-1 w-full bg-white">
+    <div class="flex justify-between items-end border-b-2 border-black pb-3 mb-8">
+        <h1 class="text-2xl font-bold text-black">배너관리</h1>
+        <div class="text-sm text-gray-500 font-medium">HOME > 환경설정 > <strong class="text-black">배너관리</strong></div>
+    </div>
+
+    <div class="max-w-[1200px] flex flex-col gap-6">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+            <div class="flex font-bold text-sm">
+                <a th:href="@{/admin/config/banner(position='MAIN1', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'MAIN1'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-r-0 border-gray-300 transition-colors">메인상단배너</a>
+                <a th:href="@{/admin/config/banner(position='MAIN2', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'MAIN2'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-r-0 border-gray-300 transition-colors">메인슬라이더배너</a>
+                <a th:href="@{/admin/config/banner(position='MAIN3', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'MAIN3'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-r-0 border-gray-300 transition-colors">메인사이드배너 1</a>
+                <a th:href="@{/admin/config/banner(position='MAIN4', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'MAIN4'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-r-0 border-gray-300 transition-colors">메인사이드배너 2</a>
+                <a th:href="@{/admin/config/banner(position='PRODUCT1', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'PRODUCT1'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-r-0 border-gray-300 transition-colors">상품 상세보기 배너</a>
+                <a th:href="@{/admin/config/banner(position='MEMBER1', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'MEMBER1'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-r-0 border-gray-300 transition-colors">회원로그인 배너</a>
+                <a th:href="@{/admin/config/banner(position='MY1', sort=${currentSort})}"
+                   th:classappend="${currentPosition == 'MY1'} ? 'bg-white text-black border-b-0' : 'bg-gray-200 text-gray-600'"
+                   class="px-6 py-3 border border-gray-300 transition-colors">마이페이지 배너</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <select th:onchange="|location.href='@{/admin/config/banner(position=${currentPosition})}&sort=' + this.value|"
+                        class="border-gray-300 rounded-sm text-sm font-medium focus:ring-primary focus:border-primary py-2 px-3 pr-8">
+                    <option value="idDesc" th:selected="${currentSort == 'idDesc'}">최신등록순</option>
+                    <option value="idAsc" th:selected="${currentSort == 'idAsc'}">오래된순</option>
+                    <option value="dateDesc" th:selected="${currentSort == 'dateDesc'}">배너노출일순</option>
+                </select>
+
+                <button type="button" onclick="openModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-bold text-sm shadow-md transition-all">
+                    + 배너등록
+                </button>
+            </div>
+        </div>
+
+        <form id="bannerForm" th:action="@{/admin/config/banner/delete}" method="post">
+            <input type="hidden" name="position" th:value="${currentPosition}">
+            <input type="hidden" name="sort" th:value="${currentSort}">
+
+            <table class="w-full border-t border-b border-gray-300 text-center text-sm">
+                <thead class="bg-gray-50 border-b border-gray-300 font-label-md">
+                <tr>
+                    <th class="py-3 px-2 w-12"><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th>
+                    <th class="py-3 px-2 w-16">번호</th>
+                    <th class="py-3 px-2 w-24">이미지</th>
+                    <th class="py-3 px-4 text-left">배너정보</th>
+                    <th class="py-3 px-4">배너위치</th>
+                    <th class="py-3 px-4">날짜/시간</th>
+                    <th class="py-3 px-4">관리</th>
+                </tr>
+                </thead>
+                <tbody id="bannerTableBody">
+                <tr th:each="b, stat : ${bannerList}" class="banner-row border-b hover:bg-gray-50 transition-colors">
+                    <td class="py-3 px-2"><input type="checkbox" name="bannerIds" th:value="${b.id}"></td>
+
+                    <td class="py-3 px-2 font-medium" th:text="${(pageData.pg - 1) * pageData.size + stat.count}">1</td>
+
+                    <td class="py-2 flex justify-center">
+                        <div class="w-16 h-16 border flex items-center justify-center overflow-hidden bg-gray-50">
+                            <img th:if="${b.fileUrl_stored != null}" th:src="${b.fileUrl_stored}" class="square-img object-cover w-full h-full opacity-0 transition-opacity duration-300" alt="배너 이미지">
+                        </div>
+                    </td>
+                    <td class="text-left py-3 px-4">
+                        <div class="font-bold text-black" th:text="${b.name}">배너명</div>
+                        <div class="text-xs text-gray-500" th:text="|배너사이즈 : ${b.sizeType}|"></div>
+                        <div class="text-xs text-gray-500" th:text="|배경색 : ${b.backgroundColor}|"></div>
+                    </td>
+                    <td class="py-3 px-4 font-medium" th:text="${b.position}"></td>
+                    <td class="py-3 px-4 text-xs text-gray-600">
+                        <div th:text="|${b.startDate} ~ ${b.endDate}|"></div>
+                        <div th:text="|${b.startTime} ~ ${b.endTime}|"></div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <a th:href="@{/admin/config/banner/status(id=${b.id}, position=${currentPosition}, sort=${currentSort}, page=${pageData.pg})}"
+                           th:text="${b.status}"
+                           th:classappend="${b.status == '활성'} ? 'text-blue-600 border-blue-600 bg-blue-50/50' : 'text-gray-400 border-gray-400 bg-gray-50'"
+                           class="inline-block px-3 py-1 border rounded text-xs font-bold transition-colors hover:opacity-80">
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${bannerList == null or bannerList.isEmpty()}">
+                    <td colspan="7" class="py-12 text-center text-gray-400">등록된 배너가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="flex justify-between items-center mt-6">
+                <button type="submit" class="bg-gray-500 text-white px-6 py-2 font-bold text-sm rounded-sm hover:bg-gray-600 transition-colors">선택삭제</button>
+
+                <div th:replace="~{fragments/_pagination :: pagination(${pageData}, '/admin/config/banner?position=' + ${currentPosition} + '&sort=' + ${currentSort})}"></div>
+
+                <div class="w-[88px]"></div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div id="bannerModal" class="modal-fade fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeModal()"></div>
+
+    <div class="relative bg-white w-[650px] shadow-2xl rounded-sm max-h-[90vh] overflow-y-auto">
+        <div class="bg-gray-700 text-white flex justify-between items-center px-4 py-3 sticky top-0 z-10">
+            <h2 class="font-bold">배너등록</h2>
+            <button type="button" onclick="closeModal()" class="text-white hover:text-gray-300 font-bold text-xl leading-none">&times;</button>
+        </div>
+
+        <form th:action="@{/admin/config/banner/add}" method="post" enctype="multipart/form-data" onsubmit="return validateBannerForm(this);" class="p-6 flex flex-col gap-3 text-sm">
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">배너이름</div>
+                <div class="flex-1 p-2">
+                    <input type="text" name="name" placeholder="배너명입력" class="w-full border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm">
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">배너크기</div>
+                <div class="flex-1 p-2">
+                    <input type="text" name="sizeType" placeholder="배너크기입력 (예: 1200x80)" class="w-full border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm">
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">배경색</div>
+                <div class="flex-1 p-2">
+                    <input type="text" name="backgroundColor" placeholder="배너배경색입력 (예: #FFFFFF)" class="w-full border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm">
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">배너링크</div>
+                <div class="flex-1 p-2">
+                    <input type="text" name="linkUrl" placeholder="배너링크입력 (예: /event/1)" class="w-full border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm">
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">배너위치</div>
+                <div class="flex-1 p-2">
+                    <select name="position" class="w-32 border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm pr-8">
+                        <option value="">선택</option>
+                        <option value="MAIN1">메인상단</option>
+                        <option value="MAIN2">메인슬라이더</option>
+                        <option value="MAIN3">메인사이드배너 1</option>
+                        <option value="MAIN4">메인사이드배너 2</option>
+                        <option value="PRODUCT1">상품상세보기</option>
+                        <option value="MEMBER1">회원로그인</option>
+                        <option value="MY1">마이페이지</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">노출날짜</div>
+                <div class="flex-1 p-2 flex items-center flex-wrap gap-2">
+                    <div class="flex items-center gap-1">
+                        <input type="text" name="startDate" id="reg-start-date" placeholder="YYYY-MM-DD" maxlength="10" oninput="autoFormatDate(this)"
+                               class="w-28 border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm text-gray-800 text-center px-2">
+                        <div class="relative flex items-center">
+                            <input type="date" onchange="document.getElementById('reg-start-date').value = this.value;"
+                                   class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" title="달력에서 시작일 선택">
+                            <button type="button" class="p-1.5 bg-gray-100 border border-gray-300 rounded-sm hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-base">calendar_month</span>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-gray-500 font-bold">~</span>
+                    <div class="flex items-center gap-1">
+                        <input type="text" name="endDate" id="reg-end-date" placeholder="YYYY-MM-DD" maxlength="10" oninput="autoFormatDate(this)"
+                               class="w-28 border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm text-gray-800 text-center px-2">
+                        <div class="relative flex items-center">
+                            <input type="date" onchange="document.getElementById('reg-end-date').value = this.value;"
+                                   class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" title="달력에서 종료일 선택">
+                            <button type="button" class="p-1.5 bg-gray-100 border border-gray-300 rounded-sm hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-base">calendar_month</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-2.5 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">노출시간</div>
+                <div class="flex-1 p-2 flex items-center flex-wrap gap-2">
+                    <div class="flex items-center gap-1">
+                        <input type="text" name="startTime" id="reg-start-time" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"
+                               class="w-20 border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm text-gray-800 text-center px-2">
+                        <div class="relative flex items-center">
+                            <input type="time" onchange="document.getElementById('reg-start-time').value = this.value;"
+                                   class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" title="시계에서 시작시간 선택">
+                            <button type="button" class="p-1.5 bg-gray-100 border border-gray-300 rounded-sm hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-base">schedule</span>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-gray-500 font-bold">~</span>
+                    <div class="flex items-center gap-1">
+                        <input type="text" name="endTime" id="reg-end-time" placeholder="HH:MM" maxlength="5" oninput="autoFormatTime(this)"
+                               class="w-20 border-gray-300 rounded-sm focus:border-primary focus:ring-primary text-sm text-gray-800 text-center px-2">
+                        <div class="relative flex items-center">
+                            <input type="time" onchange="document.getElementById('reg-end-time').value = this.value;"
+                                   class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" title="시계에서 종료시간 선택">
+                            <button type="button" class="p-1.5 bg-gray-100 border border-gray-300 rounded-sm hover:bg-gray-200 text-gray-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-base">schedule</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center border border-gray-300">
+                <div class="w-28 bg-gray-100 py-3 px-3 font-bold text-gray-700 border-r border-gray-300 text-center flex-shrink-0">배너파일</div>
+                <div class="flex-1 p-2 flex items-center gap-3">
+                    <label class="cursor-pointer bg-gray-200 border border-gray-300 px-3 py-1 text-xs text-gray-700 hover:bg-gray-300 rounded-sm flex-shrink-0">
+                        파일선택
+                        <input type="file" name="file" class="hidden" onchange="updateFileName(this)">
+                    </label>
+                    <span id="fileNameDisplay" class="text-xs text-gray-500 truncate max-w-[180px]">선택된파일없음</span>
+                    <span class="text-xs text-gray-400 ml-auto flex-shrink-0">노출 위치에 맞는 크기 권장</span>
+                </div>
+            </div>
+
+            <div class="text-center mt-4 mb-2">
+                <button type="submit" class="bg-gray-700 hover:bg-gray-800 text-white px-10 py-2.5 font-bold text-base transition-colors shadow-sm rounded-sm">
+                    등록하기
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    /* 메뉴 아코디언 로직 */
+    function toggleAccordion(button) {
+        const menuItem = button.closest('.group\\/menu');
+        if (!menuItem) return;
+
+        const isActive = menuItem.classList.contains('menu-item-active');
+
+        if (isActive) {
+            menuItem.classList.remove('menu-item-active');
+        } else {
+            document.querySelectorAll('.menu-item-active').forEach(item => {
+                if (item !== menuItem) {
+                    item.classList.remove('menu-item-active');
+                }
+            });
+            menuItem.classList.add('menu-item-active');
+        }
+    }
+
+    /* 전체 선택 체크박스 로직 */
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="bannerIds"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    function toggleAll(source) {
+        const checkboxes = document.getElementsByName('bannerIds');
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+
+    /* 파일 선택 시 파일명 표시 로직 */
+    function updateFileName(input) {
+        const display = document.getElementById('fileNameDisplay');
+        if (input.files && input.files.length > 0) {
+            display.textContent = input.files[0].name;
+            display.classList.replace('text-gray-500', 'text-gray-900');
+        } else {
+            display.textContent = '선택된파일없음';
+            display.classList.replace('text-gray-900', 'text-gray-500');
+        }
+    }
+
+    /* JS로 이미지를 완벽한 정사각형(1:1비율, 중앙 크롭)으로 처리하는 로직 */
+    document.addEventListener("DOMContentLoaded", function() {
+        const images = document.querySelectorAll('.square-img');
+
+        images.forEach(img => {
+            img.onload = function() {
+                this.style.width = '100%';
+                this.style.height = '100%';
+                this.style.objectFit = 'cover';
+                this.style.objectPosition = 'center';
+                this.classList.remove('opacity-0');
+            };
+
+            if (img.complete) {
+                img.onload();
+            }
+        });
+    });
+
+    function filterBanner(position, btn) {
+        document.querySelectorAll('#bannerTabs button').forEach(b => {
+            b.classList.remove('bg-white', 'text-black');
+            b.classList.add('bg-gray-200', 'text-gray-600');
+        });
+        btn.classList.remove('bg-gray-200', 'text-gray-600');
+        btn.classList.add('bg-white', 'text-black');
+
+        document.querySelectorAll('.banner-row').forEach(row => {
+            row.style.display = (row.getAttribute('data-position') === position) ? '' : 'none';
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const firstTab = document.querySelector('#bannerTabs button');
+        if (firstTab) filterBanner('MAIN1', firstTab);
+    });
+
+    // 모달 제어
+    function openModal() { document.getElementById('bannerModal').classList.add('show'); }
+    function closeModal() { document.getElementById('bannerModal').classList.remove('show'); }
+
+    /* 🟢 1. 날짜 자동 하이픈(-) 생성 함수 */
+    function autoFormatDate(input) {
+        let val = input.value.replace(/[^0-9]/g, '');
+        if (val.length > 4 && val.length <= 6) {
+            val = val.substring(0, 4) + '-' + val.substring(4);
+        } else if (val.length > 6) {
+            val = val.substring(0, 4) + '-' + val.substring(4, 6) + '-' + val.substring(6, 8);
+        }
+        input.value = val;
+    }
+
+    /* 🟢 2. 시간 자동 콜론(:) 생성 함수 */
+    function autoFormatTime(input) {
+        let val = input.value.replace(/[^0-9]/g, '');
+        if (val.length > 2) {
+            val = val.substring(0, 2) + ':' + val.substring(2, 4);
+        }
+        input.value = val;
+    }
+
+    /* 🟢 3. 400 Bad Request 방지를 위한 전체 입력값 및 날짜/시간 유효성 검증 함수 */
+    function validateBannerForm(form) {
+        // 1) 배너 이름 검증
+        if (!form.name.value.trim()) {
+            alert('배너 이름을 입력해주세요.');
+            form.name.focus();
+            return false;
+        }
+        // 2) 배너 크기 검증
+        if (!form.sizeType.value.trim()) {
+            alert('배너 크기를 입력해주세요. (예: 1200x80)');
+            form.sizeType.focus();
+            return false;
+        }
+        // 3) 배경색 검증
+        if (!form.backgroundColor.value.trim()) {
+            alert('배경색을 입력해주세요. (예: #FFFFFF)');
+            form.backgroundColor.focus();
+            return false;
+        }
+        // 4) 배너 링크 검증
+        if (!form.linkUrl.value.trim()) {
+            alert('배너 링크를 입력해주세요. (예: /event/1)');
+            form.linkUrl.focus();
+            return false;
+        }
+        // 5) 배너 노출 위치 검증
+        if (!form.position.value) {
+            alert('배너 노출 위치를 선택해주세요.');
+            form.position.focus();
+            return false;
+        }
+
+        // 6) 시작 날짜 검증
+        const startDate = form.startDate.value.trim();
+        const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+        if (!startDate) {
+            alert('노출 시작 날짜를 입력해주세요. (예: 2026-07-01)');
+            form.startDate.focus();
+            return false;
+        }
+        if (!dateRegex.test(startDate)) {
+            alert('시작 날짜 형식이 올바르지 않습니다.\nYYYY-MM-DD 형식으로 입력하거나 달력 아이콘을 선택해주세요.');
+            form.startDate.focus();
+            return false;
+        }
+
+        // 7) 종료 날짜 검증
+        const endDate = form.endDate.value.trim();
+        if (!endDate) {
+            alert('노출 종료 날짜를 입력해주세요. (예: 2026-07-31)');
+            form.endDate.focus();
+            return false;
+        }
+        if (!dateRegex.test(endDate)) {
+            alert('종료 날짜 형식이 올바르지 않습니다.\nYYYY-MM-DD 형식으로 입력하거나 달력 아이콘을 선택해주세요.');
+            form.endDate.focus();
+            return false;
+        }
+        if (startDate > endDate) {
+            alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+            form.endDate.focus();
+            return false;
+        }
+
+        // 8) 시작 시간 검증
+        const startTime = form.startTime.value.trim();
+        const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        if (!startTime) {
+            alert('노출 시작 시간을 입력해주세요. (예: 00:00)');
+            form.startTime.focus();
+            return false;
+        }
+        if (!timeRegex.test(startTime)) {
+            alert('시작 시간 형식이 올바르지 않습니다.\nHH:MM (24시간제) 형식으로 입력하거나 시계 아이콘을 선택해주세요.');
+            form.startTime.focus();
+            return false;
+        }
+
+        // 9) 종료 시간 검증
+        const endTime = form.endTime.value.trim();
+        if (!endTime) {
+            alert('노출 종료 시간을 입력해주세요. (예: 23:59)');
+            form.endTime.focus();
+            return false;
+        }
+        if (!timeRegex.test(endTime)) {
+            alert('종료 시간 형식이 올바르지 않습니다.\nHH:MM (24시간제) 형식으로 입력하거나 시계 아이콘을 선택해주세요.');
+            form.endTime.focus();
+            return false;
+        }
+        if (startDate === endDate && startTime > endTime) {
+            alert('시작 날짜와 종료 날짜가 같을 경우, 종료 시간은 시작 시간보다 빠를 수 없습니다.');
+            form.endTime.focus();
+            return false;
+        }
+
+        // 10) 배너 이미지 파일 검증
+        if (!form.file.files || form.file.files.length === 0) {
+            alert('배너 이미지 파일을 선택해주세요.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+<script th:src="@{/js/auth-nav.js}" src="/k_market/js/auth-nav.js"></script>
+<script th:src="@{/js/admin-navigation.js}" src="/js/admin-navigation.js"></script>
+</body>
+</html>

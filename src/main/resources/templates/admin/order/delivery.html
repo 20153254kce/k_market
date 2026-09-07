@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8"/>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <title>K-market Admin Dashboard - 배송현황</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+
+        .material-symbols-outlined {
+
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+
+        }
+
+        /* Accordion Smooth Animation */
+
+        .menu-content {
+
+            max-height: 0;
+
+            overflow: hidden;
+
+            transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out, padding 0.3s ease-in-out;
+
+            opacity: 0;
+
+        }
+
+        .menu-item-active .menu-content {
+
+            max-height: 500px;
+
+            opacity: 1;
+
+            padding-top: 4px;
+
+            padding-bottom: 8px;
+
+        }
+
+        .chevron-icon {
+
+            transition: transform 0.3s ease;
+
+        }
+
+        .menu-item-active .chevron-icon {
+
+            transform: rotate(180deg);
+
+        }
+
+    </style>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script id="tailwind-config">
+
+        tailwind.config = {
+
+            darkMode: "class",
+
+            theme: {
+
+                extend: {
+
+                    "colors": {
+
+                        "secondary-container": "#c0ecdc", "surface-container-highest": "#e1e3e4", "primary-fixed": "#c8e8f2", "on-error": "#ffffff",
+
+                        "inverse-surface": "#2e3132", "on-surface": "#191c1d", "on-secondary": "#ffffff", "tertiary-fixed": "#ffdcc7",
+
+                        "surface-bright": "#f8f9fa", "surface-container-lowest": "#ffffff", "primary-container": "#2c4a52", "error-container": "#ffdad6",
+
+                        "primary": "#14333b", "on-tertiary-fixed-variant": "#5f402b", "on-secondary-fixed": "#002018", "background": "#f8f9fa",
+
+                        "secondary-fixed": "#c0ecdc", "tertiary-fixed-dim": "#eabda2", "secondary": "#3e6659", "error": "#ba1a1a",
+
+                        "primary-fixed-dim": "#acccd5", "on-secondary-fixed-variant": "#264e42", "tertiary": "#452916", "surface": "#f8f9fa",
+
+                        "on-tertiary": "#ffffff", "on-primary-container": "#99b9c2", "inverse-primary": "#acccd5", "surface-container-low": "#f3f4f5",
+
+                        "on-tertiary-container": "#d6ab90", "on-primary-fixed": "#001f26", "surface-tint": "#45636b", "tertiary-container": "#5e3f2a",
+
+                        "on-error-container": "#93000a", "secondary-fixed-dim": "#a5d0c0", "on-primary": "#ffffff", "on-tertiary-fixed": "#2d1605",
+
+                        "on-background": "#191c1d", "on-secondary-container": "#446c5f", "outline": "#72787a", "outline-variant": "#c1c7ca",
+
+                        "on-surface-variant": "#41484a", "inverse-on-surface": "#f0f1f2", "on-primary-fixed-variant": "#2d4b53", "surface-variant": "#e1e3e4",
+
+                        "surface-dim": "#d9dadb", "surface-container": "#edeeef", "surface-container-high": "#e7e8e9"
+
+                    },
+
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+
+                    "spacing": { "margin-mobile": "16px", "base": "8px", "gutter": "24px", "xs": "4px", "sm": "12px", "xl": "80px", "container-max": "1280px", "md": "24px", "lg": "48px" },
+
+                    "fontFamily": { "headline-md": ["Plus Jakarta Sans"], "body-lg": ["Be Vietnam Pro"], "headline-lg-mobile": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "body-md": ["Be Vietnam Pro"], "label-md": ["Be Vietnam Pro"], "label-sm": ["Be Vietnam Pro"], "headline-lg": ["Plus Jakarta Sans"] },
+
+                    "fontSize": { "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}], "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}], "headline-lg-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}], "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}], "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}], "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}], "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}], "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}] }
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+</head>
+
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex">
+
+<div th:replace="~{admin/_layout :: sidebar('order')}"></div>
+
+
+
+<div th:replace="~{admin/_layout :: header}"></div>
+
+
+
+<main class="ml-64 mt-16 p-lg flex-1">
+    <div class="mb-lg border-b pb-sm flex justify-between items-end">
+        <h1 class="font-headline-lg text-headline-lg text-on-background">배송현황</h1>
+        <p class="text-label-md text-on-surface-variant">HOME > 주문관리 > 배송현황</p>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-lg border border-outline-variant p-md shadow-sm">
+        <!-- 1번 영역: 검색창 -->
+        <div class="mb-md flex gap-sm pb-md border-b">
+            <select class="border-outline-variant rounded-lg pr-8">
+                <option>송장번호</option>
+                <option>주문번호</option>
+                <option>수령인</option>
+            </select>
+            <input type="text" placeholder="검색어입력" class="border-outline-variant rounded-lg w-64"/>
+
+            <button class="bg-primary text-white px-6 py-2 rounded-lg">검색</button>
+        </div>
+
+        <!-- 2번 영역: 테이블 -->
+        <table class="w-full border-collapse text-center">
+            <thead class="bg-surface-container border-y border-outline-variant">
+            <tr class="text-label-md">
+                <th class="py-4 px-2">송장번호</th>
+                <th class="py-4 px-2">택배사</th>
+                <th class="py-4 px-2">주문번호</th>
+                <th class="py-4 px-2">수령인</th>
+                <th class="py-4 px-2">상품명</th>
+                <th class="py-4 px-2">건수</th>
+                <th class="py-4 px-2">물품합계</th>
+                <th class="py-4 px-2">배송비</th>
+                <th class="py-4 px-2">배송상태</th>
+                <th class="py-4 px-2">접수일</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-variant">
+            <tr th:if="${deliveryPage != null}" th:each="delivery : ${deliveryPage.content}">
+                <td class="py-4 px-2">
+                    <button type="button"
+                            class="text-blue-600 underline font-medium hover:text-blue-800"
+                            th:text="${delivery?.trackingNumber}"
+                            th:data-tracking="${delivery?.trackingNumber}"
+                            onclick="openPopup(this.getAttribute('data-tracking'))">
+                    </button>
+                </td>
+                <td class="py-4 px-2" th:text="${delivery.courierName}"></td>
+                <td class="py-4 px-2" th:text="${delivery.orderNo}"></td>
+                <td class="py-4 px-2" th:text="${delivery.recipientName}"></td>
+                <td class="py-4 px-2" th:text="${delivery.orderName}"></td>
+                <td class="py-4 px-2" th:text="${delivery.quantity}"></td>
+                <td class="py-4 px-2" th:text="${delivery.totalProductPrice}"></td>
+                <td class="py-4 px-2" th:text="${delivery.shippingFee}"></td>
+                <td class="py-4 px-2" th:text="${delivery.deliveryStatus}"></td>
+                <td class="py-4 px-2"
+                    th:text="${delivery.shippedAt != null ? #temporals.format(delivery.shippedAt, 'yyyy-MM-dd HH:mm:ss') : '-'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="mt-8 flex justify-center gap-4 text-on-surface-variant"
+         th:if="${!deliveryPage.isEmpty()}">
+
+        <a th:href="@{/admin/order/delivery(page=${deliveryPage.number - 1})}"
+           th:classappend="${deliveryPage.first} ? 'pointer-events-none text-gray-400'">이전</a>
+
+        <div class="flex gap-2">
+            <a th:each="i : ${#numbers.sequence(0, deliveryPage.totalPages - 1)}"
+               th:href="@{/admin/order/delivery(page=${i})}"
+               th:text="${i + 1}"
+               th:classappend="${i == deliveryPage.number} ? 'font-bold underline' : ''"></a>
+        </div>
+
+        <a th:href="@{/admin/order/delivery(page=${deliveryPage.number + 1})}"
+           th:classappend="${deliveryPage.last} ? 'pointer-events-none text-gray-400'">다음</a>
+    </div>
+</main>
+
+<div id="deliveryPopup" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+    <div class="bg-white w-[600px] rounded shadow-lg">
+        <div class="bg-gray-800 text-white p-4 flex justify-between">
+            <span class="font-bold">배송상세</span>
+            <span id="headerTrackingNo"></span>
+            <button onclick="closePopup()">X</button>
+        </div>
+
+        <div class="p-6">
+            <h3 class="font-bold border-b-2 border-black pb-2 mb-4">상품정보</h3>
+            <table class="w-full text-center border-t border-b">
+                <tbody id="productTableBody"></tbody>
+            </table>
+
+            <h3 class="font-bold border-b-2 border-black pb-2 mt-8 mb-4">배송정보</h3>
+            <div class="bg-gray-100 p-4 text-sm grid grid-cols-[100px_1fr] gap-y-2">
+                <div class="text-gray-600 font-semibold">주문번호</div><div id="infoOrderNo"></div>
+                <div class="text-gray-600 font-semibold">수령인</div><div id="infoRecipientName"></div>
+                <div class="text-gray-600 font-semibold">연락처</div><div id="infoPhone"></div>
+                <div class="text-gray-600 font-semibold">배송지 주소</div><div id="infoAddress"></div>
+                <div class="text-gray-600 font-semibold">택배사</div><div id="infoCourier"></div>
+                <div class="text-gray-600 font-semibold">송장번호</div><div id="infoTrackingNo"></div>
+                <div class="text-gray-600 font-semibold">기타</div><div id="infoMemo"></div>
+            </div>
+            <button onclick="closePopup()" class="mt-6 w-full bg-gray-200 py-2 rounded">닫기</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function openPopup(trackingNumber) {
+        fetch(`/admin/order/delivery/detail/${trackingNumber}`)
+            .then(res => res.json())
+            .then(data => {
+                // 헤더
+                document.getElementById('headerTrackingNo').innerText = data.trackingNumber;
+
+                // 상품 정보 (DTO의 필드 사용)
+                document.getElementById('productTableBody').innerHTML = `
+                <tr>
+                    <td class="py-4">
+                        <img id="productImage" src="" alt="상품이미지" style="width: 50px; height: 50px;">
+                    </td>
+                    <td class="py-4">${data.orderNo}</td>
+                    <td>${data.orderName}</td>
+                    <td>(주) 상호명</td>
+                    <td>${data.totalProductPrice.toLocaleString()}원</td>
+                    <td>${data.quantity}</td>
+                    <td>${data.shippingFee}원</td>
+                    <td class="font-bold">${(data.totalProductPrice + data.shippingFee).toLocaleString()}원</td>
+                </tr>
+            `;
+
+                // 배송 정보 (DTO 필드와 일치하게 수정)
+                document.getElementById('infoOrderNo').innerText = data.orderNo;
+                document.getElementById('infoRecipientName').innerText = data.recipientName;
+                document.getElementById('infoPhone').innerText = data.recipientPhone || "-";
+                document.getElementById('infoAddress').innerText = (data.baseAddress + " " + (data.detailAddress || "")).trim() || "-";
+                document.getElementById('infoCourier').innerText = data.courierName;
+                document.getElementById('infoTrackingNo').innerText = data.trackingNumber;
+                document.getElementById('infoMemo').innerText = data.memo || "요청사항 없음";
+
+                document.getElementById('deliveryPopup').classList.remove('hidden');
+            });
+    }
+
+    function closePopup() {
+        document.getElementById('deliveryPopup').classList.add('hidden');
+    }
+</script>
+
+<script th:src="@{/js/admin-navigation.js}" src="/js/admin-navigation.js"></script>
+
+    </body>
+</html>
